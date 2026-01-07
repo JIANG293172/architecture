@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "73BB34BB-07EA-479C-8F53-BB4F4C120B80"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FCDE9FD7-2DD6-4640-B61F-58A5D295EBED"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftUI10/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "testHandyJSONOptionalParse()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "FCDE9FD7-2DD6-4640-B61F-58A5D295EBED - dfa0d6bbe8dcd42"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftUI10.ViewController.testHandyJSONOptionalParse() -&gt; ()"
+                  moduleName = "SwiftUI10.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/taojiang/Desktop/poxiao/propertyWrapper/handjson2/SwiftUI10/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90">
+               </Location>
+               <Location
+                  uuid = "FCDE9FD7-2DD6-4640-B61F-58A5D295EBED - dfa0d6bbe8dcd42"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftUI10.ViewController.testHandyJSONOptionalParse() -&gt; ()"
+                  moduleName = "SwiftUI10.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/taojiang/Desktop/poxiao/propertyWrapper/handjson2/SwiftUI10/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

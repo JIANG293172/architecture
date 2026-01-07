@@ -1,0 +1,16 @@
+platform :ios, '13.0'
+inhibit_all_warnings!
+source 'https://github.com/CocoaPods/Specs.git'
+
+# 禁止所有 Pods 库的警告
+inhibit_all_warnings!
+
+# 在你的项目主 Target 中定义依赖
+target 'Demo02' do
+  # use_frameworks! # 使用动态框架（Swift 库需要）
+
+#  pod 'PromiseKit'
+#  pod 'Alamofire'
+  pod 'SnapKit'
+
+end
