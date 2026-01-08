@@ -23,7 +23,7 @@ struct ChanganCarControlHome: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         // 1. 头部组件
-                        AutoHomePageHeader(initTitle: "长安汽车车控首页")
+                        AutoHomePageHeader(initTitle: "车控首页")
                         
                         // 2. 车辆信息卡片
                         AutoHomePageStateView(
