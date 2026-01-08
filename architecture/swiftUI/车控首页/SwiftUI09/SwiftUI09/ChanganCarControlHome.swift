@@ -1,10 +1,3 @@
-//
-//  ChanganCarControlHome.swift
-//  SwiftUI09
-//
-//  Created by CQCA202121101_2 on 2026/1/8.
-//
-
 import SwiftUI
 
 struct ChanganCarControlHome: View {
@@ -20,57 +13,108 @@ struct ChanganCarControlHome: View {
     // 对应 Flutter 的 SnackBar（用 @State 管理弹窗）
     @State private var snackBarText: String?
     @State private var snackBarColor: Color?
-    
-
     // 新增：控制提示栏显示/隐藏的状态
     @State private var isSnackBarShowing = false
     
     var body: some View {
-            TabView {
-                NavigationStack {
-                    ScrollView {
-                        // 原页面内容...
+        TabView {
+            // 首页标签页（包含完整页面内容）
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // 1. 头部组件
+                        AutoHomePageHeader(initTitle: "长安汽车车控首页")
+                        
+                        // 2. 车辆信息卡片
+                        AutoHomePageStateView(
+                            licensePlate: licensePlate,
+                            carModel: carModel,
+                            batteryPercent: batteryPercent,
+                            mileage: mileage,
+                            isLock: isLock,
+                            isLoading: isLoading
+                        )
+                        
+                        // 3. 常用控制区
+                        buildControlArea()
+                        
+                        // 4. 车辆数据统计
+                        buildCarDataArea()
+                        
+                        // 5. 功能入口区
+                        buildFunctionEntrance()
                     }
-                    .background(Color(hex: "F5F7FA"))
-                    .navigationTitle("长安车控")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        // 原右上角通知按钮...
-                    }
-                    // 步骤2：添加自定义底部提示栏（替代原 snackBar）
-                    .overlay(
-                        Group {
-                            if isSnackBarShowing, let text = snackBarText, let color = snackBarColor {
-                                VStack {
-                                    Spacer()
-                                    Text(text)
-                                        .foregroundColor(.white)
-                                        .padding()
-                                        .background(color)
-                                        .cornerRadius(8)
-                                        .padding(.horizontal, 16)
-                                        .padding(.bottom, 32) // 避开底部导航栏
-                                }
-                                .transition(.move(edge: .bottom))
-                                .animation(.easeInOut, value: isSnackBarShowing)
-                            }
-                        }
-                    )
+                    .padding(.bottom, 16)
                 }
-                .tabItem { /* 原标签配置... */ }
-                .tag(0)
-                
-                // 其他标签页...
+                .background(Color(hex: "F5F7FA"))
+                .navigationTitle("长安车控")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    // 右上角通知按钮（补全实现）
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: showNoNotification) {
+                            Image(systemName: "bell")
+                                .foregroundColor(Color(hex: "0066CC"))
+                        }
+                    }
+                }
+                // 自定义底部提示栏
+                .overlay(
+                    Group {
+                        if isSnackBarShowing, let text = snackBarText, let color = snackBarColor {
+                            VStack {
+                                Spacer()
+                                Text(text)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .background(color)
+                                    .cornerRadius(8)
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 32) // 避开底部导航栏
+                            }
+                            .transition(.move(edge: .bottom))
+                            .animation(.easeInOut, value: isSnackBarShowing)
+                        }
+                    }
+                )
             }
-            // 原 TabView 样式配置...
+            .tabItem { // 补全标签配置
+                Label("首页", systemImage: "house.fill")
+            }
+            .tag(0)
+            
+            // 车辆标签页
+            Text("车辆页面")
+                .tabItem {
+                    Label("车辆", systemImage: "car.fill")
+                }
+                .tag(1)
+            
+            // 行程标签页
+            Text("行程页面")
+                .tabItem {
+                    Label("行程", systemImage: "map.fill")
+                }
+                .tag(2)
+            
+            // 我的标签页
+            Text("我的页面")
+                .tabItem {
+                    Label("我的", systemImage: "person.fill")
+                }
+                .tag(3)
         }
-    
-    
+        // TabView 样式配置
+        .tint(Color(hex: "0066CC"))
+        .font(.system(size: 12))
+        .background(Color.white)
+        .shadow(color: Color.black.opacity(0.12), radius: 8, y: -2)
+    }
 }
 
-// MARK: - 控制操作（对应原 Flutter 的 _toggleLock/_toggleAirCondition 等）
+// MARK: - 控制操作（补全所有方法的提示栏显示逻辑）
 extension ChanganCarControlHome {
-    // 示例：toggleLock 方法中显示提示
+    // 车辆上锁/解锁
     private func toggleLock() async {
         guard !isLoading else { return }
         isLoading = true
@@ -80,7 +124,7 @@ extension ChanganCarControlHome {
         isLock.toggle()
         isLoading = false
         
-        // 显示自定义提示栏
+        // 显示提示栏
         snackBarText = isLock ? "车辆已上锁" : "车辆已解锁"
         snackBarColor = isLock ? .green : Color(hex: "0066CC")
         isSnackBarShowing = true
@@ -103,6 +147,11 @@ extension ChanganCarControlHome {
         
         snackBarText = isAirOn ? "空调已开启" : "空调已关闭"
         snackBarColor = isAirOn ? Color(hex: "F5A623") : .gray
+        isSnackBarShowing = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isSnackBarShowing = false
+        }
     }
     
     // 模拟电量减少
@@ -110,20 +159,30 @@ extension ChanganCarControlHome {
         guard batteryPercent > 0 else { return }
         batteryPercent -= 5
         mileage = Int(Double(mileage) * 0.95)
+        
+        // 显示电量变化提示
+        snackBarText = "电量已减少5%，剩余里程更新"
+        snackBarColor = Color(hex: "0066CC")
+        isSnackBarShowing = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isSnackBarShowing = false
+        }
     }
     
-    // 其他需要显示提示的地方（如 showNoNotification）也做同样修改
+    // 通知按钮点击
     private func showNoNotification() {
         snackBarText = "暂无新通知"
         snackBarColor = .gray
         isSnackBarShowing = true
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isSnackBarShowing = false
         }
     }
 }
 
-// MARK: - 常用控制区（对应原 _buildControlArea）
+// MARK: - 常用控制区（原代码不变，确保引用正确）
 extension ChanganCarControlHome {
     private func buildControlArea() -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -131,11 +190,9 @@ extension ChanganCarControlHome {
                 .font(.system(size: 16, weight: .bold))
                 .foregroundColor(Color(hex: "333333"))
             
-            // 网格布局（对应 Flutter 的 GridView.count）
             LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible()), count: 4),
-                spacing: 8,
-                pinnedViews: [.sectionHeaders]
+                spacing: 8
             ) {
                 // 锁车/解锁
                 buildControlButton(
@@ -164,6 +221,10 @@ extension ChanganCarControlHome {
                 ) {
                     snackBarText = "寻车模式已开启，车辆鸣笛+双闪"
                     snackBarColor = .orange
+                    isSnackBarShowing = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSnackBarShowing = false
+                    }
                 }
                 
                 // 后备箱
@@ -173,6 +234,10 @@ extension ChanganCarControlHome {
                 ) {
                     snackBarText = "后备箱已开启"
                     snackBarColor = .gray
+                    isSnackBarShowing = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSnackBarShowing = false
+                    }
                 }
                 
                 // 车窗
@@ -182,6 +247,10 @@ extension ChanganCarControlHome {
                 ) {
                     snackBarText = "车窗控制功能待开通"
                     snackBarColor = .gray
+                    isSnackBarShowing = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSnackBarShowing = false
+                    }
                 }
                 
                 // 天窗
@@ -191,6 +260,10 @@ extension ChanganCarControlHome {
                 ) {
                     snackBarText = "天窗控制功能待开通"
                     snackBarColor = .gray
+                    isSnackBarShowing = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSnackBarShowing = false
+                    }
                 }
                 
                 // 充电/加油
@@ -208,6 +281,10 @@ extension ChanganCarControlHome {
                 ) {
                     snackBarText = "更多控制功能即将上线"
                     snackBarColor = .gray
+                    isSnackBarShowing = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSnackBarShowing = false
+                    }
                 }
             }
         }
@@ -219,7 +296,7 @@ extension ChanganCarControlHome {
         .padding(.horizontal, 16)
     }
     
-    // 单个控制按钮（对应原 _buildControlButton）
+    // 单个控制按钮
     private func buildControlButton(
         icon: String,
         text: String,
@@ -256,7 +333,7 @@ extension ChanganCarControlHome {
     }
 }
 
-// MARK: - 车辆数据统计（对应原 _buildCarDataArea）
+// MARK: - 车辆数据统计（原代码不变）
 extension ChanganCarControlHome {
     private func buildCarDataArea() -> some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -264,7 +341,6 @@ extension ChanganCarControlHome {
                 .font(.system(size: 16, weight: .bold))
                 .foregroundColor(Color(hex: "333333"))
             
-            // 第一行数据
             HStack(spacing: 12) {
                 buildDataCard(
                     title: "今日里程",
@@ -279,7 +355,6 @@ extension ChanganCarControlHome {
                 )
             }
             
-            // 第二行数据
             HStack(spacing: 12) {
                 buildDataCard(
                     title: "累计里程",
@@ -302,7 +377,6 @@ extension ChanganCarControlHome {
         .padding(.horizontal, 16)
     }
     
-    // 单个数据卡片（对应原 _buildDataCard）
     private func buildDataCard(
         title: String,
         value: String,
@@ -332,7 +406,7 @@ extension ChanganCarControlHome {
     }
 }
 
-// MARK: - 功能入口区（对应原 _buildFunctionEntrance）
+// MARK: - 功能入口区（原代码不变）
 extension ChanganCarControlHome {
     private func buildFunctionEntrance() -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -340,7 +414,6 @@ extension ChanganCarControlHome {
                 .font(.system(size: 16, weight: .bold))
                 .foregroundColor(Color(hex: "333333"))
             
-            // 功能网格
             LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible()), count: 4),
                 spacing: 8
@@ -363,11 +436,14 @@ extension ChanganCarControlHome {
         .padding(.horizontal, 16)
     }
     
-    // 功能入口项（对应原 _buildFunctionItem）
     private func buildFunctionItem(icon: String, text: String) -> some View {
         Button(action: {
             snackBarText = "\(text) 功能待开通"
             snackBarColor = .gray
+            isSnackBarShowing = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                isSnackBarShowing = false
+            }
         }) {
             VStack(alignment: .center, spacing: 6) {
                 Image(systemName: icon)
@@ -388,48 +464,3 @@ extension ChanganCarControlHome {
         .cornerRadius(8)
     }
 }
-
-// MARK: - 底部导航栏（对应原 _buildBottomNav）
-extension ChanganCarControlHome {
-    private func buildBottomNav() -> some View {
-        TabView {
-            // 首页（当前页面）
-            Text("首页")
-                .tabItem {
-                    Label("首页", systemImage: "house.fill")
-                }
-                .tag(0)
-            
-            // 车辆
-            Text("车辆")
-                .tabItem {
-                    Label("车辆", systemImage: "car.fill")
-                }
-                .tag(1)
-            
-            // 行程
-            Text("行程")
-                .tabItem {
-                    Label("行程", systemImage: "map.fill")
-                }
-                .tag(2)
-            
-            // 我的
-            Text("我的")
-                .tabItem {
-                    Label("我的", systemImage: "person.fill")
-                }
-                .tag(3)
-        }
-        // 选中颜色
-        .tint(Color(hex: "0066CC"))
-        // 文字大小
-        .font(.system(size: 12))
-        // 背景色
-        .background(Color.white)
-        // 阴影
-        .shadow(color: Color.black.opacity(0.12), radius: 8, y: -2)
-        // 修复：移除错误的 toolbarColorScheme，改用 UIKit 外观设置（更稳定）
-    }
-}
-
