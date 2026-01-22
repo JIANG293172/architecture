@@ -7,14 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D5CFD66535AD8590692B4631 /* libPods-SwiftUI10.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF1E79CC01480E544A7D03C /* libPods-SwiftUI10.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5C8E23642EBAF19E0084E5A6 /* SwiftUI10.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUI10.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B563B30CBE3993BCC39AB72 /* Pods-SwiftUI10.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUI10.release.xcconfig"; path = "Target Support Files/Pods-SwiftUI10/Pods-SwiftUI10.release.xcconfig"; sourceTree = "<group>"; };
-		6DF1E79CC01480E544A7D03C /* libPods-SwiftUI10.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwiftUI10.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FCA2C3B89E31EF7B618662A5 /* Pods-SwiftUI10.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUI10.debug.xcconfig"; path = "Target Support Files/Pods-SwiftUI10/Pods-SwiftUI10.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -43,7 +39,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5CFD66535AD8590692B4631 /* libPods-SwiftUI10.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,8 +50,6 @@
 			children = (
 				5C8E23662EBAF19E0084E5A6 /* SwiftUI10 */,
 				5C8E23652EBAF19E0084E5A6 /* Products */,
-				9181BC9C3314F50A28CB68D0 /* Pods */,
-				D73C1F172FF6B50E8AE0E7B1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,23 +61,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9181BC9C3314F50A28CB68D0 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				FCA2C3B89E31EF7B618662A5 /* Pods-SwiftUI10.debug.xcconfig */,
-				6B563B30CBE3993BCC39AB72 /* Pods-SwiftUI10.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		D73C1F172FF6B50E8AE0E7B1 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				6DF1E79CC01480E544A7D03C /* libPods-SwiftUI10.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -92,7 +68,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5C8E23772EBAF19F0084E5A6 /* Build configuration list for PBXNativeTarget "SwiftUI10" */;
 			buildPhases = (
-				E84B2B1E6869E737D5B9CA80 /* [CP] Check Pods Manifest.lock */,
 				5C8E23602EBAF19E0084E5A6 /* Sources */,
 				5C8E23612EBAF19E0084E5A6 /* Frameworks */,
 				5C8E23622EBAF19E0084E5A6 /* Resources */,
