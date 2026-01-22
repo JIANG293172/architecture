@@ -48,7 +48,54 @@ class Demo1ViewController: UIViewController {
         setupMetal()
         generateData(for: currentTimeRange)
     }
-    
+    // 在generateData方法中使用异步线程
+    private func generateData(for timeRange: TimeRange) {
+        // 计算天数
+        var days: Int
+        switch timeRange {
+        case .sevenDays:
+            days = 7
+        case .oneMonth:
+            days = 30
+        case .oneYear:
+            days = 365
+        }
+        
+        // 在后台线程生成数据和计算顶点
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            // 1. 生成数据
+            let fuelConsumptionData = (0..<days).map { _ in 5.0 + Float.random(in: 0..<10.0) }
+            let mileageData = (0..<days).map { _ in 10.0 + Float.random(in: 0..<90.0) }
+            
+            // 2. 生成时间标签
+            var timeLabels: [String] = []
+            for i in 0..<days {
+                switch timeRange {
+                case .sevenDays:
+                    timeLabels.append("Day \(i+1)")
+                case .oneMonth:
+                    timeLabels.append("Day \(i+1)")
+                case .oneYear:
+                    timeLabels.append("Month \(i/30 + 1)")
+                }
+            }
+            
+            // 3. 存储数据
+            self.fuelConsumptionData = fuelConsumptionData
+            self.mileageData = mileageData
+            self.timeLabels = timeLabels
+            
+            // 4. 回到主线程更新UI和Metal缓冲区
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.updateVertexData()
+                self.updateUniforms()
+                self.metalView.setNeedsDisplay()
+            }
+        }
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         // 视图布局变化时重新绘制，包括重新计算顶点数据
@@ -150,43 +197,7 @@ class Demo1ViewController: UIViewController {
         }
     }
     
-    // MARK: - 生成数据
-    private func generateData(for timeRange: TimeRange) {
-        var days: Int
-        
-        switch timeRange {
-        case .sevenDays:
-            days = 7
-        case .oneMonth:
-            days = 30
-        case .oneYear:
-            days = 365
-        }
-        
-        // 生成油耗数据 (5-15 L/100km)
-        fuelConsumptionData = (0..<days).map { _ in 5.0 + Float.random(in: 0..<10.0) }
-        
-        // 生成里程数据 (10-100 km)
-        mileageData = (0..<days).map { _ in 10.0 + Float.random(in: 0..<90.0) }
-        
-        // 生成时间标签
-        timeLabels = []
-        for i in 0..<days {
-            switch timeRange {
-            case .sevenDays:
-                timeLabels.append("Day \(i+1)")
-            case .oneMonth:
-                timeLabels.append("Day \(i+1)")
-            case .oneYear:
-                timeLabels.append("Month \(i/30 + 1)")
-            }
-        }
-        
-        // 更新顶点数据
-        updateVertexData()
-        updateUniforms()
-        metalView.setNeedsDisplay()
-    }
+
     
     // MARK: - 更新顶点数据
     private func updateVertexData() {
@@ -289,7 +300,7 @@ class Demo1ViewController: UIViewController {
             vertices.append(Vertex(position: SIMD2<Float>(topRightX, topRightY), color: SIMD4<Float>(0.0, 0.7, 0.0, 1.0)))
             
             // 两个三角形的索引
-            let baseIndex = UInt16(vertices.count - 4)
+            let baseIndex = UInt16(vertices.count - 3)
             indices.append(baseIndex)
             indices.append(baseIndex + 1)
             indices.append(baseIndex + 2)
