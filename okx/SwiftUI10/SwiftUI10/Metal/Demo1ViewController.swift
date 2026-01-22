@@ -51,7 +51,8 @@ class Demo1ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // 视图布局变化时重新绘制
+        // 视图布局变化时重新绘制，包括重新计算顶点数据
+        updateVertexData()
         updateUniforms()
         metalView.setNeedsDisplay()
     }
