@@ -76,26 +76,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 
 
-// Demo 2 ViewController
-class Demo2ViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Demo 2: 动画效果"
-        view.backgroundColor = .white
-        
-        let label = UILabel()
-        label.text = "这是动画效果示例"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
-}
+
 
 // Demo 3 ViewController
 class Demo3ViewController: UIViewController {

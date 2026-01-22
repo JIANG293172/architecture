@@ -3,4 +3,68 @@
    uuid = "C21F25D0-A40D-483B-AB67-9D961762A434"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3626907D-AE36-4C3F-A31A-2541E8611456"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftUI10/Metal/Demo1ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
+            landmarkName = "createLineChartVertices()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E3BB5EB3-1CA7-4FE2-B611-573D0BD021DA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SecureEnclave/Demo2ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
+            landmarkName = "encryptMessage()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E3BB5EB3-1CA7-4FE2-B611-573D0BD021DA - 2d111140e452e071"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftUI10.Demo2ViewController.createKeyPair() -&gt; ()"
+                  moduleName = "SwiftUI10.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/taojiang/Desktop/poxiao/architecture/okx/SwiftUI10/SecureEnclave/Demo2ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "233"
+                  endingLineNumber = "233">
+               </Location>
+               <Location
+                  uuid = "E3BB5EB3-1CA7-4FE2-B611-573D0BD021DA - a92d1d60d7d354df"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftUI10.Demo2ViewController.encryptMessage() -&gt; ()"
+                  moduleName = "SwiftUI10.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/taojiang/Desktop/poxiao/architecture/okx/SwiftUI10/SecureEnclave/Demo2ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "233"
+                  endingLineNumber = "233">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
