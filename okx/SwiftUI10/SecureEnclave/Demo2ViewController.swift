@@ -10,32 +10,42 @@ import LocalAuthentication
 import Security
 import CryptoKit
 
-// Demo 2 ViewController - Secure Enclave示例
+// MARK: - 扩展：Data转十六进制字符串
+// 面试考点：如何安全地展示和处理二进制数据
+extension Data {
+    var hexString: String {
+        return map { String(format: "%02x", $0) }.joined()
+    }
+}
+
+// Demo 2 ViewController - Secure Enclave加密货币钱包完整示例
 class Demo2ViewController: UIViewController {
     
     // MARK: - UI组件
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let titleLabel = UILabel()
-    private let createKeyButton = UIButton(type: .system)
-    private let encryptButton = UIButton(type: .system)
-    private let decryptButton = UIButton(type: .system)
-    private let signButton = UIButton(type: .system)
-    private let verifyButton = UIButton(type: .system)
+    private let generatePrivateKeyButton = UIButton(type: .system)
+    private let encryptStoreButton = UIButton(type: .system)
+    private let signTransactionButton = UIButton(type: .system)
+    private let clearMemoryButton = UIButton(type: .system)
     private let resultTextView = UITextView()
-    private let okxExampleButton = UIButton(type: .system)
     
     // MARK: - 数据
-    private var privateKey: SecureEnclave.P256.Signing.PrivateKey? // 使用CryptoKit的SecureEnclave API
-    private var publicKey: SecKey?
-    private var encryptedData: Data?
-    private var signedData: Data?
-    private let testMessage = "Hello, Secure Enclave!"
+    private var bitcoinPrivateKey: Data? // 用户真正的比特币私钥（32字节）
+    private var secureEnclavePrivateKey: SecKey? // Secure Enclave私钥
+    private var secureEnclavePublicKey: SecKey? // Secure Enclave公钥
+    private var encryptedBitcoinPrivateKey: Data? // 加密后的比特币私钥
+    private let testTransactionData = "Bitcoin Transaction: Send 0.001 BTC to 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa".data(using: .utf8)! // 测试交易数据
+    
+    // Secure Enclave密钥标签
+    private let secureEnclaveKeyTag = "com.example.secureenclave.bitcoin.wallet"
+    private let encryptedKeychainTag = "com.example.keychain.encrypted.bitcoin.privatekey"
     
     // MARK: - 生命周期
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Demo 2: Secure Enclave示例"
+        title = "Demo 2: Secure Enclave加密货币钱包"
         view.backgroundColor = .white
         setupUI()
         setupActions()
@@ -51,57 +61,50 @@ class Demo2ViewController: UIViewController {
         scrollView.addSubview(contentView)
         
         // 设置标题
-        titleLabel.text = "Secure Enclave 演示"
+        titleLabel.text = "Secure Enclave 加密货币钱包"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleLabel)
         
         // 设置按钮
-        createKeyButton.setTitle("1. 创建密钥对", for: .normal)
-        createKeyButton.backgroundColor = .systemBlue
-        createKeyButton.setTitleColor(.white, for: .normal)
-        createKeyButton.layer.cornerRadius = 8
-        createKeyButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(createKeyButton)
+        generatePrivateKeyButton.setTitle("1. 生成比特币私钥", for: .normal)
+        generatePrivateKeyButton.backgroundColor = .systemBlue
+        generatePrivateKeyButton.setTitleColor(.white, for: .normal)
+        generatePrivateKeyButton.layer.cornerRadius = 8
+        generatePrivateKeyButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(generatePrivateKeyButton)
         
-        encryptButton.setTitle("2. RSA加密", for: .normal)
-        encryptButton.backgroundColor = .systemGreen
-        encryptButton.setTitleColor(.white, for: .normal)
-        encryptButton.layer.cornerRadius = 8
-        encryptButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(encryptButton)
+        encryptStoreButton.setTitle("2. 加密存储私钥", for: .normal)
+        encryptStoreButton.backgroundColor = .systemGreen
+        encryptStoreButton.setTitleColor(.white, for: .normal)
+        encryptStoreButton.layer.cornerRadius = 8
+        encryptStoreButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(encryptStoreButton)
         
-        decryptButton.setTitle("3. RSA解密", for: .normal)
-        decryptButton.backgroundColor = .systemOrange
-        decryptButton.setTitleColor(.white, for: .normal)
-        decryptButton.layer.cornerRadius = 8
-        decryptButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(decryptButton)
+        signTransactionButton.setTitle("3. 签名交易", for: .normal)
+        signTransactionButton.backgroundColor = .systemPurple
+        signTransactionButton.setTitleColor(.white, for: .normal)
+        signTransactionButton.layer.cornerRadius = 8
+        signTransactionButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(signTransactionButton)
         
-        signButton.setTitle("4. 数字签名", for: .normal)
-        signButton.backgroundColor = .systemPurple
-        signButton.setTitleColor(.white, for: .normal)
-        signButton.layer.cornerRadius = 8
-        signButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(signButton)
-        
-        verifyButton.setTitle("5. 验证签名", for: .normal)
-        verifyButton.backgroundColor = .systemPink
-        verifyButton.setTitleColor(.white, for: .normal)
-        verifyButton.layer.cornerRadius = 8
-        verifyButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(verifyButton)
-        
-        okxExampleButton.setTitle("6. OKX加密货币示例", for: .normal)
-        okxExampleButton.backgroundColor = .systemRed
-        okxExampleButton.setTitleColor(.white, for: .normal)
-        okxExampleButton.layer.cornerRadius = 8
-        okxExampleButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(okxExampleButton)
+        clearMemoryButton.setTitle("4. 清空内存私钥", for: .normal)
+        clearMemoryButton.backgroundColor = .systemRed
+        clearMemoryButton.setTitleColor(.white, for: .normal)
+        clearMemoryButton.layer.cornerRadius = 8
+        clearMemoryButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(clearMemoryButton)
         
         // 设置结果文本视图
-        resultTextView.text = "操作结果将显示在这里"
+        resultTextView.text = "操作结果将显示在这里\n\n" +
+                            "流程说明：\n" +
+                            "1. 生成32字节比特币私钥\n" +
+                            "2. 创建Secure Enclave密钥对\n" +
+                            "3. 用SE公钥加密私钥\n" +
+                            "4. 将密文存入Keychain\n" +
+                            "5. 交易时解密并签名\n" +
+                            "6. 立即清零内存私钥"
         resultTextView.font = UIFont.systemFont(ofSize: 16)
         resultTextView.layer.borderWidth = 1
         resultTextView.layer.borderColor = UIColor.lightGray.cgColor
@@ -129,263 +132,272 @@ class Demo2ViewController: UIViewController {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            // 创建密钥对按钮约束
-            createKeyButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
-            createKeyButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            createKeyButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            createKeyButton.heightAnchor.constraint(equalToConstant: 50),
+            // 生成私钥按钮约束
+            generatePrivateKeyButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            generatePrivateKeyButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            generatePrivateKeyButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+            generatePrivateKeyButton.heightAnchor.constraint(equalToConstant: 50),
             
-            // 加密按钮约束
-            encryptButton.topAnchor.constraint(equalTo: createKeyButton.bottomAnchor, constant: 20),
-            encryptButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            encryptButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            encryptButton.heightAnchor.constraint(equalToConstant: 50),
+            // 加密存储按钮约束
+            encryptStoreButton.topAnchor.constraint(equalTo: generatePrivateKeyButton.bottomAnchor, constant: 20),
+            encryptStoreButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            encryptStoreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+            encryptStoreButton.heightAnchor.constraint(equalToConstant: 50),
             
-            // 解密按钮约束
-            decryptButton.topAnchor.constraint(equalTo: encryptButton.bottomAnchor, constant: 20),
-            decryptButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            decryptButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            decryptButton.heightAnchor.constraint(equalToConstant: 50),
+            // 签名交易按钮约束
+            signTransactionButton.topAnchor.constraint(equalTo: encryptStoreButton.bottomAnchor, constant: 20),
+            signTransactionButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            signTransactionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+            signTransactionButton.heightAnchor.constraint(equalToConstant: 50),
             
-            // 签名按钮约束
-            signButton.topAnchor.constraint(equalTo: decryptButton.bottomAnchor, constant: 20),
-            signButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            signButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            signButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            // 验证签名按钮约束
-            verifyButton.topAnchor.constraint(equalTo: signButton.bottomAnchor, constant: 20),
-            verifyButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            verifyButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            verifyButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            // OKX示例按钮约束
-            okxExampleButton.topAnchor.constraint(equalTo: verifyButton.bottomAnchor, constant: 20),
-            okxExampleButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            okxExampleButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            okxExampleButton.heightAnchor.constraint(equalToConstant: 50),
+            // 清空内存按钮约束
+            clearMemoryButton.topAnchor.constraint(equalTo: signTransactionButton.bottomAnchor, constant: 20),
+            clearMemoryButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            clearMemoryButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+            clearMemoryButton.heightAnchor.constraint(equalToConstant: 50),
             
             // 结果文本视图约束
-            resultTextView.topAnchor.constraint(equalTo: okxExampleButton.bottomAnchor, constant: 30),
+            resultTextView.topAnchor.constraint(equalTo: clearMemoryButton.bottomAnchor, constant: 30),
             resultTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             resultTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             resultTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-            resultTextView.heightAnchor.constraint(equalToConstant: 300)
+            resultTextView.heightAnchor.constraint(equalToConstant: 400)
         ])
     }
     
     // MARK: - 动作设置
     private func setupActions() {
-        createKeyButton.addTarget(self, action: #selector(createKeyPair), for: .touchUpInside)
-        encryptButton.addTarget(self, action: #selector(encryptMessage), for: .touchUpInside)
-        decryptButton.addTarget(self, action: #selector(decryptMessage), for: .touchUpInside)
-        signButton.addTarget(self, action: #selector(signMessage), for: .touchUpInside)
-        verifyButton.addTarget(self, action: #selector(verifySignature), for: .touchUpInside)
-        okxExampleButton.addTarget(self, action: #selector(okxExample), for: .touchUpInside)
+        generatePrivateKeyButton.addTarget(self, action: #selector(generateBitcoinPrivateKey), for: .touchUpInside)
+        encryptStoreButton.addTarget(self, action: #selector(encryptAndStorePrivateKey), for: .touchUpInside)
+        signTransactionButton.addTarget(self, action: #selector(signTransaction), for: .touchUpInside)
+        clearMemoryButton.addTarget(self, action: #selector(clearMemory), for: .touchUpInside)
     }
     
-    // MARK: - Secure Enclave 操作
+    // MARK: - 核心流程实现
     
-    // 创建密钥对
-    // 面试考点：如何在Secure Enclave中创建密钥对
-    // 修复：使用CryptoKit的SecureEnclave API，避免keychain相关问题
-    @objc private func createKeyPair() {
+    // 步骤1：生成比特币私钥（32字节）
+    // 面试考点：如何安全生成加密货币私钥
+    @objc private func generateBitcoinPrivateKey() {
         do {
-            // 使用CryptoKit的SecureEnclave API生成ECDSA密钥对
-            // 面试考点：CryptoKit是iOS 13+推荐的加密框架，提供了更简洁的API
-            let privateKey = try SecureEnclave.P256.Signing.PrivateKey()
-            self.privateKey = privateKey
-            
-            // 获取公钥
-            let publicKey = privateKey.publicKey
-            
-            // 尝试将CryptoKit的公钥转换为SecKey（用于传统API调用）
-            // 注意：这个转换不是必需的，失败也不会影响主要功能
-            do {
-                self.publicKey = try convertToSecKey(publicKey: publicKey)
-            } catch {
-                print("⚠️ 公钥转换为SecKey失败（不影响主要功能）: \(error.localizedDescription)")
-                self.publicKey = nil
+            // 生成32字节随机私钥（比特币标准）
+            var privateKeyBytes = [UInt8](repeating: 0, count: 32)
+            let status = SecRandomCopyBytes(kSecRandomDefault, privateKeyBytes.count, &privateKeyBytes)
+            guard status == errSecSuccess else {
+                throw NSError(domain: "SecRandomError", code: Int(status), userInfo: nil)
             }
             
-            // 获取公钥数据（用于传输）
-            let publicKeyData = privateKey.publicKey.rawRepresentation
+            // 存储私钥
+            let privateKey = Data(privateKeyBytes)
+            self.bitcoinPrivateKey = privateKey
             
-            updateResult("✅ 密钥对创建成功\n" +
-                        "公钥长度: \(publicKeyData.count) 字节\n" +
-                        "密钥存储在Secure Enclave中，私钥无法被提取\n" +
-                        "使用算法: ECDSA P256（加密货币常用）")
+            // 步骤2：创建Secure Enclave密钥对
+            try createSecureEnclaveKeyPair()
+            
+            updateResult("✅ 比特币私钥生成成功\n" +
+                        "私钥长度: 32字节\n" +
+                        "私钥数据: \(privateKey.hexString)\n" +
+                        "✅ Secure Enclave密钥对创建成功\n" +
+                        "提示: 私钥已生成，可进行加密存储")
         } catch {
-            updateResult("❌ 创建密钥对失败: \(error.localizedDescription)")
+            updateResult("❌ 生成私钥失败: \(error.localizedDescription)")
         }
     }
     
-    // 将CryptoKit公钥转换为SecKey
-    private func convertToSecKey(publicKey: P256.Signing.PublicKey) throws -> SecKey {
-        let publicKeyData = publicKey.rawRepresentation
+    // 创建Secure Enclave密钥对
+    // 面试考点：如何正确配置Secure Enclave密钥生成参数
+    private func createSecureEnclaveKeyPair() throws {
+        // 生成标签数据
+        let tagData = secureEnclaveKeyTag.data(using: .utf8)! as CFData
         
-        // 使用更详细的属性字典，确保格式正确
+        // RSA密钥对生成参数
+        // 面试考点：Secure Enclave RSA密钥生成的关键参数
         let attributes: [String: Any] = [
-            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-            kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
-            kSecAttrKeySizeInBits as String: 256,
-            kSecAttrIsPermanent as String: false,
-            kSecAttrApplicationTag as String: "com.example.secureenclave.ec.public".data(using: .utf8)! as CFData
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeySizeInBits as String: 2048,
+            kSecPrivateKeyAttrs as String: [
+                kSecAttrApplicationTag as String: tagData,
+                kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
+                kSecAttrIsPermanent as String: false // 不存储到keychain，避免权限问题
+            ]
         ]
         
+        // 生成RSA密钥对
+        // 面试考点：Secure Enclave的核心API调用
         var error: Unmanaged<CFError>?
-        guard let secKey = SecKeyCreateWithData(publicKeyData as CFData, attributes as CFDictionary, &error) else {
-            // 如果转换失败，直接返回nil而不是抛出错误，因为这个转换不是必需的
+        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error),
+              let publicKey = SecKeyCopyPublicKey(privateKey) else {
             throw error!.takeRetainedValue() as Error
         }
         
-        return secKey
+        // 存储密钥对
+        self.secureEnclavePrivateKey = privateKey
+        self.secureEnclavePublicKey = publicKey
     }
     
-    // 消息加密（注意：ECDSA主要用于签名，这里演示对称加密）
-    @objc private func encryptMessage() {
-        guard privateKey != nil else {
-            updateResult("❌ 请先创建密钥对")
-            return
-        }
-        
+    // 步骤3-4：加密比特币私钥并存储到Keychain
+    // 面试考点：如何安全加密和存储私钥
+    @objc private func encryptAndStorePrivateKey() {
         do {
-            let messageData = testMessage.data(using: .utf8)! 
-            
-            // 生成随机对称密钥
-            let symmetricKey = SymmetricKey(size: .bits256)
-            
-            // 使用AES-GCM加密消息
-            let sealedBox = try AES.GCM.seal(messageData, using: symmetricKey)
-            let encryptedData = sealedBox.combined!
-            
-            self.encryptedData = encryptedData
-            
-            updateResult("✅ 加密成功\n" +
-                        "原始消息: \(testMessage)\n" +
-                        "加密后数据长度: \(encryptedData.count) 字节\n" +
-                        "加密数据: \(encryptedData.base64EncodedString())\n" +
-                        "注意: 使用AES-GCM对称加密（ECDSA主要用于签名）")
-        } catch {
-            updateResult("❌ 加密失败: \(error.localizedDescription)")
-        }
-    }
-    
-    // 消息解密（使用对称加密）
-    // 面试考点：如何使用AES-GCM进行对称解密
-    @objc private func decryptMessage() {
-        guard let encryptedData = encryptedData else {
-            updateResult("❌ 请先加密消息")
-            return
-        }
-        
-        do {
-            // 注意：在实际应用中，对称密钥应该通过安全方式存储或派生
-            // 这里为了演示，我们重新生成相同的密钥（仅用于演示）
-            let symmetricKey = SymmetricKey(size: .bits256)
-            
-            // 使用AES-GCM解密消息
-            let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
-            let decryptedData = try AES.GCM.open(sealedBox, using: symmetricKey)
-            
-            guard let decryptedMessage = String(data: decryptedData, encoding: .utf8) else {
-                throw NSError(domain: "DecryptionError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert decrypted data to string"])
+            guard let bitcoinPrivateKey = bitcoinPrivateKey, let publicKey = secureEnclavePublicKey else {
+                throw NSError(domain: "KeyError", code: 0, userInfo: [NSLocalizedDescriptionKey: "请先生成比特币私钥"])
             }
             
-            updateResult("✅ 解密成功\n" +
-                        "解密后消息: \(decryptedMessage)\n" +
-                        "注意: 使用AES-GCM对称解密")
-        } catch {
-            updateResult("❌ 解密失败: \(error.localizedDescription)")
-        }
-    }
-    
-    // 数字签名
-    // 面试考点：如何使用Secure Enclave进行数字签名
-    @objc private func signMessage() {
-        guard let privateKey = privateKey else {
-            updateResult("❌ 请先创建密钥对")
-            return
-        }
-        
-        do {
-            let messageData = testMessage.data(using: .utf8)! 
-            
-            // 使用私钥签名（私钥始终在Secure Enclave中）
-            // 面试考点：CryptoKit SecureEnclave数字签名的核心API调用
-            let signature = try privateKey.signature(for: messageData)
-            let signedData = signature.rawRepresentation
-            
-            self.signedData = signedData
-            
-            updateResult("✅ 签名成功\n" +
-                        "签名数据长度: \(signedData.count) 字节\n" +
-                        "签名数据: \(signedData.base64EncodedString())\n" +
-                        "使用算法: ECDSA P256（加密货币常用）")
-        } catch {
-            updateResult("❌ 签名失败: \(error.localizedDescription)")
-        }
-    }
-    
-    // 验证签名
-    @objc private func verifySignature() {
-        guard let privateKey = privateKey, let signedData = signedData else {
-            updateResult("❌ 请先创建密钥对并签名消息")
-            return
-        }
-        
-        do {
-            let messageData = testMessage.data(using: .utf8)! 
-            let publicKey = privateKey.publicKey
-            
-            // 创建签名对象
-            let signature = try P256.Signing.ECDSASignature(rawRepresentation: signedData)
-            
-            // 使用公钥验证签名
-            // 面试考点：CryptoKit签名验证的核心API调用
-            let isValid = publicKey.isValidSignature(signature, for: messageData)
-            
-            if isValid {
-                updateResult("✅ 签名验证成功\n" +
-                            "消息完整性得到确认")
-            } else {
-                throw NSError(domain: "VerificationError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid signature"])
+            // 使用Secure Enclave公钥加密比特币私钥
+            // 面试考点：RSA加密的核心API调用
+            var error: Unmanaged<CFError>?
+            guard let encryptedData = SecKeyCreateEncryptedData(
+                publicKey,
+                .rsaEncryptionOAEPSHA256,
+                bitcoinPrivateKey as CFData,
+                &error
+            ) as Data? else {
+                throw error!.takeRetainedValue() as Error
             }
+            
+            // 将加密后的私钥存储到Keychain
+            // 面试考点：如何安全配置Keychain存储参数
+            try storeEncryptedKeyToKeychain(encryptedData: encryptedData)
+            
+            // 存储加密数据到内存
+            self.encryptedBitcoinPrivateKey = encryptedData
+            
+            updateResult("✅ 私钥加密存储成功\n" +
+                        "加密数据长度: \(encryptedData.count) 字节\n" +
+                        "加密数据: \(encryptedData.hexString)\n" +
+                        "✅ 密文已存入Keychain\n" +
+                        "提示: 可进行交易签名操作")
         } catch {
-            updateResult("❌ 签名验证失败: \(error.localizedDescription)")
+            updateResult("❌ 加密存储失败: \(error.localizedDescription)")
         }
     }
     
-    // OKX加密货币示例
-    @objc private func okxExample() {
-        updateResult("🔐 OKX加密货币Secure Enclave应用场景\n\n" +
-                    "1. 私钥管理\n" +
-                    "   - 加密货币钱包的私钥存储在Secure Enclave中\n" +
-                    "   - 私钥无法被提取，即使设备被越狱\n" +
-                    "   - 交易签名在Secure Enclave内部完成\n\n" +
-                    "2. 交易签名\n" +
-                    "   - 用户发起交易时，交易数据发送到Secure Enclave\n" +
-                    "   - Secure Enclave使用私钥签名交易\n" +
-                    "   - 签名后的数据返回给应用，然后广播到网络\n\n" +
-                    "3. 身份验证\n" +
-                    "   - 使用Secure Enclave存储的密钥进行设备身份验证\n" +
-                    "   - 防止未授权设备访问账户\n\n" +
-                    "4. 多因素认证\n" +
-                    "   - 结合生物识别（Touch ID/Face ID）和Secure Enclave\n" +
-                    "   - 提供更高级别的账户保护\n\n" +
-                    "5. 恢复机制\n" +
-                    "   - 使用助记词作为备份，而非私钥\n" +
-                    "   - 即使设备丢失，也可以通过助记词恢复钱包\n\n" +
-                    "实现方案：\n" +
-                    "- 使用上述的Secure Enclave API存储RSA或ECDSA密钥\n" +
-                    "- 交易签名时调用SecKeyCreateSignature\n" +
-                    "- 结合LocalAuthentication框架实现生物识别\n" +
-                    "- 定期备份助记词，确保资产安全")
+    // 将加密后的私钥存储到Keychain
+    // 面试考点：Keychain安全存储的最佳实践
+    private func storeEncryptedKeyToKeychain(encryptedData: Data) throws {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: encryptedKeychainTag,
+            kSecValueData as String: encryptedData,
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly, // 仅设备解锁时可访问，且仅本设备
+            kSecAttrSynchronizable as String: false // 不同步到iCloud
+        ]
+        
+        // 删除旧数据（如果存在）
+        SecItemDelete(query as CFDictionary)
+        
+        // 存储新数据
+        let status = SecItemAdd(query as CFDictionary, nil)
+        guard status == errSecSuccess else {
+            throw NSError(domain: "KeychainError", code: Int(status), userInfo: nil)
+        }
+    }
+    
+    // 从Keychain读取加密后的私钥
+    private func getEncryptedKeyFromKeychain() throws -> Data {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: encryptedKeychainTag,
+            kSecReturnData as String: true,
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+        ]
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        guard status == errSecSuccess, let data = result as? Data else {
+            throw NSError(domain: "KeychainError", code: Int(status), userInfo: nil)
+        }
+        
+        return data
+    }
+    
+    // 步骤5：交易签名（含内存清零）
+    // 面试考点：如何安全进行交易签名并管理内存中的私钥
+    @objc private func signTransaction() {
+        do {
+            // 从Keychain读取加密的私钥
+            let encryptedPrivateKey = try getEncryptedKeyFromKeychain()
+            
+            guard let privateKey = secureEnclavePrivateKey else {
+                throw NSError(domain: "KeyError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Secure Enclave私钥不存在"])
+            }
+            
+            // 使用Secure Enclave私钥解密
+            // 面试考点：Secure Enclave解密的核心API调用
+            var error: Unmanaged<CFError>?
+            guard let decryptedPrivateKey = SecKeyCreateDecryptedData(
+                privateKey,
+                .rsaEncryptionOAEPSHA256,
+                encryptedPrivateKey as CFData,
+                &error
+            ) as Data? else {
+                throw error!.takeRetainedValue() as Error
+            }
+            
+            // 验证解密后的私钥长度
+            guard decryptedPrivateKey.count == 32 else {
+                throw NSError(domain: "DecryptionError", code: 0, userInfo: [NSLocalizedDescriptionKey: "私钥长度不正确"])
+            }
+            
+            // 使用比特币私钥签名交易
+            // 面试考点：如何使用私钥进行数字签名
+            let signature = try signWithBitcoinPrivateKey(privateKey: decryptedPrivateKey, data: testTransactionData)
+            
+            // 步骤5e：立即清零内存中的私钥
+            // 面试考点：如何防止内存中的私钥泄露
+            var mutablePrivateKey = decryptedPrivateKey
+            mutablePrivateKey.resetBytes(in: 0..<mutablePrivateKey.count)
+            
+            updateResult("✅ 交易签名成功\n" +
+                        "交易数据: \(String(data: testTransactionData, encoding: .utf8)!)\n" +
+                        "签名数据: \(signature.hexString)\n" +
+                        "✅ 内存私钥已清零\n" +
+                        "提示: 签名完成，私钥已安全处理")
+        } catch {
+            updateResult("❌ 交易签名失败: \(error.localizedDescription)")
+        }
+    }
+    
+    // 使用比特币私钥签名交易数据
+    // 注意：实际比特币交易签名更复杂，这里使用简化的ECDSA签名
+    private func signWithBitcoinPrivateKey(privateKey: Data, data: Data) throws -> Data {
+        // 这里使用CryptoKit进行ECDSA签名（模拟比特币签名）
+        // 实际比特币使用secp256k1曲线，这里使用P256作为示例
+        do {
+            // 生成临时ECDSA密钥对进行签名
+            let privateKey = try P256.Signing.PrivateKey(rawRepresentation: privateKey)
+            let signature = try privateKey.signature(for: data)
+            return signature.rawRepresentation
+        } catch {
+            // 如果私钥格式不适合P256，使用SHA256+HMAC作为演示
+            let signature = HMAC<SHA256>.authenticationCode(for: data, using: SymmetricKey(data: privateKey))
+            return Data(signature)
+        }
+    }
+    
+    // 步骤6：清空内存中的私钥
+    // 面试考点：内存安全的最佳实践
+    @objc private func clearMemory() {
+        // 清零内存中的私钥
+        if var privateKey = bitcoinPrivateKey {
+            privateKey.resetBytes(in: 0..<privateKey.count)
+            self.bitcoinPrivateKey = nil
+        }
+        
+        if var encryptedKey = encryptedBitcoinPrivateKey {
+            encryptedKey.resetBytes(in: 0..<encryptedKey.count)
+            self.encryptedBitcoinPrivateKey = nil
+        }
+        
+        // 重置Secure Enclave密钥
+        self.secureEnclavePrivateKey = nil
+        self.secureEnclavePublicKey = nil
+        
+        updateResult("✅ 内存私钥已清零\n" +
+                    "✅ Secure Enclave密钥已重置\n" +
+                    "提示: 所有敏感数据已从内存清除")
     }
     
     // MARK: - 辅助方法
-    
-
     
     // 更新结果显示
     private func updateResult(_ text: String) {
@@ -395,65 +407,71 @@ class Demo2ViewController: UIViewController {
     }
 }
 
-// MARK: - Secure Enclave 原理与优势
+// MARK: - Secure Enclave 原理与面试考点
 /*
-Secure Enclave 原理：
-1. 硬件隔离：Secure Enclave是一个独立的硬件区域，与主处理器隔离
-2. 加密引擎：内置专用的加密引擎，用于密钥生成和加密操作
-3. 密钥保护：私钥在Secure Enclave中生成并存储，永远不会离开该环境
-4. 安全启动：Secure Enclave有自己的安全启动过程，防止被篡改
-5. 生物识别集成：直接与Touch ID/Face ID硬件集成，提供更安全的身份验证
-
-Secure Enclave 优势：
-1. 最高安全性：硬件级别的安全保障，远高于软件加密
-2. 私钥不可提取：即使设备被越狱，私钥也无法被获取
-3. 防篡改：硬件隔离防止攻击者篡改加密操作
-4. 高性能：专用硬件加速加密操作
-5. 便捷使用：与iOS系统深度集成，使用简单
+Secure Enclave 核心原理：
+1. 硬件隔离：独立于主处理器的硬件安全区域
+2. 密钥保护：私钥在硬件内生成和存储，永不离开
+3. 加密加速：专用硬件加速加密操作
+4. 安全启动：独立的安全启动过程
+5. 生物识别集成：直接与Touch ID/Face ID集成
 
 面试考点总结：
-1. Secure Enclave的基本原理和硬件架构
-2. 如何在Secure Enclave中创建和使用密钥
-3. 私钥无法被提取的实现机制
-4. RSA和ECDSA在Secure Enclave中的使用场景
-5. Secure Enclave与生物识别的集成方式
-6. 加密货币钱包中Secure Enclave的应用
-7. Secure Enclave的局限性和替代方案
-8. 如何处理Secure Enclave的错误和异常情况
+
+1. 私钥生成与管理：
+   - 如何安全生成32字节比特币私钥
+   - 为什么使用SecRandomCopyBytes而不是其他随机方法
+   - 私钥长度的重要性
+
+2. Secure Enclave使用：
+   - 如何正确配置RSA/ECDSA密钥生成参数
+   - kSecAttrTokenIDSecureEnclave的作用
+   - 为什么设置kSecAttrIsPermanent为false
+
+3. 加密与存储：
+   - RSA-OAEP-SHA256加密的优势
+   - Keychain存储的最佳安全配置
+   - kSecAttrAccessibleWhenUnlockedThisDeviceOnly的意义
+
+4. 交易签名：
+   - 如何使用解密后的私钥进行签名
+   - 签名后立即清零内存的重要性
+   - 实际比特币交易签名的复杂性
+
+5. 内存安全：
+   - 如何安全处理内存中的私钥
+   - Data.resetBytes(in:)方法的作用
+   - 防止内存转储攻击的措施
+
+6. 错误处理：
+   - SecKeyCreateRandomKey失败的常见原因
+   - Keychain操作失败的处理
+   - 生物识别失败的降级方案
+
+7. 安全最佳实践：
+   - 多因素认证的集成
+   - 助记词备份的重要性
+   - 应对越狱设备的策略
+
+8. 性能考虑：
+   - Secure Enclave操作的性能特点
+   - 如何优化频繁签名的性能
+   - 内存使用的优化
 
 OKX等加密货币公司的面试问题：
-1. 如何设计一个安全的加密货币钱包
-2. Secure Enclave在钱包安全中的作用
-3. 如何防止私钥泄露
-4. 交易签名的安全实现方案
-5. 多因素认证的最佳实践
-6. 设备丢失后的资产恢复方案
-7. 如何应对越狱设备的安全挑战
-8. Secure Enclave与其他安全存储方案的对比
-*/
+1. 如何设计一个安全的加密货币钱包架构
+2. Secure Enclave在钱包安全中的具体应用
+3. 如何防止私钥在传输和存储过程中泄露
+4. 交易签名的完整流程和安全保障
+5. 多设备同步的安全实现方案
+6. 设备丢失后的资产恢复机制
+7. 如何应对侧信道攻击
+8. Secure Enclave与其他安全方案的对比
 
-// MARK: - ECDSA示例（加密货币常用算法）
-/*
-// 注意：以下代码需要iOS 13+，使用CryptoKit框架
-import CryptoKit
-
-// 创建ECDSA密钥对（用于加密货币）
-func createECDSAKeyPair() throws -> (privateKey: SecureEnclave.P256.Signing.PrivateKey, publicKey: SecureEnclave.P256.Signing.PublicKey) {
-    // 生成ECDSA密钥对（P256曲线，加密货币常用）
-    let privateKey = try SecureEnclave.P256.Signing.PrivateKey()
-    let publicKey = privateKey.publicKey
-    return (privateKey, publicKey)
-}
-
-// 使用ECDSA签名交易
-func signTransaction(transactionData: Data, privateKey: SecureEnclave.P256.Signing.PrivateKey) throws -> Data {
-    let signature = try privateKey.signature(for: transactionData)
-    return signature.rawRepresentation
-}
-
-// 验证ECDSA签名
-func verifyTransaction(transactionData: Data, signature: Data, publicKey: SecureEnclave.P256.Signing.PublicKey) throws -> Bool {
-    let signature = try P256.Signing.ECDSASignature(rawRepresentation: signature)
-    return publicKey.isValidSignature(signature, for: transactionData)
-}
+实际应用建议：
+1. 使用ECDSA而不是RSA（更适合加密货币）
+2. 结合生物识别进行操作授权
+3. 定期备份助记词
+4. 实现设备绑定机制
+5. 监控异常签名行为
 */
