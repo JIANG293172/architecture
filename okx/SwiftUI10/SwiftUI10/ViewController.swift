@@ -341,7 +341,8 @@ class Demo1ViewController: UIViewController {
             
             // 顶点坐标需要转换为Metal的标准化设备坐标 (-1 to 1)
             let normalizedX = (x / Float(metalView.frame.width)) * 2.0 - 1.0
-            let normalizedY = 1.0 - (y / Float(metalView.frame.height)) * 2.0
+            // 修复坐标系：Metal的y轴原点在左下角，而UIKit的y轴原点在左上角
+            let normalizedY = (y / Float(metalView.frame.height)) * 2.0 - 1.0
             
             vertices.append(Vertex(position: SIMD2<Float>(normalizedX, normalizedY), color: SIMD4<Float>(0.0, 0.5, 1.0, 1.0)))
             
@@ -379,9 +380,11 @@ class Demo1ViewController: UIViewController {
             
             // 柱状图的四个顶点
             let bottomLeftX = barX / Float(metalView.frame.width) * 2.0 - 1.0
-            let bottomLeftY = 1.0 - (20.0 / Float(metalView.frame.height)) * 2.0
+            // 修复坐标系：Metal的y轴原点在左下角，而UIKit的y轴原点在左上角
+            let bottomLeftY = (20.0 / Float(metalView.frame.height)) * 2.0 - 1.0
             let topRightX = (barX + barWidth) / Float(metalView.frame.width) * 2.0 - 1.0
-            let topRightY = 1.0 - ((20.0 + barHeight) / Float(metalView.frame.height)) * 2.0
+            // 修复坐标系：Metal的y轴原点在左下角，而UIKit的y轴原点在左上角
+            let topRightY = ((20.0 + barHeight) / Float(metalView.frame.height)) * 2.0 - 1.0
             
             // 底部左
             vertices.append(Vertex(position: SIMD2<Float>(bottomLeftX, bottomLeftY), color: SIMD4<Float>(0.0, 0.7, 0.0, 1.0)))
