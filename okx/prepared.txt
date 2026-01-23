@@ -1,0 +1,197 @@
+
+请一并提供该岗位的详情介绍
+
+OKX iOS 移动端软件工程师岗位详情
+OKX 是全球领先的加密资产交易所与 Web3 基础设施提供商，移动端产品服务千万级日活用户。本次 iOS 开发岗隶属其全球移动研发团队，聚焦加密交易、资产管理、OKX Wallet 等核心业务开发，要求适配全球用户需求，保障金融级应用的高性能与高安全性。
+1. 核心技术能力要求
+具备扎实的 iOS 原生开发经验，熟练掌握 Swift/Objective-C，深入理解 ARC、闭包循环引用、结构体 COW、POP 等 Swift 底层特性；精通 UIKit 底层原理，能基于 Core Graphics/Metal 实现高性能 UI 与复杂图表开发。
+2. 工程与并发能力要求
+拥有扎实的数据结构与算法基础，能应对高难度算法考核；熟练掌握 GCD、Swift 新并发模型，能处理 WebSocket 高并发行情流；运用 Combine/RxSwift 实现数据联动，遵循 TDD、CI/CD 等敏捷开发流程。
+3. 业务与协作能力要求
+了解区块链 / Web3 基础，熟悉私钥安全存储等钱包相关技术者优先；有大规模应用性能优化经验；具备良好的跨团队协作能力与英语沟通能力，适配全球跨时区协作。
+
+
+开场的自我介绍
+My name is Jiang Tao.I graduated from Hangzhou Dianzi University. I have a bachelor's degree.I have 8 years of experience in iOS development, I’m good at using Objective-C and Swift."I have strong experience in crash fixing and preventing memory leaks.I've worked on app size and performance optimization.I'm skilled in breaking down large projects into components and using the MVVM architecture.I have a deep understanding of multithreaded programming.I'm a great team player and very experienced with version control systems like Git.”
+
+一、My career started at Tonghuashun, where I worked on a stock trading app for millions of users. I was responsible for collecte crash reporting, user behavior analysis, and the trading module.
+二、Then, I moved to Quwei Tech, developing short video and in-app purchase features. I successfully reduced the app crash rate from 3% to under 0.5%.
+三、At Kugou Music, I worked on the friend recommendation system. I improved the loading speed of the friends page by 60% and received a top performance rating.
+四、My next role was at Dongchedi. I led the componentization of a key business module, splitting it into 8 independent parts. This allowed multiple teams to work independently. I also fixed some of the app's most complex crashes.
+五、I’m currently at Changan Auto, where I lead the development of the car control module. My work on micro-apps and a new homepage has reduced crashes to under 0.03%, improved loading speeds by 70%, and cut development costs by 60% through componentization. I've always received high performance ratings here.
+
+"With 8 years in the industry, I'm a proactive learner. I regularly study code on GitHub, solve problems on Stack Overflow, and have published over 20 technical articles.
+I write clean, high-quality code with a focus on performance and flexibility. I know how to build stable apps that handle errors gracefully.
+That's a little about me. Thank you for listening."
+
+
+宏观类话题
+
+我的优点
+My skills align with the OKX role in 5 key areas:
+
+1）Core Native Development
+Proficient in Swift/OC, solid grasp of iOS fundamentals, skilled in network programming and UI frameworks. Capable of owning core features for million-DAU apps, ensuring low latency and high stability in high-frequency trading scenarios.
+2）Architecture & Engineering
+Led componentization and MVVM transformation, built private component libraries, developed custom routers for cross-module communication. Fits million-DAU platform iterations, reduces coupling, boosts efficiency, and ensures financial-grade app reliability.
+3）Performance Optimization & UX
+Specializes in app performance tuning, improved homepage loading speed by 50% in a Changan Automobile project. Solves high-concurrency lag issues in OKX’s market data and asset inquiry, enhancing trading smoothness.
+4）Cross-platform & Business Expansion
+Familiar with WebView-native interaction, data security and encrypted transmission. Supports seamless DApp-native integration, meeting high security standards for crypto trading.
+5）Collaboration & Rapid Iteration
+Rich cross-team collaboration experience, familiar with agile development. Efficiently responds to global business needs, ensuring fast and stable launch of new features.
+
+你的缺点
+I have two key areas I’m focusing on to strengthen my skills: This is also my future study plan.
+
+1）lack of hands-on experience in crypto industry security
+But I’ve taken measure to study security  of leading crypto apps, analyze private key encryption workflows, and figure out how to balance security and performance using my past development experience.
+
+2）lack of hands-on experience in cross-platform development
+Recently, I’ve been learning Flutter systematically. I found its layout logic is similar to SwiftUI, and I’ve already practiced integrating Flutter modules via CocoaPods and building  communication with MethodChannel.
+
+
+为什么选择这家企业
+Dear interviewer, I apply for OKX’s iOS role because my technical experience and career plan highly align with OKX’s platform value. OKX’s unique strengths match my core needs in three key aspects:
+
+1. Platform & Technical Challenges
+As a blockchain/fintech leader, OKX has high-DAU products with complex scenarios (trading, wallet, asset management). It needs to solve on-chain/off-chain interaction, private key security and high-concurrency market push—matching my experience in high-DAU app optimization, componentization and architecture design. Other firms lack such comprehensive technical challenges.
+
+2. Industry Prospects & Value Recognition
+I believe blockchain reshapes financial trust, and OKX leads with stable trading systems and forward-looking Web3 layout. Its mobile team deeply participates in core businesses (transaction optimization, wallet security), unlike other firms where iOS is only a display window. I can grow with OKX’s industry-leading development.
+
+3. Team Collaboration & Growth
+OKX’s core value of "Get Things Done" fits my work style of cross-functional collaboration and rapid iteration. Its global team offers cutting-edge Web3 tech access and cross-cultural collaboration opportunities, avoiding technical solidification of other companies. It’s perfect for my long-term career growth.
+
+Closing
+OKX’s platform, industry prospects and team culture align with my strengths and goals. I’m eager to join, contribute my high-concurrency and security optimization experience to OKX’s iOS products, and grow with the team.
+
+职业规划
+Short-term Plans
+Learn blockchain & fintech deeply
+I’ll study crypto financial-grade security (e.g., private key encryption) and master industry business logic to match financial scenario needs.
+Link core tech with business
+With my iOS skills, I’ll polish high-concurrency/performance tech and integrate it with blockchain business, to be a tech-savvy and business-aware developer.
+
+Long-term Plans (Including AI Implementation Learning)
+Master Flutter cross-platform development
+I’ll build Flutter expertise and hands-on experience, master cross-platform module development, and enhance multi-platform business support capabilities.
+I’ll also learn AI implementation related knowledge and explore its application in blockchain/fintech iOS development.
+
+
+
+对于沟通能力
+
+
+团队合作能力
+
+
+处理复杂问题能力
+
+
+处理冲突的能力
+
+
+仔细梳理自己简历中的工作经历、亮点项目以及成就
+长安汽车：
+1)Core Achievements in changan auto
+一Vehicle Control SDK & componentization transformation
+1)3-Tier Component Architecture Design： Led the decomposition of monolithic vehicle control modules into a scalable 3-layer architecture:
+Foundation Layer: Core infrastructure (network, storage, base utilities)
+Common Business Layer: Shared capabilities (authentication, vehicle binding, user management)
+Business Layer: Dedicated vehicle control logic (lock/unlock, air conditioning, status monitoring)
+2)Runtime-Based Router Implementation：Designed a Runtime message forwarding-based Router
+Router stores component protocol definitions (implemented by other components)
+Dynamically creates protocol-conforming classes at runtime, invoking methods via protocol ID
+Enables full component decoupling through dynamic message forwarding
+3)Cross-App SDK Sharing：Built a reusable vehicle control SDK powering 5 Changan Apps
+Eliminated redundant code during cross-app migration
+Reduced version inconsistency risks and stability issues
+Cut cross-App feature delivery time by 30%
+
+ByteDance
+MVVM Architecture Upgrade
+Migrated from legacy MVC to MVVM for low coupling and long-term maintainability, cutting 3,000+ lines of redundant ViewController code and reducing state synchronization bugs.
+Core Layer Responsibilities
+1）View Layer: Focuses solely on UI rendering and user interaction (no business logic). Emits user events to ViewModel and receives state updates to refresh UI.
+2）ViewModel Layer: Acts as the bridge between View and Model—manages all business logic, unifies protocol handling, and controls data flow.
+3）Model Layer: Defines data models encapsulating dealer attributes and wraps async operations.
+
+
+酷狗音乐
+As a key iOS developer at Kugou Music (nearly 100M daily active users), I led the full reconstruction and optimization of the Friend Recommendation Page, delivering notable gains in code efficiency, performance and stability while supporting explosive business growth.
+Measurable Outcomes
+1）Code Efficiency: Cut 40% of redundant code in the recommendation module, improving maintainability and lowering iteration costs.
+Stability Under Scaling: Supported a 500% business volume surge with zero production incidents, verifying the architecture’s robustness.
+2）Load Speed Boost: Accelerated recommendation data loading by 60%, significantly enhancing user experience.
+Issue Reduction: Lowered module-related bug rates by 70%, reducing maintenance overhead and improving user satisfaction.
+3）Core Value Delivery: Faster feature iterations via simplified code structure; reduced page abandonment with optimized loading speed; stabilized large-scale business operations and cut user complaints by resolving stability issues.
+
+小影记
+As a key iOS developer at Xiaoyingji (a popular video editing app with millions of users), I led a comprehensive stability and memory optimization initiative, resolving critical technical bottlenecks to enhance user experience—aligned with interview-focused clarity and conciseness.
+Crash Optimization: Root-Cause Fixes
+Systematically eliminated four major crash categories with targeted technical solutions:
+1）Multi-thread Data Race: Implemented thread-safe mechanisms to resolve concurrent resource competition.
+2）Memory Leak-induced Crashes: Fixed leaks via code refactoring and lifecycle management optimization.
+3）Array Out-of-bounds Errors: Added strict bounds checking and safe index access logic.
+4）Unrecognized Selector Errors: Leveraged Objective-C runtime message forwarding—intercepted forwardingTargetForSelector and dynamically added empty implementations for missing methods, eliminating unrecognized message crashes.
+
+Memory Optimization: Reduced Footprint & Peak Usage
+Executed a three-pronged strategy tailored for video editing’s high-memory demands:
+1）Peak Memory Reduction: Wrapped memory-intensive batch processing tasks with @autoreleasepool to force  timely temporary object release.
+2）Timely Resource Deallocation: Implemented strict lifecycle management to immediately free unused media assets and cached data.
+3）Memory Leak Elimination: Used Instruments Leaks Tool to locate and fix hidden leaks.
+
+
+同花顺
+As a key iOS developer at Tonghuashun—China’s top stock trading platform (14M+ DAU, 90% securities firm integration)—I specialized in enterprise-grade stability systems and financial data visualization, focusing on crash resilience and real-time performance. My deep expertise in iOS crash capture principles from this role directly enabled effective crash analysis work at Dongchedi later.
+Enterprise-Grade Crash Capture & Analysis System
+Designed and built a full-stack crash monitoring system tailored for financial scenarios (downtime risks user investment losses), with in-depth implementation of core principles:
+Core Capabilities
+1）Dual-Level Crash Collection: Captured object-level uncaught exceptions (null pointers, logic errors) via Objective-C exception handlers; monitored system-level low-end crashes (SIGSEGV/SIGABRT/SIGBUS) via signal handlers, covering kernel-level failures.
+2）Precise Symbolication Workflow: Collected critical debugging data (ASLR offsets, app base launch offsets, raw crash addresses); calculated actual code locations using Actual Address = Crash Address - ASLR Offset - Base Address; mapped to function names/line numbers via DSYM files for actionable root-cause analysis.
+3）Contextual & Compliant Data Collection: Gathered non-sensitive user context (app version, device model, trading page) to accelerate debugging, fully complying with financial privacy regulations.
+4）Smart Upload Strategy: Passive background sync on app restart (30s network polling for resilience); user-friendly prompts for non-critical errors, boosting log upload rate by 25%.
+
+
+描述一件最成功/印象最深刻/最有成就感的事情
+The most challenging problem was resolving months-long intractable online crashes in the Dongchedi dealer system. These crashes failed symbolization via standard tools (Xcode Organizer, Crashlytics), with logs only showing hexadecimal addresses instead of function names. Some crashes occurred exclusively on specific device-OS combinations and were unreproducible in test environments, affecting tens of thousands of daily users given Dongchedi’s scale.
+
+To resolve this, I developed a proprietary manual symbolization workflow based on iOS low-level principles (ASLR, Mach-O structure, dSYM debug info), which later became the team’s standard practice:
+1）Extract Crash Context: Collected core data (crash address, affected modules’ runtime base addresses) from monitoring platform crash reports—base addresses are auto-recorded in the "Binary Images" section.
+2）Calculate Symbol Offset: Reversed ASLR with module-specific formulas: main app offset = crash address - main app runtime base address; framework offset = crash address - framework runtime base address, ensuring accurate binary mapping.
+3）Precise Symbol Matching: Used version-matched dSYM files and symbolication tools to parse Symbol Table/DWARF info, translating offsets into exact function names and code lines—resolving standard tools’ failures.
+4）Reproduce & Fix Root Causes: Leveraged ByteDance’s device farm to replicate target hardware-OS environments, injected context-inferred test data (e.g., abnormal business records) to trigger crashes. Fixed root causes (null pointers, invalid data handling) via targeted null checks and data validation.
+
+Outcomes: Cut dealer system crash rate by 20%, reduced critical crash resolution time by 60%, documented the method in a Manual Crash Localization Guide and trained 15 team members. This work demonstrated my ability to apply low-level fundamentals to solve large-scale edge-case issues without relying on standard tools.
+
+
+
+描述一件最困难/最有挑战性的事情是如何解决的
+
+
+
+根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
+
+
+
+专业相关问题的简单讨论
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
