@@ -26,7 +26,7 @@ import Combine
 // MARK: - 登录视图控制器
 class Demo5ViewController: UIViewController {
     
-    private var hostingController: UIHostingController<LoginView>?
+    internal var hostingController: UIHostingController<LoginView>?
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = LoginViewModel()
     
@@ -85,13 +85,13 @@ class Demo5ViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    private func showLoginSuccess() {
+    internal func showLoginSuccess() {
         let alert = UIAlertController(title: "登录成功", message: "欢迎回来！", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "确定", style: .default))
         present(alert, animated: true)
     }
     
-    private func showError(_ message: String) {
+    internal func showError(_ message: String) {
         let alert = UIAlertController(title: "登录失败", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "确定", style: .default))
         present(alert, animated: true)

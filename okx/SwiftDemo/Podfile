@@ -19,4 +19,18 @@ target 'SwiftDemo' do
   pod 'RxDataSources', '~> 5.0' # 列表数据源
   pod 'RxAlamofire', '~> 6.1'   # 网络请求
 
+  # 为测试目标添加依赖
+  target 'SwiftDemoTests' do
+    inherit! :search_paths
+    # 测试目标继承主目标的依赖
+    pod 'PromiseKit'
+    pod 'Alamofire'
+    pod 'SnapKit'
+    pod 'RxSwift', '~> 6.5'       # 核心库
+    pod 'RxCocoa', '~> 6.5'       # UI 扩展
+    pod 'RxRelay', '~> 6.5'       # Relay 类型
+    pod 'RxDataSources', '~> 5.0' # 列表数据源
+    pod 'RxAlamofire', '~> 6.1'   # 网络请求
+  end
+
 end
