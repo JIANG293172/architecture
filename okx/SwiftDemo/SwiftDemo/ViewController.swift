@@ -10,7 +10,7 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let tableView = UITableView()
-    private let demoList = ["Metal", "SecureEnclave", "GCD", "续传", "combine", "test"]
+    private let demoList = ["Metal", "SecureEnclave", "GCD", "续传", "combine", "RXSwift"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
