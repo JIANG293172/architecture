@@ -81,19 +81,23 @@ I’ll also learn AI implementation related knowledge and explore its applicatio
 
 
 对于沟通能力
-
+Communication skills: Focus on "precise delivery + closed-loop confirmation." Use role-specific simple language to align needs with product, UI, backend teams. Follow up with written summaries after meetings to avoid misunderstandings and rework.
 
 团队合作能力
-
+Teamwork: Key is "mutual support + shared goals." Clarify responsibilities, leverage strengths, proactively help colleagues in need, and share experience/tools to achieve team targets together.
 
 处理复杂问题能力
-
+Complex problem-solving: Core is "structured breakdown + targeted solutions." Split complex issues into small manageable parts, research solutions, optimize details, and verify repeatedly to break through bottlenecks.
 
 处理冲突的能力
+Conflict resolution: Focus on "empathy + win-win balance." Face conflicts directly, analyze needs objectively with data/facts, and propose compromise plans that protect core goals while addressing all parties' concerns.
 
 
 仔细梳理自己简历中的工作经历、亮点项目以及成就
 长安汽车：
+Core Achievements in changan auto
+As the iOS technical leader for Changan Automobile’s intelligent connected car ecosystem,
+I spearheaded critical transformations across  componentization.
 1)Core Achievements in changan auto
 一Vehicle Control SDK & componentization transformation
 1)3-Tier Component Architecture Design： Led the decomposition of monolithic vehicle control modules into a scalable 3-layer architecture:
@@ -107,7 +111,7 @@ Enables full component decoupling through dynamic message forwarding
 3)Cross-App SDK Sharing：Built a reusable vehicle control SDK powering 5 Changan Apps
 Eliminated redundant code during cross-app migration
 Reduced version inconsistency risks and stability issues
-Cut cross-App feature delivery time by 30%
+Cut cross-App feature delivery time by 30%.
 
 ByteDance
 MVVM Architecture Upgrade
@@ -155,6 +159,20 @@ Core Capabilities
 
 
 描述一件最成功/印象最深刻/最有成就感的事情
+My Most Rewarding Achievement: Building Changan Auto’s iOS Componentization Ecosystem from Scratch
+As the core iOS technical lead at Changan Automobile, my most impactful achievement is spearheading the end-to-end componentization transformation of the iOS engineering system from 2019 to present—a ground-up initiative that addressed critical pain points and delivered substantial long-term value.
+The project began with a pressing challenge: Changan’s legacy iOS codebase was a monolithic structure, making it cumbersome to support the company’s expanding matrix of intelligent connected car apps. Cross-app feature reuse required massive redundant development, leading to 40% of engineering effort wasted on duplicate work, frequent version inconsistencies, and prolonged delivery cycles. Worse, the tightly coupled architecture made it nearly impossible to scale teams or onboard new developers efficiently.
+To tackle this, I led the design and implementation of a scalable 3-tier component architecture:
+Foundation Layer: Unified core infrastructure (network, storage, base utilities) to eliminate low-level duplication;
+Common Business Layer: Centralized shared capabilities (authentication, vehicle binding, user management) for cross-app reuse;
+Business Layer: Decoupled dedicated modules (vehicle control, status monitoring, remote operations) for independent iteration.
+A key technical breakthrough was the runtime-based Router I designed: by storing component protocol definitions and dynamically creating conforming classes at runtime, we achieved full decoupling—components communicate via protocol IDs without direct dependencies, solving the long-standing issue of tight coupling in monolithic apps.
+The outcome was transformative: we built a reusable vehicle control SDK that now powers 5 Changan Apps, cutting cross-app feature delivery time by 30% and slashing redundant code by over 60%. This not only saved hundreds of engineering hours annually but also laid the foundation for Changan’s matrixed app development strategy, enabling seamless scaling across new products. Additionally, I developed a comprehensive training program to upskill 20+ team members on componentization best practices, fostering a more efficient, collaborative engineering culture.
+To this day, this componentization ecosystem remains the backbone of Changan’s iOS development, driving consistent stability, accelerating innovation, and delivering enduring business value—making it the most fulfilling and impactful work of my career.
+
+
+
+描述一件最困难/最有挑战性的事情是如何解决的
 The most challenging problem was resolving months-long intractable online crashes in the Dongchedi dealer system. These crashes failed symbolization via standard tools (Xcode Organizer, Crashlytics), with logs only showing hexadecimal addresses instead of function names. Some crashes occurred exclusively on specific device-OS combinations and were unreproducible in test environments, affecting tens of thousands of daily users given Dongchedi’s scale.
 
 To resolve this, I developed a proprietary manual symbolization workflow based on iOS low-level principles (ASLR, Mach-O structure, dSYM debug info), which later became the team’s standard practice:
@@ -166,32 +184,61 @@ To resolve this, I developed a proprietary manual symbolization workflow based o
 Outcomes: Cut dealer system crash rate by 20%, reduced critical crash resolution time by 60%, documented the method in a Manual Crash Localization Guide and trained 15 team members. This work demonstrated my ability to apply low-level fundamentals to solve large-scale edge-case issues without relying on standard tools.
 
 
-
-描述一件最困难/最有挑战性的事情是如何解决的
-
-
-
 根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
-
+如何安全的保存用户的私钥
+To securely store users' private keys on iOS, we use Secure Enclave—a separate, tamper-proof hardware component in Apple’s chips (A-series/M-series).
+Its core principle: Private keys never leave the Secure Enclave in plaintext. All encryption/signing happens directly in this isolated hardware, so keys aren’t exposed to the app’s memory or iOS system—even if the device is jailbroken.
+Basic workflow:
+Generate a key pair in Secure Enclave (private key stays here);
+Use the public key to encrypt the user’s private key, store encrypted data in Keychain;
+When needed, decrypt and use the private key inside Secure Enclave, then clear it from memory.
+Adding FaceID/TouchID for verification makes it even safer.
 
 
 专业相关问题的简单讨论
+What is the composition of the object structure in OC?
+It is composed of an isa pointer and property pointers. The isa pointer consists of many properties, such as has_assoc, weak_referenced, extra_rc, and has_sidetable_rc. Although the isa pointer contains a wealth of information, it only occupies 8 bytes, which improves the efficiency of OC.
 
 
+MQTT Connection Establishment Process Steps
+I. TCP Handshake Phase
+Purpose: This step is to establish a reliable byte stream transmission channel.
+Process
+Client: Send SYN to request a connection establishment.
+Server: Allocate resources and send SYN and ACK for confirmation.
+Client: Send ACK after confirmation.
+Packet Capture and TroubleshootingWe can use Wireshark to view TCP handshake packets.
+II. TLS Handshake Phase
+Purpose: Establish an encrypted channel and authenticate the server's identity.
+ProcessTLS 1.2Client: Client HelloServer: Server Hello (selected encryption algorithm), Certificate (certificate chain), Server Key ExchangeClient: Client Key Exchange, [Certificate Verify (for mutual authentication)], ChangeCipherSpec, FinishedServer: ChangeCipherSpec, Finished
+TLS 1.3Client: Client Hello (carrying TLS 1.3 version, cipher suites, SNI, ECDHE ephemeral public key, client_certificate_type extension)Server: Server Hello (selected encryption algorithm), Certificate (server certificate chain), Certificate Request (requesting client certificate), Finished (implicitly including ChangeCipherSpec)
+Troubleshooting MethodsDebugging devices: Obtain TLS logs via the system Console.app.Online users: Set the parameter CFNETWORK_DIAGNOSTICS in info.plist, then obtain logs locally.
+III. MQTT Handshake
+Purpose: Establish an MQTT session.
+ProcessClient: CONNECT (with parameters such as ClientID, Keep-Alive)Server: CONNACK (Reason Code 0x00=Success, Session Present)
 
 
+What situations can cause a deadlock?
+The main reason is two tasks waiting for each other! For example, when we create a task on a synchronous queue while the queue is executing another task, a deadlock will occur.
+This is the most common scenario we encounter. We should always ask ourselves: is the task we are creating waiting for another task? This mostly happens in a synchronous queue!
 
 
+Why does Swift design Copy on Write?
+Swift uses value type syntax to use arrays, but saves the data on the heap. It automatically manages the copying of arrays.
 
+Copy on Write is an optimization technique for arrays.All the properties share the same data while the arrays have no changes.Only when the data is changed and the array has a reference count greater than one, it will copy the data to a new pointer.The optimized array has some features:
 
+1._buffer: points to the address of the data on the heap.
+2.refcount: reference count
+3.isUnique
+4.Elements: the address of the elements on the heap.
+5.Count: the number of elements.
 
+Flutter has the same declarative UI syntax as SwiftUI: both describe what the UI looks like. 
+Flutter uses `setState` to notify of changes, while SwiftUI uses `@State`/`@Binding` to observe changes; 
+finally, Flutter calls the `build` function to refresh the UI, and SwiftUI calls the `body` property to refresh the UI. 
 
-
-
-
-
-
-
-
-
+What is Metal? How is it different from OpenGL ES on iOS?
+Metal is Apple’s high performance graphics engine which uses the GPU directly. Metal uses MTLDevice to get a GPU reference, and renders on MTKView. We use asynchronous threads to process the data, and use MTLBuffer to send drawing data from the CPU to the GPU. This makes the UI interaction fluent.
+ Compared to OpenGL ES: Metal is more efficient (closer to GPU), runs faster on Apple devices, and is better optimized for their chips. OpenGL ES is cross-platform but less tailored to Apple’s hardware, so it’s slower in comparison.
 
