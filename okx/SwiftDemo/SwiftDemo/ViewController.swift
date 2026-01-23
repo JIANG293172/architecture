@@ -10,7 +10,7 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let tableView = UITableView()
-    private let demoList = ["Demo 1: 基础UI展示", "Demo 2: 动画效果", "Demo 3: 网络请求示例", "Demo 4: 数据存储示例"]
+    private let demoList = ["Metal", "SecureEnclave", "GCD", "续传", "combine"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +51,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
+    
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -64,8 +68,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             targetVC = Demo2ViewController()
         case 2:
             targetVC = Demo3ViewController()
-//        case 3:
-//            targetVC = Demo4ViewController()
+        case 3:
+            targetVC = Demo4ViewController()
+        case 4:
+            targetVC = Demo5ViewController()
         default:
             return
         }
