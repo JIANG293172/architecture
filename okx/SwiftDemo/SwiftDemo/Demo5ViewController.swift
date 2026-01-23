@@ -9,6 +9,20 @@ import UIKit
 import SwiftUI
 import Combine
 
+
+//一、先明确：属性包装器 / 协议的「归属」（SwiftUI vs Combine）
+//关键字 / 协议    归属框架    核心作用    能否脱离对方使用？
+//@State    SwiftUI 专属    视图内部私有状态，驱动 UI 刷新    ✅ 完全独立
+//@Binding    SwiftUI 专属    父子视图双向绑定外部状态    ✅ 完全独立
+//@StateObject    SwiftUI 专属    视图持有 ObservableObject 对象（所有权）    ❌ 依赖 Combine 的 ObservableObject
+//@ObservedObject    SwiftUI 专属    监听外部传入的 ObservableObject    ❌ 依赖 Combine 的 ObservableObject
+//ObservableObject    Combine 协议    标记类为「可观察对象」，关联 @Published    ❌ SwiftUI 中用它做跨视图数据共享，Combine 可单独用
+
+//@EnvironmentObject    SwiftUI 专属    全局监听环境中的 ObservableObject    ❌ 依赖 Combine 的 ObservableObject
+//@AppStorage    SwiftUI 专属    监听 UserDefaults 持久化数据    ✅ 完全独立
+//@Environment    SwiftUI 专属    读取 / 监听全局环境值（如主题、尺寸）    ✅ 完全独立
+//@Published    Combine 核心    修饰类属性，生成发布者触发事件    ❌ SwiftUI 中用它驱动 UI，Combine 可单独用
+
 // MARK: - 登录视图控制器
 class Demo5ViewController: UIViewController {
     
@@ -253,6 +267,17 @@ class LoginViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let loginService = LoginService()
     
+    // MARK: - PassthroughSubject 示例
+    private let loginFlowSubject = PassthroughSubject<LoginFlowEvent, Never>()
+    
+    // 登录流程事件枚举
+    enum LoginFlowEvent {
+        case loginStarted
+        case loginSucceeded
+        case loginFailed(error: String)
+        case loginCompleted
+    }
+    
     init() {
         setupValidations()
     }
@@ -399,5 +424,116 @@ extension Publisher {
                 }
             }
             .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - PassthroughSubject 示例
+class AuthenticationManager {
+    // 创建一个 PassthroughSubject，用于发送认证状态变更事件
+    // 泛型参数：Output 类型为 AuthStatus，Failure 类型为 Never（不会发送错误）
+    let authStatusSubject = PassthroughSubject<AuthStatus, Never>()
+    
+    // 认证状态枚举
+    enum AuthStatus {
+        case unauthenticated
+        case authenticating
+        case authenticated(userID: String)
+        case authenticationFailed(error: String)
+    }
+    
+    // 模拟登录过程
+    func login(username: String, password: String) {
+        // 发送认证中状态
+        authStatusSubject.send(.authenticating)
+        
+        // 模拟网络延迟
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.5) {
+            if username == "admin" && password == "123456" {
+                // 登录成功，发送认证成功状态
+                self.authStatusSubject.send(.authenticated(userID: "user_123"))
+                // 完成发送
+                self.authStatusSubject.send(completion: .finished)
+            } else {
+                // 登录失败，发送认证失败状态
+                self.authStatusSubject.send(.authenticationFailed(error: "用户名或密码错误"))
+                // 完成发送
+                self.authStatusSubject.send(completion: .finished)
+            }
+        }
+    }
+    
+    // 模拟登出过程
+    func logout() {
+        // 发送未认证状态
+        authStatusSubject.send(.unauthenticated)
+        // 完成发送
+        authStatusSubject.send(completion: .finished)
+    }
+}
+
+// MARK: - 在 LoginViewModel 中添加 PassthroughSubject 示例
+extension LoginViewModel {
+    // 发送登录流程事件的方法
+    private func sendLoginFlowEvent(_ event: LoginFlowEvent) {
+        loginFlowSubject.send(event)
+    }
+    
+    // 初始化登录流程事件监听
+    private func setupLoginFlowMonitoring() {
+        // 监听登录流程事件
+        loginFlowSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .loginStarted:
+                    print("登录流程开始")
+                case .loginSucceeded:
+                    print("登录流程成功")
+                case .loginFailed(let error):
+                    print("登录流程失败: \(error)")
+                case .loginCompleted:
+                    print("登录流程完成")
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    // 重写初始化方法，添加登录流程监控
+    convenience init(withFlowMonitoring: Bool) {
+        self.init()
+        if withFlowMonitoring {
+            setupLoginFlowMonitoring()
+        }
+    }
+    
+    // 重写登录方法，添加流程事件发送
+    func loginWithFlowMonitoring() {
+        sendLoginFlowEvent(.loginStarted)
+        isLoading = true
+        errorMessage = ""
+        
+        // 使用登录服务进行登录
+        loginService.login(username: username, password: password)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: {[weak self] completion in
+                self?.isLoading = false
+                
+                // 处理错误
+                if case .failure(let error) = completion {
+                    self?.errorMessage = error.localizedDescription
+                    self?.sendLoginFlowEvent(.loginFailed(error: error.localizedDescription))
+                    self?.sendLoginFlowEvent(.loginCompleted)
+                }
+            }, receiveValue: {[weak self] success in
+                if success {
+                    self?.isLoggedIn = true
+                    self?.sendLoginFlowEvent(.loginSucceeded)
+                } else {
+                    self?.errorMessage = "用户名或密码错误"
+                    self?.sendLoginFlowEvent(.loginFailed(error: "用户名或密码错误"))
+                }
+                self?.sendLoginFlowEvent(.loginCompleted)
+            })
+            .store(in: &cancellables)
     }
 }

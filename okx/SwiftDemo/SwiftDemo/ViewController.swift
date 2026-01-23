@@ -10,7 +10,7 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let tableView = UITableView()
-    private let demoList = ["Metal", "SecureEnclave", "GCD", "续传", "combine"]
+    private let demoList = ["Metal", "SecureEnclave", "GCD", "续传", "combine", "test"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,6 +72,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             targetVC = Demo4ViewController()
         case 4:
             targetVC = Demo5ViewController()
+        case 5:
+            targetVC = Demo6ViewController()
         default:
             return
         }
