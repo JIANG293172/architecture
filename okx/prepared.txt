@@ -57,14 +57,11 @@ I'm familiar with data security and encrypted transmission, and meet high securi
 5）Collaboration 
 I have rich cross-team collaboration experience and I’m familiar with agile development. I also have experience working with cross-regional and multilingual teams.
 
+
 你的缺点
-I have two key areas I’m focusing on to strengthen my skills: This is also my future study plan.
-
-1）lack of hands-on experience in crypto industry security
-But I’ve taken measure to study security  of leading crypto apps, analyze private key encryption workflows, and figure out how to balance security and performance using my past development experience.
-
-2）lack of hands-on experience in cross-platform development
-Recently, I’ve been learning Flutter systematically. I found its layout logic is similar to SwiftUI, and I’ve already practiced integrating Flutter modules via CocoaPods and building  communication with MethodChannel.
+I’m focusing on two key areas to improve my skills, and this is also my future study plan.
+1)I lack hands-on experience in crypto industry security. So I’ve taken measures to study the security of top crypto apps, analyze private key encryption workflows, and figure out how to balance security properly.
+2)I lack hands-on experience in cross-platform development. Recently I’ve been learning Flutter in a systematic way. Its layout logic is similar to SwiftUI, and I’ve practiced integrating Flutter modules with CocoaPods, and building communication through MethodChannel.
 
 
 为什么选择这家企业
