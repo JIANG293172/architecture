@@ -84,18 +84,17 @@ I’ll learn Flutter well and gain hands-on experience, master cross-platform mo
 I’ll also learn how to set up AI agents and apply AI to client-side development, integrating it into daily work processes.
 
 
-对于沟通能力
-Communication skills: Focus on "precise delivery + closed-loop confirmation." Use role-specific simple language to align needs with product, UI, backend teams. Follow up with written summaries after meetings to avoid misunderstandings and rework.
+Communication skills
+I focus on clear communication and follow-up confirmation. I talk with product, UI and backend teams in simple language to align on needs, and write a summary after meetings to avoid misunderstandings and extra work.
 
-团队合作能力
-Teamwork: Key is "mutual support + shared goals." Clarify responsibilities, leverage strengths, proactively help colleagues in need, and share experience/tools to achieve team targets together.
+Teamwork
+The key is helping each other and working toward the same goals. I make clear everyone’s duties, use our strengths, help colleagues actively, and share experience and tools to hit team goals together.
 
-处理复杂问题能力
-Complex problem-solving: Core is "structured breakdown + targeted solutions." Split complex issues into small manageable parts, research solutions, optimize details, and verify repeatedly to break through bottlenecks.
+Complex problem-solving
+The core is breaking down problems step by step and solving them with specific methods. I split hard problems into small, easy-to-handle parts, find solutions, polish details, and check many times to get past difficulties.
 
-处理冲突的能力
-Conflict resolution: Focus on "empathy + win-win balance." Face conflicts directly, analyze needs objectively with data/facts, and propose compromise plans that protect core goals while addressing all parties' concerns.
-
+Conflict resolution
+I focus on understanding others and finding a win-win way. I face conflicts directly, analyze everyone’s needs fairly with data and facts, and suggest compromise plans that keep core goals and meet others’ needs.
 
 仔细梳理自己简历中的工作经历、亮点项目以及成就
 一.Core Achievements at Changan Auto
