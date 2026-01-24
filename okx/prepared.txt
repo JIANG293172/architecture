@@ -46,17 +46,16 @@ I reduced the app size from 800MB to 400MB(MegaBytes) and lowered the crash rate
 
 我的优点
 My skills align with the OKX role in 5 key areas:
-
-1）Core Native Development
-Proficient in Swift/OC, solid grasp of iOS fundamentals, skilled in network programming and UI frameworks. Capable of owning core features for million-DAU apps, ensuring low latency and high stability in high-frequency trading scenarios.
-2）Architecture & Engineering
-Led componentization and MVVM transformation, built private component libraries, developed custom routers for cross-module communication. Fits million-DAU platform iterations, reduces coupling, boosts efficiency, and ensures financial-grade app reliability.
-3）Performance Optimization & UX
-Specializes in app performance tuning, improved homepage loading speed by 50% in a Changan Automobile project. Solves high-concurrency lag issues in OKX’s market data and asset inquiry, enhancing trading smoothness.
-4）Cross-platform & Business Expansion
-Familiar with WebView-native interaction, data security and encrypted transmission. Supports seamless DApp-native integration, meeting high security standards for crypto trading.
-5）Collaboration & Rapid Iteration
-Rich cross-team collaboration experience, familiar with agile development. Efficiently responds to global business needs, ensuring fast and stable launch of new features.
+1）for Core Native Development
+I'm proficient in Swift and Objective-C, and have a good grasp of basic iOS knowledge. I also have experience in app internationalization.
+2）for Architecture
+I led componentization and MVVM transformation, built private component libraries, and developed custom routers for cross-module communication. It fits million-DAU platform updates, reduces coupling and improves development efficiency.
+3）Performance Optimization
+At Changan Auto, I improved the homepage loading speed by 50% and reduced the app size by 50%.
+4）secure
+I'm familiar with data security and encrypted transmission, and meet high security standards for crypto trading.
+5）Collaboration 
+I have rich cross-team collaboration experience and I’m familiar with agile development. I also have experience working with cross-regional and multilingual teams.
 
 你的缺点
 I have two key areas I’m focusing on to strengthen my skills: This is also my future study plan.
@@ -134,9 +133,9 @@ I led the full reconstruction and optimization of the Friend Recommendation Page
 
 四.Core Achievements at XiaoYing
 At XiaoYing, as a key iOS developer, I led the crash and memory optimization work. 
-1.First, for the multi-thread data race issue on the picture page, I implemented thread-safe mechanisms to fix concurrent resource contention. 
-2.for Unrecognized Selector Errors, I used Objective-C runtime message forwarding—intercepting forwardingTargetForSelector: and adding empty implementations for missing methods to eliminate such crashes. 
-3.I resolved memory leaks by refactoring code and optimizing lifecycle management, which fixed crashes caused by memory leaks.
+1)First, for the multi-thread data race issue on the picture page, I implemented thread-safe mechanisms to fix concurrent resource contention. 
+2)for Unrecognized Selector Errors, I used Objective-C runtime message forwarding—intercepting forwardingTargetForSelector: and adding empty implementations for missing methods to eliminate such crashes. 
+3)I resolved memory leaks by refactoring code and optimizing lifecycle management, which fixed crashes caused by memory leaks.
 
 五.Core Achievements at tonghuashun
 I built a full-stack crash monitoring system tailored for financial scenarios.
@@ -228,4 +227,3 @@ finally, Flutter calls the `build` function to refresh the UI, and SwiftUI calls
 What is Metal? How is it different from OpenGL ES on iOS?
 Metal is Apple’s high performance graphics engine which uses the GPU directly. Metal uses MTLDevice to get a GPU reference, and renders on MTKView. We use asynchronous threads to process the data, and use MTLBuffer to send drawing data from the CPU to the GPU. This makes the UI interaction fluent.
  Compared to OpenGL ES: Metal is more efficient (closer to GPU), runs faster on Apple devices, and is better optimized for their chips. OpenGL ES is cross-platform but less tailored to Apple’s hardware, so it’s slower in comparison.
-
