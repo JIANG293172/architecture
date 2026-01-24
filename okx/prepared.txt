@@ -170,11 +170,11 @@ Adding FaceID/TouchID for verification makes it even safer.
 
 
 专业相关问题的简单讨论
-What is the composition of the object structure in OC?
+一.What is the composition of the object structure in OC?
 It is composed of an isa pointer and property pointers. The isa pointer consists of many properties, such as has_assoc, weak_referenced, extra_rc, and has_sidetable_rc. Although the isa pointer contains a wealth of information, it only occupies 8 bytes, which improves the efficiency of OC.
 
 
-MQTT Connection Establishment Process Steps
+二.MQTT Connection Establishment Process Steps
 I. TCP Handshake Phase
 Purpose: This step is to establish a reliable byte stream transmission channel.
 Process
@@ -192,12 +192,12 @@ Purpose: Establish an MQTT session.
 ProcessClient: CONNECT (with parameters such as ClientID, Keep-Alive)Server: CONNACK (Reason Code 0x00=Success, Session Present)
 
 
-What situations can cause a deadlock?
+三.What situations can cause a deadlock?
 The main reason is two tasks waiting for each other! For example, when we create a task on a synchronous queue while the queue is executing another task, a deadlock will occur.
 This is the most common scenario we encounter. We should always ask ourselves: is the task we are creating waiting for another task? This mostly happens in a synchronous queue!
 
 
-Why does Swift design Copy on Write?
+四.Why does Swift design Copy on Write?
 Swift uses value type syntax to use arrays, but saves the data on the heap. It automatically manages the copying of arrays.
 
 Copy on Write is an optimization technique for arrays.All the properties share the same data while the arrays have no changes.Only when the data is changed and the array has a reference count greater than one, it will copy the data to a new pointer.The optimized array has some features:
@@ -208,10 +208,10 @@ Copy on Write is an optimization technique for arrays.All the properties share t
 4.Elements: the address of the elements on the heap.
 5.Count: the number of elements.
 
-Flutter has the same declarative UI syntax as SwiftUI: both describe what the UI looks like. 
+五.Flutter has the same declarative UI syntax as SwiftUI: both describe what the UI looks like. 
 Flutter uses `setState` to notify of changes, while SwiftUI uses `@State`/`@Binding` to observe changes; 
 finally, Flutter calls the `build` function to refresh the UI, and SwiftUI calls the `body` property to refresh the UI. 
 
-What is Metal? How is it different from OpenGL ES on iOS?
+六.What is Metal? How is it different from OpenGL ES on iOS?
 Metal is Apple’s high performance graphics engine which uses the GPU directly. Metal uses MTLDevice to get a GPU reference, and renders on MTKView. We use asynchronous threads to process the data, and use MTLBuffer to send drawing data from the CPU to the GPU. This makes the UI interaction fluent.
  Compared to OpenGL ES: Metal is more efficient (closer to GPU), runs faster on Apple devices, and is better optimized for their chips. OpenGL ES is cross-platform but less tailored to Apple’s hardware, so it’s slower in comparison.
