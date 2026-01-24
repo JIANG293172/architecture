@@ -145,7 +145,6 @@ The outcome was transformative: we built a reusable vehicle control SDK that now
 To this day, this componentization ecosystem remains the backbone of Changan’s iOS development, driving consistent stability, accelerating innovation, and delivering enduring business value—making it the most fulfilling and impactful work of my career.
 
 
-
 描述一件最困难/最有挑战性的事情是如何解决的
 The most challenging problem I faced was fixing the long-standing online crashes in the Dongchedi dealer system. Standard tools couldn’t symbolize these crashes — the logs only showed hex addresses, not function names. This affected tens of thousands of daily users.
 To fix this, I created a custom manual symbol fix process based on basic iOS principles. Later, this became the team’s standard way of working:
@@ -161,12 +160,12 @@ In the end, I reduced the dealer system’s crash rate by 20%. I also wrote this
 
 根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
 如何安全的保存用户的私钥
-To securely store users' private keys on iOS, we use Secure Enclave—a separate, tamper-proof hardware component in Apple’s chips (A-series/M-series).
-Its core principle: Private keys never leave the Secure Enclave in plaintext. All encryption/signing happens directly in this isolated hardware, so keys aren’t exposed to the app’s memory or iOS system—even if the device is jailbroken.
-Basic workflow:
-Generate a key pair in Secure Enclave (private key stays here);
-Use the public key to encrypt the user’s private key, store encrypted data in Keychain;
-When needed, decrypt and use the private key inside Secure Enclave, then clear it from memory.
+To store users' private keys safely on iOS, we use Secure Enclave — a special hardware part in Apple’s chips.
+Its main rule: Private keys never leave the Secure Enclave as plain text. All encrypting and signing work is done directly in this separate hardware. So keys are not exposed to the app’s memory or iOS system, even if the device is hacked.
+Basic steps:
+1)Create a key pair in the Secure Enclave;
+2)Use the public key from the Secure Enclave to encrypt the user’s private key, then save the encrypted data in Keychain;
+3)When needed, decrypt and use the private key inside the Secure Enclave, then delete it from memory after use.
 Adding FaceID/TouchID for verification makes it even safer.
 
 
