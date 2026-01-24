@@ -65,19 +65,14 @@ I’m focusing on two key areas to improve my skills, and this is also my future
 
 
 为什么选择这家企业
-Dear interviewer, I apply for OKX’s iOS role because my technical experience and career plan highly align with OKX’s platform value. OKX’s unique strengths match my core needs in three key aspects:
+I’m  applying for the iOS role at OKX because my technical experience and career plan align well with OKX’s platform values.
+1)OKX has high-DAU products with complex scenarios like trading and wallet. 
+It needs to solve private key security and high-concurrency market push issues. 
+This matches my experience in high-DAU app optimization, componentization and architecture design.
+2)I believe blockchain reshapes financial trust, and OKX is a leader with stable trading systems and forward-looking Web3 layout. 
+The mobile team can deeply participate in core businesses like transaction optimization and wallet security.
+3)OKX’s global team provides cutting-edge Web3 tech resources and cross-cultural collaboration opportunities, and it’s perfect for my long-term career growth.
 
-1. Platform & Technical Challenges
-As a blockchain/fintech leader, OKX has high-DAU products with complex scenarios (trading, wallet, asset management). It needs to solve on-chain/off-chain interaction, private key security and high-concurrency market push—matching my experience in high-DAU app optimization, componentization and architecture design. Other firms lack such comprehensive technical challenges.
-
-2. Industry Prospects & Value Recognition
-I believe blockchain reshapes financial trust, and OKX leads with stable trading systems and forward-looking Web3 layout. Its mobile team deeply participates in core businesses (transaction optimization, wallet security), unlike other firms where iOS is only a display window. I can grow with OKX’s industry-leading development.
-
-3. Team Collaboration & Growth
-OKX’s core value of "Get Things Done" fits my work style of cross-functional collaboration and rapid iteration. Its global team offers cutting-edge Web3 tech access and cross-cultural collaboration opportunities, avoiding technical solidification of other companies. It’s perfect for my long-term career growth.
-
-Closing
-OKX’s platform, industry prospects and team culture align with my strengths and goals. I’m eager to join, contribute my high-concurrency and security optimization experience to OKX’s iOS products, and grow with the team.
 
 职业规划
 Short-term Plans
