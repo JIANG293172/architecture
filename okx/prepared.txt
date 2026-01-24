@@ -110,11 +110,8 @@ Conflict resolution: Focus on "empathy + win-win balance." Face conflicts direct
 
 
 仔细梳理自己简历中的工作经历、亮点项目以及成就
-长安汽车：
-Core Achievements at Changan Auto
-As a core iOS developer at Changan Automobile, 
-
-1）I led the decomposition of the monolithic vehicle control module into a 3-layer architecture:
+一.Core Achievements at Changan Auto
+1）I led the ground-up componentization of the monolithic vehicle control module, refactoring it into a 3-layer architecture from scratch:
 Foundation Layer: Network, storage and basic utilities
 Common Layer: Shared capabilities, payment capabilities and user behavior collection
 Business Layer: Remote vehicle control, Bluetooth key control and in-app shopping 
@@ -124,50 +121,28 @@ The router stores component protocol definitions,
 dynamically creates protocol-conforming classes at runtime, 
 and forwards messages through runtime to realize complete component decoupling.
 
+二.Core Achievements at ByteDance
+Migrated the B-side dealer module from the legacy MVC architecture to MVVM, enabling low coupling and long-term maintainability.
+1)View Layer: Focuses on UI rendering and user interaction
+2)ViewModel Layer: Processes user input actions and delivers business logic results to the View Layer
+3)Model Layer: Defines standardized data models
 
-ByteDance
-MVVM Architecture Upgrade
-Migrated from legacy MVC to MVVM for low coupling and long-term maintainability, cutting 3,000+ lines of redundant ViewController code and reducing state synchronization bugs.
-Core Layer Responsibilities
-1）View Layer: Focuses solely on UI rendering and user interaction (no business logic). Emits user events to ViewModel and receives state updates to refresh UI.
-2）ViewModel Layer: Acts as the bridge between View and Model—manages all business logic, unifies protocol handling, and controls data flow.
-3）Model Layer: Defines data models encapsulating dealer attributes and wraps async operations.
+三.Core Achievements at Kugou Music
+I led the full reconstruction and optimization of the Friend Recommendation Page
+1）Cut 40% of redundant code in the recommendation module, improving maintainability.
+2）Accelerated recommendation data loading by 60%, Used Instruments Time Profile to identify lag caused by nested loops; replaced nested traversals with dictionary-based data caching to reduce time complexity.
 
+四.Core Achievements at XiaoYing
+At XiaoYing, as a key iOS developer, I led the crash and memory optimization work. 
+1.First, for the multi-thread data race issue on the picture page, I implemented thread-safe mechanisms to fix concurrent resource contention. 
+2.for Unrecognized Selector Errors, I used Objective-C runtime message forwarding—intercepting forwardingTargetForSelector: and adding empty implementations for missing methods to eliminate such crashes. 
+3.I resolved memory leaks by refactoring code and optimizing lifecycle management, which fixed crashes caused by memory leaks.
 
-酷狗音乐
-As a key iOS developer at Kugou Music (nearly 100M daily active users), I led the full reconstruction and optimization of the Friend Recommendation Page, delivering notable gains in code efficiency, performance and stability while supporting explosive business growth.
-Measurable Outcomes
-1）Code Efficiency: Cut 40% of redundant code in the recommendation module, improving maintainability and lowering iteration costs.
-Stability Under Scaling: Supported a 500% business volume surge with zero production incidents, verifying the architecture’s robustness.
-2）Load Speed Boost: Accelerated recommendation data loading by 60%, significantly enhancing user experience.
-Issue Reduction: Lowered module-related bug rates by 70%, reducing maintenance overhead and improving user satisfaction.
-3）Core Value Delivery: Faster feature iterations via simplified code structure; reduced page abandonment with optimized loading speed; stabilized large-scale business operations and cut user complaints by resolving stability issues.
+五.Core Achievements at tonghuashun
+I built a full-stack crash monitoring system tailored for financial scenarios.
+1）Dual-Level Crash Collection: Captured object-level uncaught exceptionsvia Objective-C exception handlers; monitored system-level low-end crashes via signal handlers.
 
-小影记
-As a key iOS developer at Xiaoyingji (a popular video editing app with millions of users), I led a comprehensive stability and memory optimization initiative, resolving critical technical bottlenecks to enhance user experience—aligned with interview-focused clarity and conciseness.
-Crash Optimization: Root-Cause Fixes
-Systematically eliminated four major crash categories with targeted technical solutions:
-1）Multi-thread Data Race: Implemented thread-safe mechanisms to resolve concurrent resource competition.
-2）Memory Leak-induced Crashes: Fixed leaks via code refactoring and lifecycle management optimization.
-3）Array Out-of-bounds Errors: Added strict bounds checking and safe index access logic.
-4）Unrecognized Selector Errors: Leveraged Objective-C runtime message forwarding—intercepted forwardingTargetForSelector and dynamically added empty implementations for missing methods, eliminating unrecognized message crashes.
-
-Memory Optimization: Reduced Footprint & Peak Usage
-Executed a three-pronged strategy tailored for video editing’s high-memory demands:
-1）Peak Memory Reduction: Wrapped memory-intensive batch processing tasks with @autoreleasepool to force  timely temporary object release.
-2）Timely Resource Deallocation: Implemented strict lifecycle management to immediately free unused media assets and cached data.
-3）Memory Leak Elimination: Used Instruments Leaks Tool to locate and fix hidden leaks.
-
-
-同花顺
-As a key iOS developer at Tonghuashun—China’s top stock trading platform (14M+ DAU, 90% securities firm integration)—I specialized in enterprise-grade stability systems and financial data visualization, focusing on crash resilience and real-time performance. My deep expertise in iOS crash capture principles from this role directly enabled effective crash analysis work at Dongchedi later.
-Enterprise-Grade Crash Capture & Analysis System
-Designed and built a full-stack crash monitoring system tailored for financial scenarios (downtime risks user investment losses), with in-depth implementation of core principles:
-Core Capabilities
-1）Dual-Level Crash Collection: Captured object-level uncaught exceptions (null pointers, logic errors) via Objective-C exception handlers; monitored system-level low-end crashes (SIGSEGV/SIGABRT/SIGBUS) via signal handlers, covering kernel-level failures.
-2）Precise Symbolication Workflow: Collected critical debugging data (ASLR offsets, app base launch offsets, raw crash addresses); calculated actual code locations using Actual Address = Crash Address - ASLR Offset - Base Address; mapped to function names/line numbers via DSYM files for actionable root-cause analysis.
-3）Contextual & Compliant Data Collection: Gathered non-sensitive user context (app version, device model, trading page) to accelerate debugging, fully complying with financial privacy regulations.
-4）Smart Upload Strategy: Passive background sync on app restart (30s network polling for resilience); user-friendly prompts for non-critical errors, boosting log upload rate by 25%.
+2）Collected critical debugging data (ASLR offsets, app base launch offsets, raw crash addresses); calculated actual code locations using Actual Address = Crash Address - ASLR Offset - Base Address; mapped to function names via DSYM file.
 
 
 描述一件最成功/印象最深刻/最有成就感的事情
