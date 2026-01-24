@@ -11,18 +11,35 @@ OKX 是全球领先的加密资产交易所与 Web3 基础设施提供商，移�
 了解区块链 / Web3 基础，熟悉私钥安全存储等钱包相关技术者优先；有大规模应用性能优化经验；具备良好的跨团队协作能力与英语沟通能力，适配全球跨时区协作。
 
 
-开场的自我介绍
-My name is Jiang Tao.I graduated from Hangzhou Dianzi University. I have a bachelor's degree.I have 8 years of experience in iOS development, I’m good at using Objective-C and Swift."I have strong experience in crash fixing and preventing memory leaks.I've worked on app size and performance optimization.I'm skilled in breaking down large projects into components and using the MVVM architecture.I have a deep understanding of multithreaded programming.I'm a great team player and very experienced with version control systems like Git.”
+开场的自我介绍 (Shall I start with my self-introduction?)
+My name is Jiang Tao.I graduated from Hangzhou Dianzi University. 
+I have a bachelor's degree.
+I have 8 years of experience in iOS development, 
+I’m good at using Objective-C and Swift."
+I have strong experience in crash fixing and preventing memory leaks.
+I've worked on app size and performance optimization.
+I'm skilled in breaking down large projects into components and using the MVVM architecture.
 
-一、My career started at Tonghuashun, where I worked on a stock trading app for millions of users. I was responsible for collecte crash reporting, user behavior analysis, and the trading module.
-二、Then, I moved to Quwei Tech, developing short video and in-app purchase features. I successfully reduced the app crash rate from 3% to under 0.5%.
-三、At Kugou Music, I worked on the friend recommendation system. I improved the loading speed of the friends page by 60% and received a top performance rating.
-四、My next role was at Dongchedi. I led the componentization of a key business module, splitting it into 8 independent parts. This allowed multiple teams to work independently. I also fixed some of the app's most complex crashes.
-五、I’m currently at Changan Auto, where I lead the development of the car control module. My work on micro-apps and a new homepage has reduced crashes to under 0.03%, improved loading speeds by 70%, and cut development costs by 60% through componentization. I've always received high performance ratings here.
+一.My career started at Tonghuashun, where I worked on a stock trading app for millions of users. 
+I was responsible for crash collection, user behavior analysis, and developing the trading module.
 
-"With 8 years in the industry, I'm a proactive learner. I regularly study code on GitHub, solve problems on Stack Overflow, and have published over 20 technical articles.
-I write clean, high-quality code with a focus on performance and flexibility. I know how to build stable apps that handle errors gracefully.
-That's a little about me. Thank you for listening."
+二.When I was working at Quwei Tech, 
+I was responsible for developing mobile short video editing and in-app purchase features. 
+I successfully reduced the app crash rate from 3% to under 0.5%.
+
+三.When I was working at Kugou Music, 
+I was responsible for the friend recommendation system. 
+I improved the loading speed of the friends page by 60%.
+
+四、When I was working at Dongchedi. 
+I was responsible for the componentization of a key business module, splitting it into 8 independent parts. This allowed multiple teams to work independently. 
+I also fixed some of the app's most complex crashes.
+
+五.I’m currently at Changan Auto, and I’m responsible for the core Vehicle Control SDK. 
+I led the componentization of the Vehicle Control SDK, which cut development costs by 60%. 
+I reduced the app size from 800MB to 400MB(MegaBytes) and lowered the crash rate from 0.5% to 0.03%.
+
+"With 8 years in the industry, I'm a proactive learner. I write clean, high-quality code with a focus on performance and flexibility. That's a little about me. Thank you for listening."
 
 
 宏观类话题
@@ -79,7 +96,6 @@ I’ll build Flutter expertise and hands-on experience, master cross-platform mo
 I’ll also learn AI implementation related knowledge and explore its application in blockchain/fintech iOS development.
 
 
-
 对于沟通能力
 Communication skills: Focus on "precise delivery + closed-loop confirmation." Use role-specific simple language to align needs with product, UI, backend teams. Follow up with written summaries after meetings to avoid misunderstandings and rework.
 
@@ -95,23 +111,19 @@ Conflict resolution: Focus on "empathy + win-win balance." Face conflicts direct
 
 仔细梳理自己简历中的工作经历、亮点项目以及成就
 长安汽车：
-Core Achievements in changan auto
-As the iOS technical leader for Changan Automobile’s intelligent connected car ecosystem,
-I spearheaded critical transformations across  componentization.
-1)Core Achievements in changan auto
-一Vehicle Control SDK & componentization transformation
-1)3-Tier Component Architecture Design： Led the decomposition of monolithic vehicle control modules into a scalable 3-layer architecture:
-Foundation Layer: Core infrastructure (network, storage, base utilities)
-Common Business Layer: Shared capabilities (authentication, vehicle binding, user management)
-Business Layer: Dedicated vehicle control logic (lock/unlock, air conditioning, status monitoring)
-2)Runtime-Based Router Implementation：Designed a Runtime message forwarding-based Router
-Router stores component protocol definitions (implemented by other components)
-Dynamically creates protocol-conforming classes at runtime, invoking methods via protocol ID
-Enables full component decoupling through dynamic message forwarding
-3)Cross-App SDK Sharing：Built a reusable vehicle control SDK powering 5 Changan Apps
-Eliminated redundant code during cross-app migration
-Reduced version inconsistency risks and stability issues
-Cut cross-App feature delivery time by 30%.
+Core Achievements at Changan Auto
+As a core iOS developer at Changan Automobile, 
+
+1）I led the decomposition of the monolithic vehicle control module into a 3-layer architecture:
+Foundation Layer: Network, storage and basic utilities
+Common Layer: Shared capabilities, payment capabilities and user behavior collection
+Business Layer: Remote vehicle control, Bluetooth key control and in-app shopping 
+
+2)Designed a router based on runtime message forwarding.
+The router stores component protocol definitions, 
+dynamically creates protocol-conforming classes at runtime, 
+and forwards messages through runtime to realize complete component decoupling.
+
 
 ByteDance
 MVVM Architecture Upgrade
