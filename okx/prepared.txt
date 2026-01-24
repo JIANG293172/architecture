@@ -76,15 +76,12 @@ The mobile team can deeply participate in core businesses like transaction optim
 
 职业规划
 Short-term Plans
-Learn blockchain & fintech deeply
-I’ll study crypto financial-grade security (e.g., private key encryption) and master industry business logic to match financial scenario needs.
-Link core tech with business
-With my iOS skills, I’ll polish high-concurrency/performance tech and integrate it with blockchain business, to be a tech-savvy and business-aware developer.
+I’ll study crypto financial-grade security and master industry business logic to meet financial scenario needs.
+I’ll improve my high-concurrency and performance skills, combine them with blockchain business, and become a developer who knows both tech and business well.
 
-Long-term Plans (Including AI Implementation Learning)
-Master Flutter cross-platform development
-I’ll build Flutter expertise and hands-on experience, master cross-platform module development, and enhance multi-platform business support capabilities.
-I’ll also learn AI implementation related knowledge and explore its application in blockchain/fintech iOS development.
+Long-term Plans
+I’ll learn Flutter well and gain hands-on experience, master cross-platform module development, and improve my multi-platform business support abilities.
+I’ll also learn how to set up AI agents and apply AI to client-side development, integrating it into daily work processes.
 
 
 对于沟通能力
