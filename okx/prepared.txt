@@ -147,15 +147,16 @@ To this day, this componentization ecosystem remains the backbone of Changan’s
 
 
 描述一件最困难/最有挑战性的事情是如何解决的
-The most challenging problem was resolving months-long intractable online crashes in the Dongchedi dealer system. These crashes failed symbolization via standard tools (Xcode Organizer, Crashlytics), with logs only showing hexadecimal addresses instead of function names. Some crashes occurred exclusively on specific device-OS combinations and were unreproducible in test environments, affecting tens of thousands of daily users given Dongchedi’s scale.
+The most challenging problem I faced was fixing the long-standing online crashes in the Dongchedi dealer system. Standard tools couldn’t symbolize these crashes — the logs only showed hex addresses, not function names. This affected tens of thousands of daily users.
+To fix this, I created a custom manual symbol fix process based on basic iOS principles. Later, this became the team’s standard way of working:
 
-To resolve this, I developed a proprietary manual symbolization workflow based on iOS low-level principles (ASLR, Mach-O structure, dSYM debug info), which later became the team’s standard practice:
-1）Extract Crash Context: Collected core data (crash address, affected modules’ runtime base addresses) from monitoring platform crash reports—base addresses are auto-recorded in the "Binary Images" section.
-2）Calculate Symbol Offset: Reversed ASLR with module-specific formulas: main app offset = crash address - main app runtime base address; framework offset = crash address - framework runtime base address, ensuring accurate binary mapping.
-3）Precise Symbol Matching: Used version-matched dSYM files and symbolication tools to parse Symbol Table/DWARF info, translating offsets into exact function names and code lines—resolving standard tools’ failures.
-4）Reproduce & Fix Root Causes: Leveraged ByteDance’s device farm to replicate target hardware-OS environments, injected context-inferred test data (e.g., abnormal business records) to trigger crashes. Fixed root causes (null pointers, invalid data handling) via targeted null checks and data validation.
+1.Get crash key info: Collect core data like crash address and base address from the monitoring platform’s crash reports, the base address is in the "Binary Images" section.
+2.Calculate symbol offset: 
+main app offset = crash address - main app runtime base address;
+framework offset = crash address - framework runtime base address.
+3.Find the exact symbol: Use dSYM files matching the app version and symbol tools to read the Symbol info, and turn offsets into exact function names.
 
-Outcomes: Cut dealer system crash rate by 20%, reduced critical crash resolution time by 60%, documented the method in a Manual Crash Localization Guide and trained 15 team members. This work demonstrated my ability to apply low-level fundamentals to solve large-scale edge-case issues without relying on standard tools.
+In the end, I reduced the dealer system’s crash rate by 20%. I also wrote this method into a Manual Crash Localization Guide and trained 30 team members to use it.
 
 
 根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
