@@ -85,19 +85,20 @@ I have rich cross-team collaboration experience and I’m familiar with agile de
 I also have experience working with cross-regional and multilingual teams.
 
 
-你的缺点
-I’m focusing on two key areas to improve my skills, and this is also my future study plan.
-1)I lack hands-on experience in crypto industry security. So I’ve taken measures to study the security of top crypto apps, analyze private key encryption workflows, and figure out how to balance security properly.
-2)I lack hands-on experience in cross-platform development. Recently I’ve been learning Flutter in a systematic way. Its layout logic is similar to SwiftUI, and I’ve practiced integrating Flutter modules with CocoaPods, and building communication through MethodChannel.
+你的缺点 
+I lack hands-on experience in cross-platform development. Recently I’ve been learning Flutter in a systematic way. Its layout logic is similar to SwiftUI, and I’ve practiced integrating Flutter modules with CocoaPods, and building communication through MethodChannel.
 
 
 为什么选择这家企业
 I’m  applying for the iOS role at OKX because my technical experience and career plan align well with OKX’s platform values.
+
 1)OKX has high-DAU products with complex scenarios like trading and wallet. 
 It needs to solve private key security and high-concurrency market push issues. 
 This matches my experience in high-DAU app optimization, componentization and architecture design.
+
 2)I believe blockchain reshapes financial trust, and OKX is a leader with stable trading systems and forward-looking Web3 layout. 
 The mobile team can deeply participate in core businesses like transaction optimization and wallet security.
+
 3)OKX’s global team provides cutting-edge Web3 tech resources and cross-cultural collaboration opportunities, and it’s perfect for my long-term career growth.
 
 
