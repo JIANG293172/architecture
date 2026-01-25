@@ -97,8 +97,8 @@ Conflict resolution
 I focus on understanding others and finding a win-win way. I face conflicts directly, analyze everyone’s needs fairly with data and facts, and suggest compromise plans that keep core goals and meet others’ needs.
 
 仔细梳理自己简历中的工作经历、亮点项目以及成就
-一.Core Achievements at Changan Auto
-1）I led the ground-up componentization of the monolithic vehicle control module, refactoring it into a 3-layer architecture from scratch:
+一.Core Achievements at Changan Automobile
+1）I led the ground-up componentization of the monolithic vehicle control module, refactoring it into a 3-layer architecture:
 Foundation Layer: Network, storage and basic utilities
 Common Layer: Shared capabilities, payment capabilities and user behavior collection
 Business Layer: Remote vehicle control, Bluetooth key control and in-app shopping 
@@ -108,28 +108,37 @@ The router stores component protocol definitions,
 dynamically creates protocol-conforming classes at runtime, 
 and forwards messages through runtime to realize complete component decoupling.
 
-二.Core Achievements at ByteDance
-Migrated the B-side dealer module from the legacy MVC architecture to MVVM, enabling low coupling and long-term maintainability.
+二.Core Achievements at DongCheDi
+I refactored the B-side dealer module from MVC to MVVM architecture, enabling low coupling and long-term maintainability.
 1)View Layer: Focuses on UI rendering and user interaction
 2)ViewModel Layer: Processes user input actions and delivers business logic results to the View Layer
 3)Model Layer: Defines standardized data models
 
 三.Core Achievements at Kugou Music
 I led the full reconstruction and optimization of the Friend Recommendation Page
-1）Cut 40% of redundant code in the recommendation module, improving maintainability.
-2）Accelerated recommendation data loading by 60%, Used Instruments Time Profile to identify lag caused by nested loops; replaced nested traversals with dictionary-based data caching to reduce time complexity.
+1）Cut redundant code in the recommendation module, improving maintainability.
+2）I accelerated recommendation data loading by 60%. 
+By using Instruments Time Profile to find lag caused by nested loops, 
+
+I replaced nested traversals with dictionary-based data caching to reduce time complexity.
 
 四.Core Achievements at XiaoYing
-At XiaoYing, as a key iOS developer, I led the crash and memory optimization work. 
-1)First, for the multi-thread data race issue on the picture page, I implemented thread-safe mechanisms to fix concurrent resource contention. 
-2)for Unrecognized Selector Errors, I used Objective-C runtime message forwarding—intercepting forwardingTargetForSelector: and adding empty implementations for missing methods to eliminate such crashes. 
-3)I resolved memory leaks by refactoring code and optimizing lifecycle management, which fixed crashes caused by memory leaks.
+I led the crash governance of Xiaoyingji.
+1)I fixed the most frequent crashes on the picture page, 
+which were caused by a multi-thread data race issue. 
+I fixed it with thread-safe mechanisms to prevent concurrent resource contention.
+
+2)For Unrecognized Selector crashes, 
+I leveraged the Objective-C runtime message forwarding mechanism 
+— by intercepting forwardingTargetForSelector: and adding empty implementations for missing methods.
 
 五.Core Achievements at tonghuashun
-I built a full-stack crash monitoring system tailored for financial scenarios.
-1）Dual-Level Crash Collection: Captured object-level uncaught exceptionsvia Objective-C exception handlers; monitored system-level low-end crashes via signal handlers.
+I built an iOS crash log collection system tailored for financial scenarios.
+1)Dual-Level Crash Collection: I captured uncaught object-level exceptions via exception handlers, and system-level crashes via signal handlers.
 
-2）Collected critical debugging data (ASLR offsets, app base launch offsets, raw crash addresses); calculated actual code locations using Actual Address = Crash Address - ASLR Offset - Base Address; mapped to function names via DSYM file.
+2）I collected critical debugging data (ASLR offsets, app base addresses, raw crash addresses); 
+I calculated the actual code locations using the formula: Actual Address = Crash Address - ASLR Offset - Base Address; 
+then mapped these addresses to function names via dSYM files.
 
 
 描述一件最成功/印象最深刻/最有成就感的事情
@@ -156,6 +165,9 @@ framework offset = crash address - framework runtime base address.
 3.Find the exact symbol: Use dSYM files matching the app version and symbol tools to read the Symbol info, and turn offsets into exact function names.
 
 In the end, I reduced the dealer system’s crash rate by 20%. I also wrote this method into a Manual Crash Localization Guide and trained 30 team members to use it.
+
+
+
 
 
 根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
