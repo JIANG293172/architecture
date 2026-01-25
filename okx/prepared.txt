@@ -14,10 +14,10 @@ OKX 是全球领先的加密资产交易所与 Web3 基础设施提供商，移�
 开场的自我介绍 (Shall I start with my self-introduction?)
 My name is Jiang Tao.I graduated from Hangzhou Dianzi University. 
 I have a bachelor's degree.
-I have 8 years of experience in iOS development, 
+I have 8 years of experience in iOS development
 I’m good at using Objective-C and Swift."
-I have strong experience in crash fixing and preventing memory leaks.
-I've worked on app size and performance optimization.
+
+I have strong experience in crash fixing, memory leak prevention, app size optimization and performance optimization.
 I'm skilled in breaking down large projects into components and using the MVVM architecture.
 
 一.My career started at Tonghuashun, where I worked on a stock trading app for millions of users. 
@@ -31,13 +31,13 @@ I successfully reduced the app crash rate from 3% to under 0.5%.
 I was responsible for the friend recommendation system. 
 I improved the loading speed of the friends page by 60%.
 
-四、When I was working at Dongchedi. 
-I was responsible for the componentization of a key business module, splitting it into 8 independent parts. This allowed multiple teams to work independently. 
+四、When I was working at Dongchedi, part of ByteDance.
+I was responsible for the componentization of a key business module, splitting it into 8 independent parts. 
 I also fixed some of the app's most complex crashes.
 
-五.I’m currently at Changan Auto, and I’m responsible for the core Vehicle Control SDK. 
-I led the componentization of the Vehicle Control SDK, which cut development costs by 60%. 
-I reduced the app size from 800MB to 400MB(MegaBytes) and lowered the crash rate from 0.5% to 0.03%.
+五.I’m currently working at Changan Automobile, where I’m responsible for the core Vehicle Control SDK.
+I led the componentization of this SDK, which cut SDK integration costs by 60%.
+I also reduced the app size from 800MB to 400MB, and lowered the crash rate from 0.5% to 0.03%.
 
 "With 8 years in the industry, I'm a proactive learner. I write clean, high-quality code with a focus on performance and flexibility. That's a little about me. Thank you for listening."
 
