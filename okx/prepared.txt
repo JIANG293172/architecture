@@ -82,7 +82,11 @@ My skills align with the OKX role in 5 key areas:
 
 
 你的缺点 
-I lack hands-on experience in cross-platform development. Recently I’ve been learning Flutter in a systematic way. Its layout logic is similar to SwiftUI, and I’ve practiced integrating Flutter modules with CocoaPods, and building communication through MethodChannel.
+I lack hands-on experience in cross-platform development. 
+Recently I’ve been learning Flutter in a systematic way. 
+Its layout logic is similar to SwiftUI, 
+and I’ve practiced integrating Flutter modules with CocoaPods, 
+and building communication through MethodChannel.
 
 
 为什么选择这家企业
