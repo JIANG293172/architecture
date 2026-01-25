@@ -70,19 +70,15 @@ Smart：When my iOS team faces difficult problems, I always find effective ways 
 Friendly：I’m patient to help teammates, and always put the team’s benefits first.
 
 My skills align with the OKX role in 5 key areas:
-1）for Core Native Development
-I'm proficient in Swift and Objective-C, and have a good understanding of basic iOS knowledge. I also have experience in app internationalization.
-2）for Architecture
-I led componentization and MVVM transformation, 
-built private component libraries, and developed custom routers for cross-module communication. 
-It fits million-DAU platform updates, reduces coupling and improves development efficiency.
-3）Performance Optimization
-At Changan Auto, I improved the homepage loading speed by 50% and reduced the app size by 50%.
-4）secure
-I'm familiar with data security and encrypted transmission, and meet high security standards for crypto trading.
-5）Collaboration 
-I have rich cross-team collaboration experience and I’m familiar with agile development. 
-I also have experience working with cross-regional and multilingual teams.
+1)I'm have a good understanding of basic iOS knowledge. I also have experience in app internationalization.
+
+2)I led the componentization work, built private component libraries, and developed custom routers to enable cross-module communication.
+
+3)At Changan Auto, I worked on app size optimization, app launch optimization, crash governance and other related optimizations.
+
+4)I'm familiar with data security, and meet high security standards for crypto trading.
+
+5)I have rich cross-team collaboration experience, including working with cross-regional and multilingual teams.
 
 
 你的缺点 
