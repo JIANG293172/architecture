@@ -261,3 +261,8 @@ finally, Flutter calls the `build` function to refresh the UI, and SwiftUI calls
 六.What is Metal? How is it different from OpenGL ES on iOS?
 Metal is Apple’s high performance graphics engine which uses the GPU directly. Metal uses MTLDevice to get a GPU reference, and renders on MTKView. We use asynchronous threads to process the data, and use MTLBuffer to send drawing data from the CPU to the GPU. This makes the UI interaction fluent.
  Compared to OpenGL ES: Metal is more efficient (closer to GPU), runs faster on Apple devices, and is better optimized for their chips. OpenGL ES is cross-platform but less tailored to Apple’s hardware, so it’s slower in comparison.
+
+
+最后我的疑问：
+Could you please tell me the structure of the team?
+Thank you for sharing. I don’t have any other questions for now.
