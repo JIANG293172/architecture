@@ -142,16 +142,21 @@ then mapped these addresses to function names via dSYM files.
 
 
 描述一件最成功/印象最深刻/最有成就感的事情
-My Most Rewarding Achievement: Building Changan Auto’s iOS Componentization Ecosystem from Scratch
-As the core iOS technical lead at Changan Automobile, my most impactful achievement is spearheading the end-to-end componentization transformation of the iOS engineering system from 2019 to present—a ground-up initiative that addressed critical pain points and delivered substantial long-term value.
-The project began with a pressing challenge: Changan’s legacy iOS codebase was a monolithic structure, making it cumbersome to support the company’s expanding matrix of intelligent connected car apps. Cross-app feature reuse required massive redundant development, leading to 40% of engineering effort wasted on duplicate work, frequent version inconsistencies, and prolonged delivery cycles. Worse, the tightly coupled architecture made it nearly impossible to scale teams or onboard new developers efficiently.
-To tackle this, I led the design and implementation of a scalable 3-tier component architecture:
-Foundation Layer: Unified core infrastructure (network, storage, base utilities) to eliminate low-level duplication;
-Common Business Layer: Centralized shared capabilities (authentication, vehicle binding, user management) for cross-app reuse;
-Business Layer: Decoupled dedicated modules (vehicle control, status monitoring, remote operations) for independent iteration.
-A key technical breakthrough was the runtime-based Router I designed: by storing component protocol definitions and dynamically creating conforming classes at runtime, we achieved full decoupling—components communicate via protocol IDs without direct dependencies, solving the long-standing issue of tight coupling in monolithic apps.
-The outcome was transformative: we built a reusable vehicle control SDK that now powers 5 Changan Apps, cutting cross-app feature delivery time by 30% and slashing redundant code by over 60%. This not only saved hundreds of engineering hours annually but also laid the foundation for Changan’s matrixed app development strategy, enabling seamless scaling across new products. Additionally, I developed a comprehensive training program to upskill 20+ team members on componentization best practices, fostering a more efficient, collaborative engineering culture.
-To this day, this componentization ecosystem remains the backbone of Changan’s iOS development, driving consistent stability, accelerating innovation, and delivering enduring business value—making it the most fulfilling and impactful work of my career.
+My Most Rewarding Achievement: 
+Building Changan Auto’s iOS Componentization Ecosystem from Scratch.
+As the core iOS tech lead at Changan Automobile, 
+I led the full componentization transformation of the iOS engineering system. 
+The biggest challenge was the old monolithic codebase: cross-app feature reuse was hard, much engineering work was wasted on duplication, 
+versions were inconsistent, delivery cycles were long.
+
+To solve these problems, I designed a scalable 3-tier component architecture and a runtime-based Router to fully decouple components.
+
+The results were great: we built a reusable Vehicle Control SDK for 5 Changan apps. 
+It greatly shortened cross-app delivery time and reduced redundant code a lot, saving lots of engineering hours yearly. 
+It also laid the foundation for Changan’s app matrix development and made team scaling easy. 
+Besides, I trained over 20 team members on componentization, improving our engineering efficiency a lot.
+This ecosystem is still the backbone of Changan’s iOS development now, 
+bringing stable development and faster innovation —i t’s my most impactful work in my career.
 
 
 描述一件最困难/最有挑战性的事情是如何解决的
