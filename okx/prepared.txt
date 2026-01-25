@@ -18,6 +18,19 @@ OKX 是全球领先的加密资产交易所与 Web3 基础设施提供商，移�
 了解区块链 / Web3 基础，熟悉私钥安全存储等钱包相关技术者优先；有大规模应用性能优化经验；具备良好的跨团队协作能力与英语沟通能力，适配全球跨时区协作。
 
 
+small talk: (寒暄，友好状态)
+1. 问候（节奏舒缓，礼貌自然，适配面试开场）
+Good afternoon, xx! Nice to meet you.
+How is it going today?
+I’m doing great, thanks. I’m really happy to be here for this interview.
+
+2. 话题（衔接自然，语法规范，聊天气不生硬）
+I’m currently in Chongqing, and it’s sunny here today.
+What’s the weather like in your city, Singapore?
+That sounds good.
+I hope the weather stays nice there for you!
+
+
 开场的自我介绍 (Shall I start with my self-introduction?)
 My name is Jiang Tao.I graduated from Hangzhou Dianzi University. 
 I have a bachelor's degree.
