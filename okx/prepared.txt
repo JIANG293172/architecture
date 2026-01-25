@@ -90,16 +90,13 @@ and building communication through MethodChannel.
 
 
 为什么选择这家企业
-I’m  applying for the iOS role at OKX because my technical experience and career plan align well with OKX’s platform values.
+I’m applying for the iOS role at OKX because my technical experience and career plan align well with OKX’s platform values.
 
 1)OKX has high-DAU products with complex scenarios like trading and wallet. 
-It needs to solve private key security and high-concurrency market push issues. 
 This matches my experience in high-DAU app optimization, componentization and architecture design.
 
-2)I believe blockchain reshapes financial trust, and OKX is a leader with stable trading systems and forward-looking Web3 layout. 
+2)I believe blockchain reshapes financial trust, 
 The mobile team can deeply participate in core businesses like transaction optimization and wallet security.
-
-3)OKX’s global team provides cutting-edge Web3 tech resources and cross-cultural collaboration opportunities, and it’s perfect for my long-term career growth.
 
 
 职业规划
@@ -112,17 +109,6 @@ I’ll learn Flutter well and gain hands-on experience, master cross-platform mo
 I’ll also learn how to set up AI agents and apply AI to client-side development, integrating it into daily work processes.
 
 
-Communication skills
-I focus on clear communication and follow-up confirmation. I talk with product, UI and backend teams in simple language to align on needs, and write a summary after meetings to avoid misunderstandings and extra work.
-
-Teamwork
-The key is helping each other and working toward the same goals. I make clear everyone’s duties, use our strengths, help colleagues actively, and share experience and tools to hit team goals together.
-
-Complex problem-solving
-The core is breaking down problems step by step and solving them with specific methods. I split hard problems into small, easy-to-handle parts, find solutions, polish details, and check many times to get past difficulties.
-
-Conflict resolution
-I focus on understanding others and finding a win-win way. I face conflicts directly, analyze everyone’s needs fairly with data and facts, and suggest compromise plans that keep core goals and meet others’ needs.
 
 仔细梳理自己简历中的工作经历、亮点项目以及成就
 一.Core Achievements at Changan Automobile
@@ -269,6 +255,20 @@ finally, Flutter calls the `build` function to refresh the UI, and SwiftUI calls
 六.What is Metal? How is it different from OpenGL ES on iOS?
 Metal is Apple’s high performance graphics engine which uses the GPU directly. Metal uses MTLDevice to get a GPU reference, and renders on MTKView. We use asynchronous threads to process the data, and use MTLBuffer to send drawing data from the CPU to the GPU. This makes the UI interaction fluent.
  Compared to OpenGL ES: Metal is more efficient (closer to GPU), runs faster on Apple devices, and is better optimized for their chips. OpenGL ES is cross-platform but less tailored to Apple’s hardware, so it’s slower in comparison.
+
+
+
+Communication skills
+I focus on clear communication and follow-up confirmation. I talk with product, UI and backend teams in simple language to align on needs, and write a summary after meetings to avoid misunderstandings and extra work.
+
+Teamwork
+The key is helping each other and working toward the same goals. I make clear everyone’s duties, use our strengths, help colleagues actively, and share experience and tools to hit team goals together.
+
+Complex problem-solving
+The core is breaking down problems step by step and solving them with specific methods. I split hard problems into small, easy-to-handle parts, find solutions, polish details, and check many times to get past difficulties.
+
+Conflict resolution
+I focus on understanding others and finding a win-win way. I face conflicts directly, analyze everyone’s needs fairly with data and facts, and suggest compromise plans that keep core goals and meet others’ needs.
 
 
 最后我的疑问：
