@@ -145,8 +145,12 @@ My Most Rewarding Achievement:
 Building Changan Auto’s iOS Componentization Ecosystem from Scratch.
 As the core iOS tech lead at Changan Automobile, 
 I led the full componentization transformation of the iOS engineering system. 
-The biggest challenge was the old monolithic codebase: cross-app feature reuse was hard, much engineering work was wasted on duplication, 
-versions were inconsistent, delivery cycles were long.
+
+The biggest challenge was the old monolithic codebase: 
+cross-app feature reuse was hard, 
+much engineering work was wasted on duplication, 
+versions were inconsistent, 
+delivery cycles were long.
 
 To solve these problems, I designed a scalable 3-tier component architecture and a runtime-based Router to fully decouple components.
 
