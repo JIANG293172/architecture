@@ -64,7 +64,11 @@ I also reduced the app size from 800MB to 400MB, and lowered the crash rate from
 
 宏观类话题
 
-我的优点
+我的优点   strength advantage  3 word in your colleague. 
+Reliable：I write clean, high-quality code, and always consider error handling to make the app more stable.
+Smart：When my iOS team faces difficult problems, I always find effective ways to solve them.
+Friendly：I’m patient to help teammates, and always put the team’s benefits first.
+
 My skills align with the OKX role in 5 key areas:
 1）for Core Native Development
 I'm proficient in Swift and Objective-C, and have a good grasp of basic iOS knowledge. I also have experience in app internationalization.
