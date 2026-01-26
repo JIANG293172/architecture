@@ -157,24 +157,21 @@ then mapped these addresses to function names via dSYM files.
 
 描述一件最成功/印象最深刻/最有成就感的事情
 My Most Rewarding Achievement: 
-Building Changan Auto’s iOS Componentization Ecosystem from Scratch.
-As the core iOS tech lead at Changan Automobile, 
-I led the full componentization transformation of the iOS engineering system. 
+As the core iOS tech lead at Changan Automobile, I led the full componentization transformation of the iOS engineering system. 
 
 The biggest challenge was the old monolithic codebase: 
-cross-app feature reuse was hard, 
-much engineering work was wasted on duplication, 
-versions were inconsistent, 
-delivery cycles were long.
+the main project directly copied third-party library code, causing many integration conflicts between apps
+Reusing features across apps was hard
+we wasted lots of time on duplicate work.
 
 To solve these problems, I designed a scalable 3-tier component architecture and a runtime-based Router to fully decouple components.
 
-The results were great: we built a reusable Vehicle Control SDK for 5 Changan apps. 
+The results were great: 
+we built a reusable Vehicle Control SDK for 5 Changan apps. 
 It greatly shortened cross-app delivery time and reduced redundant code a lot, saving lots of engineering hours yearly. 
-It also laid the foundation for Changan’s app matrix development and made team scaling easy. 
+
 Besides, I trained over 20 team members on componentization, improving our engineering efficiency a lot.
-This ecosystem is still the backbone of Changan’s iOS development now, 
-bringing stable development and faster innovation —i t’s my most impactful work in my career.
+This ecosystem is still the backbone of Changan’s iOS development now, —i t’s my most impactful work in my career.
 
 
 描述一件最困难/最有挑战性的事情是如何解决的
