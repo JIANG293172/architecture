@@ -178,17 +178,22 @@ bringing stable development and faster innovation —i t’s my most impactful w
 
 
 描述一件最困难/最有挑战性的事情是如何解决的
-The most challenging problem I faced was fixing the long-standing online crashes in the Dongchedi dealer system. Standard tools couldn’t symbolize these crashes — the logs only showed hex addresses, not function names. This affected tens of thousands of daily users.
-To fix this, I created a custom manual symbol fix process based on basic iOS principles. Later, this became the team’s standard way of working:
+The biggest challenge I had was fixing the long-running online crashes in the Dongchedi dealer system – standard tools couldn’t decode these crashes.
+— the logs only showed hex addresses, not function names. This affected tens of thousands of daily users.
 
-1.Get crash key info: Collect core data like crash address and base address from the monitoring platform’s crash reports, the base address is in the "Binary Images" section.
+To fix this, I created a custom manual symbol fix process based on basic iOS principles:
+
+1.Get crash key info: 
+We collect core data such as crash address and ASLR offset.
+
 2.Calculate symbol offset: 
-main app offset = crash address - main app runtime base address;
-framework offset = crash address - framework runtime base address.
-3.Find the exact symbol: Use dSYM files matching the app version and symbol tools to read the Symbol info, and turn offsets into exact function names.
+Exact offset = crash address - ASLR (Address Space Layout Randomization).
 
-In the end, I reduced the dealer system’s crash rate by 20%. I also wrote this method into a Manual Crash Localization Guide and trained 30 team members to use it.
+3.Find the exact symbol: 
+We map crash offsets to exact function names using version-matched dSYM files and symbol tools.
 
+In the end, I reduced the dealer system’s crash rate by 30%. 
+I also shared this method with the 30 members of our iOS team.
 
 
 根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
