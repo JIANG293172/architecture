@@ -18,7 +18,10 @@ class DesignPatternViewController: ViewController {
         ["title": "Adapter Pattern", "vcClassName": "AdapterPatternViewController"],
         ["title": "Observer Pattern", "vcClassName": "ObserverPatternViewController"],
         ["title": "Facade Pattern", "vcClassName": "FacadePatternViewController"],
-        ["title": "Coordinator Pattern", "vcClassName": "CoordinatorDemoViewController"]
+        ["title": "Coordinator Pattern", "vcClassName": "CoordinatorDemoViewController"],
+        ["title": "VIPER Architecture", "vcClassName": "VIPERDemoViewController"],
+        ["title": "MVP Architecture", "vcClassName": "MVPDemoViewController"],
+        ["title": "MVVM Architecture", "vcClassName": "MVVMDemoViewController"]
     ]
     
     override func viewDidLoad() {
