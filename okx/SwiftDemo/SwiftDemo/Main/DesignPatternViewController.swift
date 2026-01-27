@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Demo8ViewController: ViewController {
+class DesignPatternViewController: ViewController {
     
     // Override demoList to define custom view controllers for design patterns
     private let demoList: [[String: String]] = [

@@ -11,14 +11,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
-        ["title": "Metal", "vcClassName": "Demo1ViewController"],
-        ["title": "SecureEnclave", "vcClassName": "Demo2ViewController"],
-        ["title": "GCD", "vcClassName": "Demo3ViewController"],
-        ["title": "续传", "vcClassName": "Demo4ViewController"],
-        ["title": "combine", "vcClassName": "Demo5ViewController"],
-        ["title": "RXSwift", "vcClassName": "Demo6ViewController"],
-        ["title": "POP", "vcClassName": "Demo7ViewController"],
-        ["title": "设计模式", "vcClassName": "Demo8ViewController"],
+        ["title": "Metal", "vcClassName": "MetalViewController"],
+        ["title": "SecureEnclave", "vcClassName": "SecureEnclaveViewController"],
+        ["title": "GCD", "vcClassName": "GCDViewController"],
+        ["title": "续传", "vcClassName": "ResumeDownloadViewController"],
+        ["title": "combine", "vcClassName": "CombineViewController"],
+        ["title": "RXSwift", "vcClassName": "RXSwiftViewController"],
+        ["title": "POP", "vcClassName": "POPViewController"],
+        ["title": "设计模式", "vcClassName": "DesignPatternViewController"],
         ["title": "算法", "vcClassName": "AlgorithmListViewController"]
     ]
     

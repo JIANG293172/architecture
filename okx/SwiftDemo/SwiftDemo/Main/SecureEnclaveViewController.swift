@@ -19,7 +19,7 @@ extension Data {
 }
 
 // Demo 2 ViewController - Secure Enclave加密货币钱包完整示例
-class Demo2ViewController: UIViewController {
+class SecureEnclaveViewController: UIViewController {
     
     // MARK: - UI组件
     private let scrollView = UIScrollView()

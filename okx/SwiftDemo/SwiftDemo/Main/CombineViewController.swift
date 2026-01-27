@@ -24,7 +24,7 @@ import Combine
 //@Published    Combine 核心    修饰类属性，生成发布者触发事件    ❌ SwiftUI 中用它驱动 UI，Combine 可单独用
 
 // MARK: - 登录视图控制器
-class Demo5ViewController: UIViewController {
+class CombineViewController: UIViewController {
     
     internal var hostingController: UIHostingController<LoginView>?
     private var cancellables = Set<AnyCancellable>()

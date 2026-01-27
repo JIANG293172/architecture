@@ -13,7 +13,7 @@ import RxRelay
 import Alamofire
 
 // MARK: - RxSwift + SwiftUI 示例视图控制器
-class Demo6ViewController: UIViewController {
+class RXSwiftViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     private let viewModel = Demo6ViewModel()

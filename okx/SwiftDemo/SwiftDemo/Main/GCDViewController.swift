@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 
 // Demo 3 ViewController
-class Demo3ViewController: UIViewController {
+class GCDViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -8,7 +8,7 @@
 import UIKit
 import Foundation
 
-class Demo4ViewController: UIViewController {
+class ResumeDownloadViewController: UIViewController {
     
     // MARK: - UI 控件
     private let urlTextField: UITextField = {

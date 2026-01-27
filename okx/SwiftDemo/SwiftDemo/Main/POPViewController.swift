@@ -89,7 +89,7 @@ func handleRefresh(_ component: Refreshable) {
     component.refresh()
 }
 
-class Demo7ViewController: UIViewController {
+class POPViewController: UIViewController {
     
     private let customButton = CustomButton(type: .system)
     private let customTableView = CustomTableView()

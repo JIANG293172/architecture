@@ -9,7 +9,7 @@ import UIKit
 import MetalKit
 import Metal
 // Demo 1 ViewController - Metal图表绘制示例
-class Demo1ViewController: UIViewController {
+class MetalViewController: UIViewController {
     
     // MARK: - 时间范围枚举
     enum TimeRange: String, CaseIterable {
