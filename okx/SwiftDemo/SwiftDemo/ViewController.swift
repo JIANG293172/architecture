@@ -22,7 +22,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         ["title": "RXSwift", "vcClassName": "RXSwiftViewController"],
         ["title": "POP", "vcClassName": "POPViewController"],
         ["title": "设计模式", "vcClassName": "DesignPatternViewController"],
-        ["title": "算法", "vcClassName": "AlgorithmListViewController"]
+        ["title": "算法", "vcClassName": "AlgorithmListViewController"],
+        ["title": "性能", "vcClassName": "PerformanceListViewController"]
     ]
     
     override func viewDidLoad() {
