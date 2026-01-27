@@ -7,13 +7,6 @@
 
 import UIKit
 
-/// 用户模型
-struct CoordinatorUser {
-    let id: Int
-    let name: String
-    let email: String
-}
-
 /// 用户详情页面视图控制器
 class UserDetailViewController: UIViewController {
     /// 协调器

@@ -7,6 +7,13 @@
 
 import UIKit
 
+/// 用户模型
+struct CoordinatorUser {
+    let id: Int
+    let name: String
+    let email: String
+}
+
 /// 用户列表页面视图控制器
 class UserListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     /// 协调器
@@ -14,11 +21,11 @@ class UserListViewController: UIViewController, UITableViewDelegate, UITableView
     
     private let tableView = UITableView()
     private let users = [
-        User(id: 1, name: "Alice", email: "alice@example.com"),
-        User(id: 2, name: "Bob", email: "bob@example.com"),
-        User(id: 3, name: "Charlie", email: "charlie@example.com"),
-        User(id: 4, name: "David", email: "david@example.com"),
-        User(id: 5, name: "Eve", email: "eve@example.com")
+        CoordinatorUser(id: 1, name: "Alice", email: "alice@example.com"),
+        CoordinatorUser(id: 2, name: "Bob", email: "bob@example.com"),
+        CoordinatorUser(id: 3, name: "Charlie", email: "charlie@example.com"),
+        CoordinatorUser(id: 4, name: "David", email: "david@example.com"),
+        CoordinatorUser(id: 5, name: "Eve", email: "eve@example.com")
     ]
     
     override func viewDidLoad() {
