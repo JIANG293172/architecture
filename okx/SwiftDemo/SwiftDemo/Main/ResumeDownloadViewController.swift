@@ -180,7 +180,7 @@ class ResumeDownloadViewController: UIViewController {
 }
 
 // MARK: - 下载管理器代理
-extension Demo4ViewController: DownloadManagerDelegate {
+extension ResumeDownloadViewController: DownloadManagerDelegate {
     func downloadProgress(_ progress: Float, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64, speed: String) {
         DispatchQueue.main.async {
             self.progressView.progress = progress

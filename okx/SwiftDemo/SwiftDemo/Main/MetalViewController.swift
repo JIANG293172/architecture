@@ -354,7 +354,7 @@ class MetalViewController: UIViewController {
 
 // MARK: - MTKViewDelegate
 // 面试考点：MTKViewDelegate协议定义了Metal视图的渲染回调方法
-extension Demo1ViewController: MTKViewDelegate {
+extension MetalViewController: MTKViewDelegate {
     
     // 绘制方法
     // 面试考点：draw方法是Metal渲染的核心，负责执行渲染命令
