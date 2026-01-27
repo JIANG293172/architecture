@@ -45,11 +45,11 @@ class MVVMDemoViewController: UIViewController {
     
     @objc private func startButtonTapped() {
         // 创建 MVVM 组件
-        let userViewModel = UserViewModel(userDataService: UserDataService())
-        let userViewController = UserViewController(viewModel: userViewModel)
-        let navigationController = UINavigationController(rootViewController: userViewController)
+        let userViewModel = MVVMUserViewModel(userDataService: MVVMUserDataService())
+        let userViewController = MVVMUserViewController(viewModel: userViewModel)
         
-        // 展示用户列表页面
+        // 推送用户列表页面
+        let navigationController = UINavigationController(rootViewController: userViewController)
         present(navigationController, animated: true, completion: nil)
     }
 }

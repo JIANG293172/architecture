@@ -4,9 +4,10 @@
 //
 //  Created by CQCA202121101_2 on 2026/1/27.
 //
+import Foundation
 
 /// 用户交互器，负责业务逻辑和数据获取
-class UserInteractor {
+class VIPERUserInteractor {
     /// 获取用户列表
     /// - Parameter completion: 回调，返回用户实体数组
     func fetchUsers(completion: @escaping ([UserEntity]) -> Void) {

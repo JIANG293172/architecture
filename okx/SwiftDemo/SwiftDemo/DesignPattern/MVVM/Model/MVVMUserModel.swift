@@ -5,8 +5,10 @@
 //  Created by CQCA202121101_2 on 2026/1/27.
 //
 
+import Foundation
+
 /// 用户模型类，包含用户数据
-class UserModel {
+class MVVMUserModel {
     let id: Int
     let name: String
     let email: String
@@ -21,22 +23,22 @@ class UserModel {
 }
 
 /// 用户数据服务，负责获取用户数据
-class UserDataService {
+class MVVMUserDataService {
     /// 获取用户列表
     /// - Parameter completion: 回调，返回用户模型数组
-    func fetchUsers(completion: @escaping ([UserModel]) -> Void) {
+    func fetchUsers(completion: @escaping ([MVVMUserModel]) -> Void) {
         // 模拟网络请求获取用户数据
         DispatchQueue.global().async {
             // 模拟网络延迟
             sleep(1)
             
             // 模拟用户数据
-            let users: [UserModel] = [
-                UserModel(id: 1, name: "Alice", email: "alice@example.com", age: 25),
-                UserModel(id: 2, name: "Bob", email: "bob@example.com", age: 30),
-                UserModel(id: 3, name: "Charlie", email: "charlie@example.com", age: 35),
-                UserModel(id: 4, name: "David", email: "david@example.com", age: 28),
-                UserModel(id: 5, name: "Eve", email: "eve@example.com", age: 32)
+            let users: [MVVMUserModel] = [
+                MVVMUserModel(id: 1, name: "Alice", email: "alice@example.com", age: 25),
+                MVVMUserModel(id: 2, name: "Bob", email: "bob@example.com", age: 30),
+                MVVMUserModel(id: 3, name: "Charlie", email: "charlie@example.com", age: 35),
+                MVVMUserModel(id: 4, name: "David", email: "david@example.com", age: 28),
+                MVVMUserModel(id: 5, name: "Eve", email: "eve@example.com", age: 32)
             ]
             
             // 回到主线程回调
@@ -50,19 +52,19 @@ class UserDataService {
     /// - Parameters:
     ///   - id: 用户ID
     ///   - completion: 回调，返回用户模型
-    func fetchUserDetails(id: Int, completion: @escaping (UserModel?) -> Void) {
+    func fetchUserDetails(id: Int, completion: @escaping (MVVMUserModel?) -> Void) {
         // 模拟网络请求获取用户详情
         DispatchQueue.global().async {
             // 模拟网络延迟
             sleep(1)
             
             // 模拟用户数据
-            let users: [UserModel] = [
-                UserModel(id: 1, name: "Alice", email: "alice@example.com", age: 25),
-                UserModel(id: 2, name: "Bob", email: "bob@example.com", age: 30),
-                UserModel(id: 3, name: "Charlie", email: "charlie@example.com", age: 35),
-                UserModel(id: 4, name: "David", email: "david@example.com", age: 28),
-                UserModel(id: 5, name: "Eve", email: "eve@example.com", age: 32)
+            let users: [MVVMUserModel] = [
+                MVVMUserModel(id: 1, name: "Alice", email: "alice@example.com", age: 25),
+                MVVMUserModel(id: 2, name: "Bob", email: "bob@example.com", age: 30),
+                MVVMUserModel(id: 3, name: "Charlie", email: "charlie@example.com", age: 35),
+                MVVMUserModel(id: 4, name: "David", email: "david@example.com", age: 28),
+                MVVMUserModel(id: 5, name: "Eve", email: "eve@example.com", age: 32)
             ]
             
             // 查找指定ID的用户

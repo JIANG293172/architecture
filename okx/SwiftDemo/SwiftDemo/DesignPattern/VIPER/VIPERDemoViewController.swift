@@ -45,11 +45,11 @@ class VIPERDemoViewController: UIViewController {
     
     @objc private func startButtonTapped() {
         // 创建 VIPER 组件
-        let userInteractor = UserInteractor()
+        let userInteractor = VIPERUserInteractor()
         let navigationController = UINavigationController()
-        let userRouter = UserRouter(navigationController: navigationController)
-        let userPresenter = UserPresenter(interactor: userInteractor, router: userRouter)
-        let userViewController = UserViewController(presenter: userPresenter)
+        let userRouter = VIPERUserRouter(navigationController: navigationController)
+        let userPresenter = VIPERUserPresenter(interactor: userInteractor, router: userRouter)
+        let userViewController = VIPERUserViewController(presenter: userPresenter)
         
         // 设置 presenter 的 view
         userPresenter.view = userViewController

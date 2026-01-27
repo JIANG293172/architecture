@@ -6,12 +6,12 @@
 //
 
 /// 用户详情展示器，负责处理用户详情的业务逻辑和数据转换
-class UserDetailPresenter {
-    weak var view: UserDetailViewProtocol?
-    private let userDataService: UserDataService
+class MVPUserDetailPresenter {
+    weak var view: MVPUserDetailViewProtocol?
+    private let userDataService: MVPUserDataService
     private let userID: Int
     
-    init(userDataService: UserDataService, userID: Int) {
+    init(userDataService: MVPUserDataService, userID: Int) {
         self.userDataService = userDataService
         self.userID = userID
     }

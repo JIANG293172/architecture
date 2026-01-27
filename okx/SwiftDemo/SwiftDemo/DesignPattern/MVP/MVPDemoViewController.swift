@@ -45,11 +45,11 @@ class MVPDemoViewController: UIViewController {
     
     @objc private func startButtonTapped() {
         // 创建 MVP 组件
-        let userPresenter = UserPresenter(userDataService: UserDataService())
-        let userViewController = UserViewController(presenter: userPresenter)
-        let navigationController = UINavigationController(rootViewController: userViewController)
+        let userPresenter = MVPUserPresenter(userDataService: MVPUserDataService())
+        let userViewController = MVPUserViewController(presenter: userPresenter)
         
-        // 展示用户列表页面
+        // 推送用户列表页面
+        let navigationController = UINavigationController(rootViewController: userViewController)
         present(navigationController, animated: true, completion: nil)
     }
 }

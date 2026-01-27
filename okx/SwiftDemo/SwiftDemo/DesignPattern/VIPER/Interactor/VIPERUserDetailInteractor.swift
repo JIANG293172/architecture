@@ -5,8 +5,10 @@
 //  Created by CQCA202121101_2 on 2026/1/27.
 //
 
+import Foundation
+
 /// 用户详情交互器，负责用户详情的业务逻辑和数据获取
-class UserDetailInteractor {
+class VIPERUserDetailInteractor {
     /// 根据ID获取用户详情
     /// - Parameters:
     ///   - id: 用户ID

@@ -7,17 +7,20 @@
 
 import UIKit
 
-/// 用户详情视图控制器，实现了 UserDetailViewProtocol 协议
-class UserDetailViewController: UIViewController, UserDetailViewProtocol {
-    private let presenter: UserDetailPresenter
+/// 用户详情视图控制器，实现了 VIPERUserDetailViewProtocol 协议
+class VIPERUserDetailViewController: UIViewController, VIPERUserDetailViewProtocol {
+    private let presenter: VIPERUserDetailPresenter
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let stackView = UIStackView()
     private let idLabel = UILabel()
     private let nameLabel = UILabel()
     private let emailLabel = UILabel()
     private let ageLabel = UILabel()
+    private let backButton = UIButton(type: .system)
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     
-    init(presenter: UserDetailPresenter) {
+    init(presenter: VIPERUserDetailPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,9 +35,6 @@ class UserDetailViewController: UIViewController, UserDetailViewProtocol {
         view.backgroundColor = .white
         setupUI()
         setupActivityIndicator()
-        
-        // 设置 presenter 的 view
-        presenter.view = self
         
         // 加载用户详情
         presenter.loadUserDetails()
@@ -97,7 +97,7 @@ class UserDetailViewController: UIViewController, UserDetailViewProtocol {
         activityIndicator.stopAnimating()
     }
     
-    func displayUserDetail(_ user: UserModel) {
+    func displayUserDetail(_ user: VIPERUserDetailViewModel) {
         idLabel.text = "ID: \(user.id)"
         nameLabel.text = user.name
         emailLabel.text = "Email: \(user.email)"
@@ -108,9 +108,5 @@ class UserDetailViewController: UIViewController, UserDetailViewProtocol {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
-    }
-    
-    func navigateBack() {
-        navigationController?.popViewController(animated: true)
     }
 }

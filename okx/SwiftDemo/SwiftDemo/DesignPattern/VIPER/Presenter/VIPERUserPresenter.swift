@@ -6,12 +6,12 @@
 //
 
 /// 用户展示器，作为 View 和 Interactor 之间的中介
-class UserPresenter {
-    weak var view: UserViewProtocol?
-    private let interactor: UserInteractor
-    private let router: UserRouter
+class VIPERUserPresenter {
+    weak var view: VIPERUserViewProtocol?
+    private let interactor: VIPERUserInteractor
+    private let router: VIPERUserRouter
     
-    init(interactor: UserInteractor, router: UserRouter) {
+    init(interactor: VIPERUserInteractor, router: VIPERUserRouter) {
         self.interactor = interactor
         self.router = router
     }
@@ -22,26 +22,26 @@ class UserPresenter {
         
         interactor.fetchUsers { [weak self] users in
             self?.view?.hideLoading()
-            self?.view?.displayUsers(users.map { UserViewModel(user: $0) })
+            self?.view?.displayUsers(users.map { VIPERUserViewModel(user: $0) })
         }
     }
     
     /// 处理用户选择
     /// - Parameter userViewModel: 选中的用户视图模型
-    func didSelectUser(userViewModel: UserViewModel) {
+    func didSelectUser(userViewModel: VIPERUserViewModel) {
         router.navigateToUserDetail(userID: userViewModel.id)
     }
 }
 
 /// 用户视图协议，定义了 View 需要实现的方法
-protocol UserViewProtocol: AnyObject {
+protocol VIPERUserViewProtocol: AnyObject {
     func showLoading()
     func hideLoading()
-    func displayUsers(_ users: [UserViewModel])
+    func displayUsers(_ users: [VIPERUserViewModel])
 }
 
 /// 用户视图模型，用于在 Presenter 和 View 之间传递数据
-struct UserViewModel {
+struct VIPERUserViewModel {
     let id: Int
     let name: String
     let email: String

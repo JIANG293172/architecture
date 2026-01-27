@@ -8,7 +8,7 @@
 import UIKit
 
 /// 用户路由器，负责导航逻辑
-class UserRouter {
+class VIPERUserRouter {
     private weak var navigationController: UINavigationController?
     
     init(navigationController: UINavigationController) {
@@ -19,10 +19,10 @@ class UserRouter {
     /// - Parameter userID: 用户ID
     func navigateToUserDetail(userID: Int) {
         // 创建用户详情页的 VIPER 组件
-        let userDetailInteractor = UserDetailInteractor()
-        let userDetailRouter = UserDetailRouter(navigationController: navigationController)
-        let userDetailPresenter = UserDetailPresenter(interactor: userDetailInteractor, router: userDetailRouter, userID: userID)
-        let userDetailViewController = UserDetailViewController(presenter: userDetailPresenter)
+        let userDetailInteractor = VIPERUserDetailInteractor()
+        let userDetailRouter = VIPERUserDetailRouter(navigationController: navigationController)
+        let userDetailPresenter = VIPERUserDetailPresenter(interactor: userDetailInteractor, router: userDetailRouter, userID: userID)
+        let userDetailViewController = VIPERUserDetailViewController(presenter: userDetailPresenter)
         
         // 设置 presenter 的 view
         userDetailPresenter.view = userDetailViewController
@@ -33,7 +33,7 @@ class UserRouter {
 }
 
 /// 用户详情路由器，负责导航逻辑
-class UserDetailRouter {
+class VIPERUserDetailRouter {
     private weak var navigationController: UINavigationController?
     
     init(navigationController: UINavigationController?) {

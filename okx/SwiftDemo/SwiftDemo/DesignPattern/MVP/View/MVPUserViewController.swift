@@ -7,16 +7,17 @@
 
 import UIKit
 
-/// 用户列表视图控制器，实现了 UserViewProtocol 协议
-class UserViewController: UIViewController, UserViewProtocol {
-    private let presenter: UserPresenter
+/// 用户列表视图控制器，实现了 MVPUserViewProtocol 协议
+class MVPUserViewController: UIViewController, MVPUserViewProtocol {
+    private let presenter: MVPUserPresenter
     private let tableView = UITableView()
-    private var users: [UserViewModel] = []
+    private var users: [MVPUserModel] = []
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     
-    init(presenter: UserPresenter) {
+    init(presenter: MVPUserPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        self.presenter.view = self
     }
     
     required init?(coder: NSCoder) {
@@ -25,11 +26,14 @@ class UserViewController: UIViewController, UserViewProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "VIPER Users"
+        title = "MVP Users"
         view.backgroundColor = .white
         setupUI()
         setupTableView()
         setupActivityIndicator()
+        
+        // 设置 presenter 的 view
+        presenter.view = self
         
         // 加载用户列表
         presenter.loadUsers()
@@ -64,15 +68,27 @@ class UserViewController: UIViewController, UserViewProtocol {
         activityIndicator.stopAnimating()
     }
     
-    func displayUsers(_ users: [UserViewModel]) {
+    func displayUsers(_ users: [MVPUserModel]) {
         self.users = users
         tableView.reloadData()
+    }
+    
+    func navigateToUserDetail(_ user: MVPUserModel) {
+        // 创建用户详情页的 MVP 组件
+        let userDetailPresenter = MVPUserDetailPresenter(userDataService: MVPUserDataService(), userID: user.id)
+        let userDetailViewController = MVPUserDetailViewController(presenter: userDetailPresenter)
+        
+        // 设置 presenter 的 view
+        userDetailPresenter.view = userDetailViewController
+        
+        // 导航到用户详情页
+        navigationController?.pushViewController(userDetailViewController, animated: true)
     }
 }
 
 // MARK: - UITableViewDataSource
 
-extension UserViewController: UITableViewDataSource {
+extension MVPUserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
@@ -89,10 +105,10 @@ extension UserViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 
-extension UserViewController: UITableViewDelegate {
+extension MVPUserViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let user = users[indexPath.row]
-        presenter.didSelectUser(userViewModel: user)
+        presenter.didSelectUser(user: user)
     }
 }

@@ -9,13 +9,13 @@ import UIKit
 import Combine
 
 /// 用户列表视图控制器，使用 MVVM 架构
-class UserViewController: UIViewController {
-    private let viewModel: UserViewModel
+class MVVMUserViewController: UIViewController {
+    private let viewModel: MVVMUserViewModel
     private let tableView = UITableView()
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: UserViewModel) {
+    init(viewModel: MVVMUserViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -93,7 +93,7 @@ class UserViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-extension UserViewController: UITableViewDataSource {
+extension MVVMUserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.users.count
     }
@@ -110,14 +110,14 @@ extension UserViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 
-extension UserViewController: UITableViewDelegate {
+extension MVVMUserViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let user = viewModel.users[indexPath.row]
         
         // 创建用户详情页的 MVVM 组件
-        let userDetailViewModel = UserDetailViewModel(userDataService: UserDataService(), userID: user.id)
-        let userDetailViewController = UserDetailViewController(viewModel: userDetailViewModel)
+        let userDetailViewModel = MVVMUserDetailViewModel(userDataService: MVVMUserDataService(), userID: user.id)
+        let userDetailViewController = MVVMUserDetailViewController(viewModel: userDetailViewModel)
         
         // 导航到用户详情页
         navigationController?.pushViewController(userDetailViewController, animated: true)

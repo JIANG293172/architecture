@@ -6,13 +6,13 @@
 //
 
 /// 用户详情展示器，作为 View 和 Interactor 之间的中介
-class UserDetailPresenter {
-    weak var view: UserDetailViewProtocol?
-    private let interactor: UserDetailInteractor
-    private let router: UserDetailRouter
+class VIPERUserDetailPresenter {
+    weak var view: VIPERUserDetailViewProtocol?
+    private let interactor: VIPERUserDetailInteractor
+    private let router: VIPERUserDetailRouter
     private let userID: Int
     
-    init(interactor: UserDetailInteractor, router: UserDetailRouter, userID: Int) {
+    init(interactor: VIPERUserDetailInteractor, router: VIPERUserDetailRouter, userID: Int) {
         self.interactor = interactor
         self.router = router
         self.userID = userID
@@ -25,7 +25,7 @@ class UserDetailPresenter {
         interactor.fetchUserDetails(id: userID) { [weak self] user in
             self?.view?.hideLoading()
             if let user = user {
-                self?.view?.displayUserDetail(UserDetailViewModel(user: user))
+                self?.view?.displayUserDetail(VIPERUserDetailViewModel(user: user))
             } else {
                 self?.view?.displayError("User not found")
             }
@@ -39,15 +39,15 @@ class UserDetailPresenter {
 }
 
 /// 用户详情视图协议，定义了 View 需要实现的方法
-protocol UserDetailViewProtocol: AnyObject {
+protocol VIPERUserDetailViewProtocol: AnyObject {
     func showLoading()
     func hideLoading()
-    func displayUserDetail(_ user: UserDetailViewModel)
+    func displayUserDetail(_ user: VIPERUserDetailViewModel)
     func displayError(_ message: String)
 }
 
 /// 用户详情视图模型，用于在 Presenter 和 View 之间传递数据
-struct UserDetailViewModel {
+struct VIPERUserDetailViewModel {
     let id: Int
     let name: String
     let email: String

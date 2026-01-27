@@ -9,16 +9,16 @@ import Foundation
 import Combine
 
 /// 用户详情视图模型，负责处理用户详情的业务逻辑和数据转换
-class UserDetailViewModel: ObservableObject {
-    @Published var user: UserModel? = nil
+class MVVMUserDetailViewModel: ObservableObject {
+    @Published var user: MVVMUserModel? = nil
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
-    private let userDataService: UserDataService
+    private let userDataService: MVVMUserDataService
     private let userID: Int
     private var cancellables = Set<AnyCancellable>()
     
-    init(userDataService: UserDataService, userID: Int) {
+    init(userDataService: MVVMUserDataService, userID: Int) {
         self.userDataService = userDataService
         self.userID = userID
     }

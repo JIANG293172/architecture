@@ -9,17 +9,20 @@ import UIKit
 import Combine
 
 /// 用户详情视图控制器，使用 MVVM 架构
-class UserDetailViewController: UIViewController {
-    private let viewModel: UserDetailViewModel
+class MVVMUserDetailViewController: UIViewController {
+    private let viewModel: MVVMUserDetailViewModel
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let stackView = UIStackView()
     private let idLabel = UILabel()
     private let nameLabel = UILabel()
     private let emailLabel = UILabel()
     private let ageLabel = UILabel()
+    private let backButton = UIButton(type: .system)
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: UserDetailViewModel) {
+    init(viewModel: MVVMUserDetailViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
