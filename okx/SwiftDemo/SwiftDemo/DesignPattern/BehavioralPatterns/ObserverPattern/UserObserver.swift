@@ -7,7 +7,7 @@
 
 /// 用户观察者类，实现了 Observer 协议
 class UserObserver: Observer {
-    private let name: String
+    let name: String
     var lastMessage: String = ""
     
     /// 初始化方法
