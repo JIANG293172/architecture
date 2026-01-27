@@ -33,24 +33,3 @@ class LoggerAdapter: AppLogger {
         thirdPartyLogger.writeLog(content: message, priority: priority)
     }
 }
-
-/// 应用程序日志接口（目标接口）
-protocol AppLogger {
-    /// 记录日志
-    /// - Parameters:
-    ///   - message: 日志消息
-    ///   - level: 日志级别
-    func log(message: String, level: String)
-}
-
-/// 第三方日志库（被适配者）
-class ThirdPartyLogger {
-    /// 写入日志
-    /// - Parameters:
-    ///   - content: 日志内容
-    ///   - priority: 日志优先级（0: 普通, 1: 错误）
-    func writeLog(content: String, priority: Int) {
-        // 实际的日志记录逻辑
-        print("ThirdPartyLogger: [Priority \(priority)] \(content)")
-    }
-}
