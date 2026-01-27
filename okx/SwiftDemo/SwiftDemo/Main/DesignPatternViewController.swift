@@ -13,10 +13,10 @@ class DesignPatternViewController: ViewController {
     private let demoList: [[String: String]] = [
         ["title": "Singleton Pattern", "vcClassName": "SingletonPatternViewController"],
         ["title": "Factory Pattern", "vcClassName": "FactoryPatternViewController"],
-        ["title": "Observer Pattern", "vcClassName": "ObserverPatternViewController"],
         ["title": "Decorator Pattern", "vcClassName": "DecoratorPatternViewController"],
         ["title": "Strategy Pattern", "vcClassName": "StrategyPatternViewController"],
         ["title": "Adapter Pattern", "vcClassName": "AdapterPatternViewController"],
+        ["title": "Observer Pattern", "vcClassName": "ObserverPatternViewController"],
         ["title": "Coordinator Pattern", "vcClassName": "CoordinatorDemoViewController"]
     ]
     
