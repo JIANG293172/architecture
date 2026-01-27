@@ -10,7 +10,16 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let tableView = UITableView()
-    private let demoList = ["Metal", "SecureEnclave", "GCD", "续传", "combine", "RXSwift"]
+    private let demoList: [[String: String]] = [
+        ["title": "Metal", "vcClassName": "Demo1ViewController"],
+        ["title": "SecureEnclave", "vcClassName": "Demo2ViewController"],
+        ["title": "GCD", "vcClassName": "Demo3ViewController"],
+        ["title": "续传", "vcClassName": "Demo4ViewController"],
+        ["title": "combine", "vcClassName": "Demo5ViewController"],
+        ["title": "RXSwift", "vcClassName": "Demo6ViewController"],
+        ["title": "POP", "vcClassName": "Demo7ViewController"],
+        ["title": "设计模式", "vcClassName": "Demo8ViewController"]
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +52,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = demoList[indexPath.row]
+        let demoItem = demoList[indexPath.row]
+        cell.textLabel?.text = demoItem["title"]
         cell.textLabel?.textColor = .black
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = .white
@@ -59,26 +69,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        var targetVC: UIViewController
-        
-        switch indexPath.row {
-        case 0:
-            targetVC = Demo1ViewController()
-        case 1:
-            targetVC = Demo2ViewController()
-        case 2:
-            targetVC = Demo3ViewController()
-        case 3:
-            targetVC = Demo4ViewController()
-        case 4:
-            targetVC = Demo5ViewController()
-        case 5:
-            targetVC = Demo6ViewController()
-        default:
+        let demoItem = demoList[indexPath.row]
+        guard let vcClassName = demoItem["vcClassName"] else {
             return
         }
         
-        navigationController?.pushViewController(targetVC, animated: true)
+        // Use runtime to create view controller from class name
+        if let vcClass = NSClassFromString("SwiftDemo." + vcClassName) as? UIViewController.Type {
+            let targetVC = vcClass.init()
+            navigationController?.pushViewController(targetVC, animated: true)
+        }
     }
 }
 
