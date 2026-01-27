@@ -18,7 +18,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         ["title": "combine", "vcClassName": "Demo5ViewController"],
         ["title": "RXSwift", "vcClassName": "Demo6ViewController"],
         ["title": "POP", "vcClassName": "Demo7ViewController"],
-        ["title": "设计模式", "vcClassName": "Demo8ViewController"]
+        ["title": "设计模式", "vcClassName": "Demo8ViewController"],
+        ["title": "算法", "vcClassName": "AlgorithmListViewController"]
     ]
     
     override func viewDidLoad() {
