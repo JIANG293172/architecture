@@ -25,7 +25,9 @@ class StrategyPatternViewController: UIViewController {
     private func setupUI() {
         // Setup amount text field
         amountTextField.frame = CGRect(x: 50, y: 100, width: view.frame.width - 100, height: 40)
-        amountTextField.borderStyle = .roundedRect
+        amountTextField.layer.borderWidth = 1.0
+        amountTextField.layer.borderColor = UIColor.gray.cgColor
+        amountTextField.layer.cornerRadius = 8.0
         amountTextField.placeholder = "Enter original amount"
         amountTextField.keyboardType = .decimalPad
         view.addSubview(amountTextField)

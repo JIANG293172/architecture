@@ -16,6 +16,7 @@ class DesignPatternViewController: ViewController {
         ["title": "Observer Pattern", "vcClassName": "ObserverPatternViewController"],
         ["title": "Decorator Pattern", "vcClassName": "DecoratorPatternViewController"],
         ["title": "Strategy Pattern", "vcClassName": "StrategyPatternViewController"],
+        ["title": "Adapter Pattern", "vcClassName": "AdapterPatternViewController"],
         ["title": "Coordinator Pattern", "vcClassName": "CoordinatorDemoViewController"]
     ]
     
