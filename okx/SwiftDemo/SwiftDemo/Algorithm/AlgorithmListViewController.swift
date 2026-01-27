@@ -10,7 +10,10 @@ class AlgorithmListViewController: ViewController {
         ["title": "Binary Tree Max Depth", "vcClassName": "MaxDepthViewController"],
         ["title": "Reverse Linked List", "vcClassName": "ReverseListViewController"],
         ["title": "Quick Sort", "vcClassName": "QuickSortViewController"],
-        ["title": "Longest Continuous Increasing Subsequence", "vcClassName": "LCISViewController"]
+        ["title": "Longest Continuous Increasing Subsequence", "vcClassName": "LCISViewController"],
+        ["title": "Bubble Sort", "vcClassName": "BubbleSortViewController"],
+        ["title": "Linked List Cycle Detection", "vcClassName": "HasCycleViewController"],
+        ["title": "Two Sum", "vcClassName": "TwoSumViewController"]
     ]
     
     override func viewDidLoad() {
