@@ -2,6 +2,32 @@ import XCTest
 import Combine
 @testable import SwiftDemo
 
+//XCTest 常用 API 整理（作用 + 触发失败条件）
+//以下表格覆盖 XCTest 最核心的断言 / 辅助 API，按「基础断言」「数值断言」「集合 / 可选型断言」「流程控制」分类，清晰标注每个 API 的核心作用和触发测试失败的条件，适配 iOS/macOS 测试场景：
+//分类    API 名称    核心作用    触发失败的条件
+//基础断言    XCTAssert(condition, _ message:)    验证任意布尔条件为 true（最通用断言）    condition 为 false 时失败
+//XCTAssertTrue(condition, _ message:)    显式验证条件为 true（语义更清晰）    condition 为 false 时失败
+//XCTAssertFalse(condition, _ message:)    验证条件为 false    condition 为 true 时失败
+//XCTFail(_ message:)    主动触发测试失败（无前置条件）    只要执行到该代码，测试立即失败
+//数值断言    XCTAssertEqual(a, b, _ message:)    验证两个值相等（支持 Equatable 类型：Int/String/ 枚举等）    a != b 时失败（如 1 != 2、.authenticating != .failed）
+//XCTAssertNotEqual(a, b, _ message:)    验证两个值不相等    a == b 时失败
+//XCTAssertGreaterThan(a, b, _ message:)    验证 a > b（支持 Comparable 类型：Int/Float/Double 等）    a ≤ b 时失败（如 0 > 0、5 > 10）
+//XCTAssertGreaterThanOrEqual(a, b, _)    验证 a ≥ b    a < b 时失败
+//XCTAssertLessThan(a, b, _ message:)    验证 a < b    a ≥ b 时失败
+//XCTAssertLessThanOrEqual(a, b, _)    验证 a ≤ b    a > b 时失败
+//XCTAssertEqualWithAccuracy(a, b, accuracy:)    验证浮点型值近似相等（解决精度问题，如 0.1+0.2≠0.3）    `    a - b    > accuracy时失败（如accuracy=0.001，0.3001 ≠ 0.3`）
+//集合 / 可选型断言    XCTAssertNil(optional, _ message:)    验证可选型为 nil    可选型有值（如 Optional("test")）时失败
+//XCTAssertNotNil(optional, _ message:)    验证可选型非 nil    可选型为 nil 时失败
+//XCTAssertEmpty(collection, _ message:)    验证集合（Array/Dictionary/Set）为空（需导入 XCTestExtensions）    集合 count > 0 时失败
+//XCTAssertNotEmpty(collection, _ message:)    验证集合非空    集合 count == 0 时失败
+//XCTAssertContains(collection, element, _)    验证集合包含指定元素（需导入 XCTestExtensions）    集合中无该元素时失败
+//错误 / 异常断言    XCTAssertThrowsError(expression, _ message:)    验证代码块抛出异常    代码块未抛出任何异常时失败
+//XCTAssertNoThrow(expression, _ message:)    验证代码块不抛出异常    代码块抛出任意异常时失败
+//XCTAssertThrowsError(expression) { error in ... }    验证抛出指定类型 / 内容的异常    未抛出异常，或抛出的异常与预期类型 / 内容不符时失败
+//流程控制 / 辅助    XCTContext.runActivity(named: _ block:)    给测试步骤分组，添加子任务 / 附件（用于测试报告）    本身不触发失败，仅用于增强测试报告可读性
+//XCTAttachment(content:)    给测试添加附件（如日志、截图、数据文件）    本身不触发失败，附件会显示在测试报告中
+//XCTWaiter().wait(for:timeout:)    等待异步任务完成（如网络请求、回调）    超时未满足等待条件（如 expectation.fulfill() 未执行）时失败
+
 /// AuthenticationManager 测试用例
 /// 测试 PassthroughSubject 的使用和认证流程
 class AuthenticationManagerTests: XCTestCase {
