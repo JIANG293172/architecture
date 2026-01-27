@@ -15,7 +15,8 @@ class DesignPatternViewController: ViewController {
         ["title": "Factory Pattern", "vcClassName": "FactoryPatternViewController"],
         ["title": "Observer Pattern", "vcClassName": "ObserverPatternViewController"],
         ["title": "Decorator Pattern", "vcClassName": "DecoratorPatternViewController"],
-        ["title": "Strategy Pattern", "vcClassName": "StrategyPatternViewController"]
+        ["title": "Strategy Pattern", "vcClassName": "StrategyPatternViewController"],
+        ["title": "Coordinator Pattern", "vcClassName": "CoordinatorDemoViewController"]
     ]
     
     override func viewDidLoad() {
