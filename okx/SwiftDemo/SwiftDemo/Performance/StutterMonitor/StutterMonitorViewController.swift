@@ -86,7 +86,7 @@ class StutterMonitorViewController: UIViewController {
         view.addSubview(logTextView)
         
         // 配置日志重定向
-        redirectConsoleLogToTextView()
+        /*redirectConsoleLogToTextView*/()
     }
     
     /// 启动按钮点击事件
