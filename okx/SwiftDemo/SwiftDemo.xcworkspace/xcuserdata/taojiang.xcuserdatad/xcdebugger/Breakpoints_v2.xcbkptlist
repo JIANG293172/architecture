@@ -62,6 +62,36 @@
             endingLineNumber = "49"
             landmarkName = "startMonitoring()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D222291E-A668-45DA-B283-97C7957D56C3 - d5952ea0595f34e4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SwiftDemo.PerformanceMonitor.startMonitoring() -&gt; ()"
+                  moduleName = "SwiftDemo.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/taojiang/Desktop/poxiao/architecture/okx/SwiftDemo/SwiftDemo/Performance/StutterMonitor/StutterMonitor.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+               <Location
+                  uuid = "D222291E-A668-45DA-B283-97C7957D56C3 - d07e8f878357cc48"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; () in SwiftDemo.PerformanceMonitor.startMonitoring() -&gt; ()"
+                  moduleName = "SwiftDemo.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/taojiang/Desktop/poxiao/architecture/okx/SwiftDemo/SwiftDemo/Performance/StutterMonitor/StutterMonitor.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -94,6 +124,20 @@
             endingLineNumber = "40"
             landmarkName = "startMonitoring()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "59032601-BD9C-46FB-BDFD-32D4892A78FF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftDemo/Performance/RunloopMonitor/RunloopMonitorViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

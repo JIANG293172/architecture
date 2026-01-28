@@ -6,7 +6,9 @@ class PerformanceListViewController: ViewController {
     /// 性能演示列表，包含演示标题和对应的视图控制器类名
     /// 思路：使用字典数组存储性能演示信息，便于动态创建对应的演示页面
     private let demoList: [[String: String]] = [
-        ["title": "Stutter Monitor", "vcClassName": "StutterMonitorViewController"]
+        ["title": "Stutter Monitor", "vcClassName": "StutterMonitorViewController"],
+        ["title": "RunLoop Monitor", "vcClassName": "RunloopMonitorViewController"],
+        ["title": "RunLoop Idle Task", "vcClassName": "RunloopIdleTaskViewController"]
     ]
     
     override func viewDidLoad() {
