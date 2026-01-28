@@ -1,6 +1,11 @@
 PODS:
   - Alamofire (5.10.2)
+  - CocoaMQTT (2.1.6):
+    - CocoaMQTT/Core (= 2.1.6)
+  - CocoaMQTT/Core (2.1.6):
+    - MqttCocoaAsyncSocket (~> 1.0.8)
   - Differentiator (5.0.0)
+  - MqttCocoaAsyncSocket (1.0.8)
   - PromiseKit (8.2.0):
     - PromiseKit/CorePromise (= 8.2.0)
     - PromiseKit/Foundation (= 8.2.0)
@@ -31,6 +36,8 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - CocoaMQTT
+  - MqttCocoaAsyncSocket
   - PromiseKit
   - Protobuf
   - RxAlamofire (~> 6.1)
@@ -44,7 +51,9 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
     - Alamofire
+    - CocoaMQTT
     - Differentiator
+    - MqttCocoaAsyncSocket
     - PromiseKit
     - Protobuf
     - RxAlamofire
@@ -57,7 +66,9 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  CocoaMQTT: 1f206228b29318eabdacad0c2e4e88575922c27a
   Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
+  MqttCocoaAsyncSocket: 77d3b74f76228dd5a05d1f9526eab101d415b30c
   PromiseKit: 74e6ab5894856b4762fef547055c809bca91d440
   Protobuf: 16a2e1ce67f7006ced3dc46a02a84a6a15853d55
   RxAlamofire: beb75a1c452d0de225651db4903f5d29d034a620
@@ -68,6 +79,6 @@ SPEC CHECKSUMS:
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
 
-PODFILE CHECKSUM: 92c1aa476aab2b522dd7f4ed615882c0ca14a48e
+PODFILE CHECKSUM: 38540969b9569276be30234e76b0ad7f91db2619
 
 COCOAPODS: 1.16.2

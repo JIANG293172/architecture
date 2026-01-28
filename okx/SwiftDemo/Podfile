@@ -6,6 +6,7 @@ source 'https://github.com/aliyun/aliyun-specs.git'
 
 # 禁止所有 Pods 库的警告
 inhibit_all_warnings!
+use_modular_headers!
 
 # 在你的项目主 Target 中定义依赖
 target 'SwiftDemo' do
@@ -19,7 +20,9 @@ target 'SwiftDemo' do
   pod 'RxDataSources', '~> 5.0' # 列表数据源
   pod 'RxAlamofire', '~> 6.1'   # 网络请求
   pod 'Protobuf'                # Google Protocol Buffer library
-  pod 'SwiftProtobuf'
+  pod 'SwiftProtobuf'           # Swift Protobuf support
+  pod 'CocoaMQTT', '~> 2.1'     # MQTT library for iOS
+  pod 'MqttCocoaAsyncSocket'    # Support for CocoaMQTT
 
   # 为测试目标添加依赖
   target 'SwiftDemoTests' do

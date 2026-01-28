@@ -14,7 +14,8 @@ class NetworkListViewController: ViewController {
     /// 思路：使用字典数组存储网络演示信息，便于动态创建对应的演示页面
     private let demoList: [[String: String]] = [
         ["title": "PropertyWrapper", "vcClassName": "PropertyWrapperViewController"],
-        ["title": "ProtocolBuffer", "vcClassName": "ProtocolBufferViewController"]
+        ["title": "ProtocolBuffer", "vcClassName": "ProtocolBufferViewController"],
+        ["title": "MQTT IM Demo", "vcClassName": "MQTTDemoViewController"]
     ]
     
     override func viewDidLoad() {
