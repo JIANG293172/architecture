@@ -19,6 +19,7 @@ target 'SwiftDemo' do
   pod 'RxDataSources', '~> 5.0' # 列表数据源
   pod 'RxAlamofire', '~> 6.1'   # 网络请求
   pod 'Protobuf'                # Google Protocol Buffer library
+  pod 'SwiftProtobuf'
 
   # 为测试目标添加依赖
   target 'SwiftDemoTests' do

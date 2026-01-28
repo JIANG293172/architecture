@@ -1,9 +1,10 @@
 import UIKit
 import Foundation
+import SwiftProtobuf // 引入 SwiftProtobuf 库
 
 /// Protocol Buffer 演示视图控制器
 /// 本示例展示了 Protocol Buffer 在 iOS 中的完整落地实现
-/// 包含类型定义、字节格式、序列化/反序列化、网络传输等示例
+/// 使用 SwiftProtobuf 库进行高性能的序列化和反序列化
 class ProtocolBufferViewController: UIViewController {
     
     /// 显示演示结果的文本视图
@@ -17,7 +18,7 @@ class ProtocolBufferViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Protocol Buffer Demo"
+        title = "Protobuf 最佳实践"
         view.backgroundColor = .white
         setupUI()
         setupActions()
@@ -26,32 +27,31 @@ class ProtocolBufferViewController: UIViewController {
     /// 设置用户界面
     private func setupUI() {
         // 设置分段控件
-        demoTypeSegmentedControl.frame = CGRect(x: 50, y: 100, width: view.frame.width - 100, height: 40)
-        demoTypeSegmentedControl.insertSegment(withTitle: "基本类型示例", at: 0, animated: false)
-        demoTypeSegmentedControl.insertSegment(withTitle: "嵌套消息示例", at: 1, animated: false)
-        demoTypeSegmentedControl.insertSegment(withTitle: "网络传输示例", at: 2, animated: false)
+        demoTypeSegmentedControl.frame = CGRect(x: 20, y: 100, width: view.frame.width - 40, height: 40)
+        demoTypeSegmentedControl.insertSegment(withTitle: "基础", at: 0, animated: false)
+        demoTypeSegmentedControl.insertSegment(withTitle: "复杂业务", at: 1, animated: false)
+        demoTypeSegmentedControl.insertSegment(withTitle: "网络模拟", at: 2, animated: false)
         demoTypeSegmentedControl.insertSegment(withTitle: "性能对比", at: 3, animated: false)
+        demoTypeSegmentedControl.insertSegment(withTitle: "JSON互转", at: 4, animated: false)
         demoTypeSegmentedControl.selectedSegmentIndex = 0
         view.addSubview(demoTypeSegmentedControl)
         
         // 设置执行按钮
         executeButton.frame = CGRect(x: 100, y: 160, width: view.frame.width - 200, height: 44)
-        executeButton.setTitle("执行演示", for: .normal)
+        executeButton.setTitle("开始演示", for: .normal)
         executeButton.setTitleColor(.white, for: .normal)
-        executeButton.backgroundColor = .blue
+        executeButton.backgroundColor = .systemBlue
         executeButton.layer.cornerRadius = 22
         view.addSubview(executeButton)
         
         // 设置结果文本视图
-        resultTextView.frame = CGRect(x: 50, y: 220, width: view.frame.width - 100, height: 400)
-        resultTextView.backgroundColor = .lightGray.withAlphaComponent(0.2)
-        resultTextView.textColor = .black
-        resultTextView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        resultTextView.frame = CGRect(x: 20, y: 220, width: view.frame.width - 40, height: view.frame.height - 300)
+        resultTextView.backgroundColor = .secondarySystemBackground
+        resultTextView.textColor = .label
+        resultTextView.font = UIFont.monospacedSystemFont(ofSize: 13, weight: .regular)
         resultTextView.isEditable = false
-        resultTextView.layer.borderWidth = 1.0
-        resultTextView.layer.borderColor = UIColor.gray.cgColor
         resultTextView.layer.cornerRadius = 8.0
-        resultTextView.text = "演示结果将显示在这里..."
+        resultTextView.text = "请选择演示类型并点击执行..."
         view.addSubview(resultTextView)
     }
     
@@ -68,11 +68,13 @@ class ProtocolBufferViewController: UIViewController {
         case 0:
             runBasicTypesDemo()
         case 1:
-            runNestedMessageDemo()
+            runComplexOrderDemo()
         case 2:
-            runNetworkTransmissionDemo()
+            runNetworkSimulationDemo()
         case 3:
             runPerformanceComparisonDemo()
+        case 4:
+            runJSONInteropDemo()
         default:
             break
         }
@@ -80,1001 +82,387 @@ class ProtocolBufferViewController: UIViewController {
         updateResultTextView()
     }
     
-    /// 基本类型示例
+    /// 1. 基础类型示例
     private func runBasicTypesDemo() {
-        appendResult("=== 基本类型示例 ===")
+        appendResult("🚀 [基础类型示例]")
         
-        // 创建用户消息
-        let user = PBUser()
-        user.id = 1
-        user.name = "张三"
-        user.email = "zhangsan@example.com"
+        // 使用 SwiftProtobuf 生成的消息类
+        var user = PBUser()
+        user.id = 1001
+        user.name = "阿强"
+        user.email = "qiang@okx.com"
         user.isActive = true
-        user.score = 95.5
-        user.tags = ["iOS", "Developer", "ProtocolBuffer"]
+        user.score = 99.8
+        user.tags = ["Swift", "Protobuf", "Crypto"]
         
-        appendResult("原始消息:")
-        appendResult("ID: \(user.id)")
-        appendResult("Name: \(user.name)")
-        appendResult("Email: \(user.email)")
-        appendResult("Is Active: \(user.isActive)")
-        appendResult("Score: \(user.score)")
-        appendResult("Tags: \(user.tags)")
-        
-        // 序列化
         do {
-            let data = try user.serializedData()
-            appendResult("\n序列化后的字节数据:")
-            appendResult("字节长度: \(data.count)")
-            appendResult("字节内容: \(data.pbHexString())")
+            // 序列化为二进制 Data
+            let binaryData = try user.serializedData()
+            appendResult("✅ 序列化成功: \(binaryData.count) 字节")
+            appendResult("📦 字节内容: \(binaryData.hexDescription)")
             
             // 反序列化
-            let deserializedUser = try PBUser(serializedData: data)
-            appendResult("\n反序列化后的消息:")
-            appendResult("ID: \(deserializedUser.id)")
-            appendResult("Name: \(deserializedUser.name)")
-            appendResult("Email: \(deserializedUser.email)")
-            appendResult("Is Active: \(deserializedUser.isActive)")
-            appendResult("Score: \(deserializedUser.score)")
-            appendResult("Tags: \(deserializedUser.tags)")
+            let decodedUser = try PBUser(serializedData: binaryData)
+            appendResult("🔍 反序列化成功:")
+            appendResult("   - ID: \(decodedUser.id)")
+            appendResult("   - Name: \(decodedUser.name)")
+            appendResult("   - Tags: \(decodedUser.tags.joined(separator: ", "))")
         } catch {
-            appendResult("\n错误: \(error.localizedDescription)")
+            appendResult("❌ 错误: \(error)")
         }
-        
-        appendResult("\n=== 基本类型示例结束 ===")
     }
     
-    /// 嵌套消息示例
-    private func runNestedMessageDemo() {
-        appendResult("=== 嵌套消息示例 ===")
+    /// 2. 复杂业务场景（订单/嵌套/枚举/重复字段）
+    private func runComplexOrderDemo() {
+        appendResult("🚀 [复杂业务场景: 订单系统]")
         
-        // 创建地址消息
-        let address = Address()
-        address.street = "科技园路"
-        address.city = "深圳"
-        address.province = "广东"
-        address.zipCode = "518000"
+        var order = PBOrder()
+        order.orderID = "ORD-2024-001"
+        order.status = .paid
+        order.timestamp = Int64(Date().timeIntervalSince1970)
         
-        // 创建公司消息
-        let company = Company()
-        company.name = "科技有限公司"
-        company.address = address
-        company.employeeCount = 100
+        // 嵌套商品 1
+        var p1 = PBProduct()
+        p1.id = 501
+        p1.name = "Bitcoin"
+        p1.price = 65000.0
         
-        // 创建用户消息（包含公司信息）
-        let user = PBUser()
-        user.id = 2
-        user.name = "李四"
-        user.email = "lisi@example.com"
-        user.company = company
+        // 嵌套商品 2
+        var p2 = PBProduct()
+        p2.id = 502
+        p2.name = "Ethereum"
+        p2.price = 3500.0
         
-        appendResult("原始嵌套消息:")
-        appendResult("用户: \(user.name)")
-        appendResult("公司: \(user.company?.name ?? "")")
-        appendResult("公司地址: \(user.company?.address?.street ?? ""), \(user.company?.address?.city ?? "")")
+        order.items = [p1, p2]
         
-        // 序列化
+        // 嵌套地址
+        var addr = PBAddress()
+        addr.city = "Singapore"
+        addr.street = "Marina Bay"
+        order.address = addr
+        
         do {
-            let data = try user.serializedData()
-            appendResult("\n序列化后的字节数据:")
-            appendResult("字节长度: \(data.count)")
-            appendResult("字节内容: \(data.pbHexString())")
+            let data = try order.serializedData()
+            appendResult("✅ 复杂订单序列化成功: \(data.count) 字节")
             
-            // 反序列化
-            let deserializedUser = try PBUser(serializedData: data)
-            appendResult("\n反序列化后的嵌套消息:")
-            appendResult("用户: \(deserializedUser.name)")
-            appendResult("公司: \(deserializedUser.company?.name ?? "")")
-            appendResult("公司地址: \(deserializedUser.company?.address?.street ?? ""), \(deserializedUser.company?.address?.city ?? "")")
+            let decodedOrder = try PBOrder(serializedData: data)
+            appendResult("🔍 订单详情:")
+            appendResult("   - ID: \(decodedOrder.orderID)")
+            appendResult("   - 状态: \(decodedOrder.status)")
+            appendResult("   - 商品数量: \(decodedOrder.items.count)")
+            appendResult("   - 首个商品: \(decodedOrder.items.first?.name ?? "") ($\(decodedOrder.items.first?.price ?? 0))")
+            appendResult("   - 配送城市: \(decodedOrder.address.city)")
         } catch {
-            appendResult("\n错误: \(error.localizedDescription)")
+            appendResult("❌ 错误: \(error)")
         }
-        
-        appendResult("\n=== 嵌套消息示例结束 ===")
     }
     
-    /// 网络传输示例
-    private func runNetworkTransmissionDemo() {
-        appendResult("=== 网络传输示例 ===")
+    /// 3. 网络模拟（从原始二进制流解析）
+    private func runNetworkSimulationDemo() {
+        appendResult("🚀 [网络模拟: 原始二进制解析]")
         
-        // 模拟创建网络请求消息
-        let request = APIRequest()
-        request.type = APIRequest.RequestType.login
-        request.timestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        // 模拟更复杂的网络场景：一个包含嵌套对象和枚举的订单数据
+        // 对应 PBOrder: 
+        // order_id: "NET-99" (1: 0a 06 4e 45 54 2d 39 39)
+        // status: paid (2: 10 01)
+        // timestamp: 1711234567 (5: 28 d7 b3 a3 b1 06)
+        let mockOrderBytes: [UInt8] = [
+            0x0a, 0x06, 0x4e, 0x45, 0x54, 0x2d, 0x39, 0x39, // tag 1 (string), len 6, "NET-99"
+            0x10, 0x01,                                     // tag 2 (varint), value 1 (paid)
+            0x28, 0xd7, 0xb3, 0xa3, 0xb1, 0x06              // tag 5 (varint), value 1711234567
+        ]
+        let networkData = Data(mockOrderBytes)
         
-        // 设置登录参数
-        let loginParams = LoginParams()
-        loginParams.username = "testuser"
-        loginParams.password = "password123"
-        request.loginParams = loginParams
+        appendResult("📡 模拟从网络 Socket 接收到字节流:")
+        appendResult("📦 原始 Hex: \(networkData.hexDescription)")
         
-        appendResult("请求消息:")
-        appendResult("类型: \(request.type)")
-        appendResult("时间戳: \(request.timestamp)")
-        appendResult("用户名: \(request.loginParams?.username ?? "")")
-        
-        // 序列化
         do {
-            let data = try request.serializedData()
-            appendResult("\n序列化后的请求数据:")
-            appendResult("字节长度: \(data.count)")
-            appendResult("字节内容: \(data.pbHexString())")
+            // 使用 SwiftProtobuf 库的核心解析能力
+            let order = try PBOrder(serializedData: networkData)
             
-            // 模拟网络传输（这里只是演示，实际项目中会通过网络发送）
-            appendResult("\n模拟网络传输...")
+            appendResult("✅ SwiftProtobuf 库解析成功:")
+            appendResult("   - 订单编号: \(order.orderID)")
+            appendResult("   - 订单状态: \(order.status == .paid ? "已支付 (1)" : "其他")")
+            appendResult("   - 时间戳: \(order.timestamp)")
             
-            // 模拟服务器响应
-            let response = APIResponse()
-            response.code = 200
-            response.message = "Login successful"
-            
-            let userInfo = UserInfo()
-            userInfo.id = 1001
-            userInfo.username = "testuser"
-            userInfo.nickname = "测试用户"
-            userInfo.avatar = "https://example.com/avatar.jpg"
-            response.userInfo = userInfo
-            
-            let responseData = try response.serializedData()
-            appendResult("\n服务器响应数据:")
-            appendResult("字节长度: \(responseData.count)")
-            appendResult("字节内容: \(responseData.pbHexString())")
-            
-            // 反序列化响应
-            let deserializedResponse = try APIResponse(serializedData: responseData)
-            appendResult("\n反序列化后的响应:")
-            appendResult("Code: \(deserializedResponse.code)")
-            appendResult("Message: \(deserializedResponse.message)")
-            appendResult("User ID: \(deserializedResponse.userInfo.id)")
-            appendResult("Username: \(deserializedResponse.userInfo.username)")
-            appendResult("Nickname: \(deserializedResponse.userInfo.nickname)")
+            // 演示动态性：如果增加未知字段，Protobuf 也能保持兼容
+            appendResult("💡 提示: Protobuf 具有向前兼容性，即使收到定义外的字段也不会崩溃")
         } catch {
-            appendResult("\n错误: \(error.localizedDescription)")
+            appendResult("❌ 解析失败: \(error)")
         }
-        
-        appendResult("\n=== 网络传输示例结束 ===")
     }
     
-    /// 性能对比示例
+    /// 4. 性能对比 (Protobuf vs JSON)
     private func runPerformanceComparisonDemo() {
-        appendResult("=== 性能对比示例 ===")
+        appendResult("🚀 [性能大比拼: PB vs JSON]")
         
-        // 创建测试数据
-        let user = PBUser()
-        user.id = 1
-        user.name = "测试用户"
-        user.email = "test@example.com"
-        user.isActive = true
-        user.score = 90.5
-        user.tags = ["iOS", "Developer", "ProtocolBuffer", "Performance", "Test"]
+        var user = PBUser()
+        user.id = 999
+        user.name = "PerformanceTester"
+        user.tags = Array(repeating: "TestTag", count: 20)
         
-        let address = Address()
-        address.street = "测试街道"
-        address.city = "测试城市"
-        address.province = "测试省份"
-        address.zipCode = "123456"
+        let count = 5000
         
-        let company = Company()
-        company.name = "测试公司"
-        company.address = address
-        company.employeeCount = 500
-        user.company = company
-        
-        // Protocol Buffer 性能测试
-        let pbStart = Date()
-        do {
-            for _ in 0..<1000 {
-                let data = try user.serializedData()
-                _ = try PBUser(serializedData: data)
-            }
-        } catch {
-            appendResult("Protocol Buffer 测试错误: \(error.localizedDescription)")
-            return
+        // PB 性能
+        let startPB = CACurrentMediaTime()
+        for _ in 0..<count {
+            let data = try! user.serializedData()
+            _ = try! PBUser(serializedData: data)
         }
-        let pbEnd = Date()
-        let pbTime = pbEnd.timeIntervalSince(pbStart) * 1000 // 毫秒
+        let endPB = CACurrentMediaTime()
+        let pbTime = (endPB - startPB) * 1000
         
-        // JSON 性能测试 - 创建一个简单的结构体用于对比
-        struct JSONUser: Codable {
+        // JSON 性能 (使用内置 JSONEncoder)
+        struct UserJSON: Codable {
             let id: Int32
             let name: String
-            let email: String
-            let isActive: Bool
-            let score: Double
             let tags: [String]
-            let company: JSONCompany?
-            
-            struct JSONCompany: Codable {
-                let name: String
-                let employeeCount: Int32
-                let address: JSONAddress?
-                
-                struct JSONAddress: Codable {
-                    let street: String
-                    let city: String
-                    let province: String
-                    let zipCode: String
-                }
-            }
         }
-        
-        let jsonUser = JSONUser(
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            isActive: user.isActive,
-            score: user.score,
-            tags: user.tags,
-            company: JSONUser.JSONCompany(
-                name: company.name,
-                employeeCount: company.employeeCount,
-                address: JSONUser.JSONCompany.JSONAddress(
-                    street: address.street,
-                    city: address.city,
-                    province: address.province,
-                    zipCode: address.zipCode
-                )
-            )
-        )
-        
-        let jsonStart = Date()
-        do {
-            for _ in 0..<1000 {
-                let jsonData = try JSONEncoder().encode(jsonUser)
-                _ = try JSONDecoder().decode(JSONUser.self, from: jsonData)
-            }
-        } catch {
-            appendResult("JSON 测试错误: \(error.localizedDescription)")
-            return
+        let userJSON = UserJSON(id: user.id, name: user.name, tags: user.tags)
+        let startJSON = CACurrentMediaTime()
+        for _ in 0..<count {
+            let data = try! JSONEncoder().encode(userJSON)
+            _ = try! JSONDecoder().decode(UserJSON.self, from: data)
         }
-        let jsonEnd = Date()
-        let jsonTime = jsonEnd.timeIntervalSince(jsonStart) * 1000 // 毫秒
+        let endJSON = CACurrentMediaTime()
+        let jsonTime = (endJSON - startJSON) * 1000
         
-        // 序列化大小对比
-        do {
-            let pbData = try user.serializedData()
-            let jsonData = try JSONEncoder().encode(jsonUser)
-            
-            appendResult("序列化大小对比:")
-            appendResult("Protocol Buffer: \(pbData.count) 字节")
-            appendResult("JSON: \(jsonData.count) 字节")
-            appendResult("压缩比例: \(String(format: "%.2f%%", Double(pbData.count) / Double(jsonData.count) * 100))")
-            
-            appendResult("\n性能对比 (1000次序列化/反序列化):")
-            appendResult("Protocol Buffer: \(String(format: "%.2f", pbTime)) 毫秒")
-            appendResult("JSON: \(String(format: "%.2f", jsonTime)) 毫秒")
-            appendResult("性能提升: \(String(format: "%.2f%%", (jsonTime - pbTime) / jsonTime * 100))")
-        } catch {
-            appendResult("大小对比错误: \(error.localizedDescription)")
-        }
+        appendResult("📊 结果 (运行 \(count) 次):")
+        appendResult("   - Protobuf: \(String(format: "%.2f", pbTime))ms")
+        appendResult("   - JSON: \(String(format: "%.2f", jsonTime))ms")
+        appendResult("📈 提升: \(String(format: "%.1f", jsonTime / pbTime))x 速度")
         
-        appendResult("\n=== 性能对比示例结束 ===")
+        let pbSize = try! user.serializedData().count
+        let jsonSize = try! JSONEncoder().encode(userJSON).count
+        appendResult("📉 体积对比: PB(\(pbSize)B) vs JSON(\(jsonSize)B)")
+        appendResult("   - 节省空间: \(String(format: "%.1f", Double(jsonSize-pbSize)/Double(jsonSize)*100))%")
     }
     
-    /// 追加结果
+    /// 5. JSON 互转示例 (Protobuf 的强大特性)
+    private func runJSONInteropDemo() {
+        appendResult("🚀 [Protobuf <=> JSON 互转]")
+        
+        var user = PBUser()
+        user.id = 888
+        user.name = "李小龙"
+        
+        do {
+            // PB -> JSON
+            let jsonString = try user.jsonString()
+            appendResult("✅ PB 转 JSON 字符串:")
+            appendResult("   \(jsonString)")
+            
+            // JSON -> PB
+            let newJSON = "{\"id\": 777, \"name\": \"叶问\"}"
+            let decodedFromJSON = try PBUser(jsonString: newJSON)
+            appendResult("✅ JSON 转回 PB 成功:")
+            appendResult("   - ID: \(decodedFromJSON.id)")
+            appendResult("   - Name: \(decodedFromJSON.name)")
+        } catch {
+            appendResult("❌ 转换失败: \(error)")
+        }
+    }
+    
     private func appendResult(_ text: String) {
         results.append(text)
+        print(text)
     }
     
-    /// 更新结果文本视图
     private func updateResultTextView() {
         resultTextView.text = results.joined(separator: "\n")
-        // 滚动到底部
         let bottom = NSMakeRange(resultTextView.text.count - 1, 1)
         resultTextView.scrollRangeToVisible(bottom)
     }
 }
 
-/// 扩展 Data 以显示十六进制字符串
+// MARK: - 数据转换扩展
 extension Data {
-    func pbHexString() -> String {
-        return map { String(format: "%02hhx", $0) }.joined()
+    var hexDescription: String {
+        return map { String(format: "%02x", $0) }.joined(separator: " ")
     }
 }
 
-/// 模拟 Protocol Buffer 生成的代码
-/// 实际项目中，这些代码会由 protoc 编译器自动生成
+// MARK: - Protobuf 消息类定义 (模拟 protoc 生成的代码)
+// 注意：在实际项目中，这些代码是由 protoc --swift_out=. 生成的
 
-// 用户消息
-class PBUser {
+struct PBUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+    static let protoMessageName: String = "PBUser"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "id"),
+        2: .same(proto: "name"),
+        3: .same(proto: "email"),
+        4: .standard(proto: "is_active"),
+        5: .same(proto: "score"),
+        6: .same(proto: "tags"),
+    ]
+
     var id: Int32 = 0
-    var name: String = ""
-    var email: String = ""
+    var name: String = String()
+    var email: String = String()
     var isActive: Bool = false
-    var score: Double = 0.0
+    var score: Double = 0
     var tags: [String] = []
-    var company: Company? = nil
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 id (varint)
-        data.append(encodeVarint(fieldNumber: 1, wireType: 0, value: UInt64(id)))
-        
-        // 序列化 name (string)
-        data.append(encodeString(fieldNumber: 2, value: name))
-        
-        // 序列化 email (string)
-        data.append(encodeString(fieldNumber: 3, value: email))
-        
-        // 序列化 isActive (bool)
-        data.append(encodeBool(fieldNumber: 4, value: isActive))
-        
-        // 序列化 score (double)
-        data.append(encodeDouble(fieldNumber: 5, value: score))
-        
-        // 序列化 tags (repeated string)
-        for tag in tags {
-            data.append(encodeString(fieldNumber: 6, value: tag))
-        }
-        
-        // 序列化 company (nested message)
-        if let company = company {
-            let companyData = try company.serializedData()
-            data.append(encodeMessage(fieldNumber: 7, value: companyData))
-        }
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
             switch fieldNumber {
-            case 1: // id
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    id = Int32(value)
-                    index += bytesRead
-                }
-            case 2: // name
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    name = value
-                    index += bytesRead
-                }
-            case 3: // email
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    email = value
-                    index += bytesRead
-                }
-            case 4: // isActive
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    isActive = value != 0
-                    index += bytesRead
-                }
-            case 5: // score
-                if wireType == 1 {
-                    score = decodeDouble(data: serializedData, index: index)
-                    index += 8
-                }
-            case 6: // tags
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    tags.append(value)
-                    index += bytesRead
-                }
-            case 7: // company
-                if wireType == 2 {
-                    let (length, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    index += bytesRead
-                    let companyData = serializedData.subdata(in: index..<index+Int(length))
-                    company = try Company(serializedData: companyData)
-                    index += Int(length)
-                }
-            default:
-                // 跳过未知字段
-                index += skipField(data: serializedData, index: index, wireType: wireType)
+            case 1: try decoder.decodeSingularInt32Field(value: &self.id)
+            case 2: try decoder.decodeSingularStringField(value: &self.name)
+            case 3: try decoder.decodeSingularStringField(value: &self.email)
+            case 4: try decoder.decodeSingularBoolField(value: &self.isActive)
+            case 5: try decoder.decodeSingularDoubleField(value: &self.score)
+            case 6: try decoder.decodeRepeatedStringField(value: &self.tags)
+            default: break
             }
+        }
+    }
+
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if self.id != 0 { try visitor.visitSingularInt32Field(value: self.id, fieldNumber: 1) }
+        if !self.name.isEmpty { try visitor.visitSingularStringField(value: self.name, fieldNumber: 2) }
+        if !self.email.isEmpty { try visitor.visitSingularStringField(value: self.email, fieldNumber: 3) }
+        if self.isActive != false { try visitor.visitSingularBoolField(value: self.isActive, fieldNumber: 4) }
+        if self.score != 0 { try visitor.visitSingularDoubleField(value: self.score, fieldNumber: 5) }
+        if !self.tags.isEmpty { try visitor.visitRepeatedStringField(value: self.tags, fieldNumber: 6) }
+        try unknownFields.traverse(visitor: &visitor)
+    }
+
+    static func ==(lhs: PBUser, rhs: PBUser) -> Bool {
+        if lhs.id != rhs.id {return false}
+        if lhs.name != rhs.name {return false}
+        if lhs.email != rhs.email {return false}
+        if lhs.isActive != rhs.isActive {return false}
+        if lhs.score != rhs.score {return false}
+        if lhs.tags != rhs.tags {return false}
+        if lhs.unknownFields != rhs.unknownFields {return false}
+        return true
+    }
+}
+
+// 订单枚举
+enum PBOrderStatus: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case pending // 0
+    case paid    // 1
+    case shipped // 2
+    case UNRECOGNIZED(Int)
+
+    init() { self = .pending }
+
+    init?(rawValue: Int) {
+        switch rawValue {
+        case 0: self = .pending
+        case 1: self = .paid
+        case 2: self = .shipped
+        default: self = .UNRECOGNIZED(rawValue)
+        }
+    }
+
+    var rawValue: Int {
+        switch self {
+        case .pending: return 0
+        case .paid: return 1
+        case .shipped: return 2
+        case .UNRECOGNIZED(let i): return i
         }
     }
 }
 
-// 公司消息
-class Company {
-    var name: String = ""
-    var address: Address? = nil
-    var employeeCount: Int32 = 0
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 name
-        data.append(encodeString(fieldNumber: 1, value: name))
-        
-        // 序列化 address
-        if let address = address {
-            let addressData = try address.serializedData()
-            data.append(encodeMessage(fieldNumber: 2, value: addressData))
-        }
-        
-        // 序列化 employeeCount
-        data.append(encodeVarint(fieldNumber: 3, wireType: 0, value: UInt64(employeeCount)))
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
+// 商品消息
+struct PBProduct: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+    static let protoMessageName: String = "PBProduct"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .same(proto: "id"),
+        2: .same(proto: "name"),
+        3: .same(proto: "price"),
+    ]
+    var id: Int64 = 0
+    var name: String = String()
+    var price: Double = 0
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
             switch fieldNumber {
-            case 1: // name
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    name = value
-                    index += bytesRead
-                }
-            case 2: // address
-                if wireType == 2 {
-                    let (length, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    index += bytesRead
-                    let addressData = serializedData.subdata(in: index..<index+Int(length))
-                    address = try Address(serializedData: addressData)
-                    index += Int(length)
-                }
-            case 3: // employeeCount
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    employeeCount = Int32(value)
-                    index += bytesRead
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
+            case 1: try decoder.decodeSingularInt64Field(value: &self.id)
+            case 2: try decoder.decodeSingularStringField(value: &self.name)
+            case 3: try decoder.decodeSingularDoubleField(value: &self.price)
+            default: break
             }
         }
+    }
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if self.id != 0 { try visitor.visitSingularInt64Field(value: self.id, fieldNumber: 1) }
+        if !self.name.isEmpty { try visitor.visitSingularStringField(value: self.name, fieldNumber: 2) }
+        if self.price != 0 { try visitor.visitSingularDoubleField(value: self.price, fieldNumber: 3) }
+        try unknownFields.traverse(visitor: &visitor)
     }
 }
 
 // 地址消息
-class Address {
-    var street: String = ""
-    var city: String = ""
-    var province: String = ""
-    var zipCode: String = ""
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 street
-        data.append(encodeString(fieldNumber: 1, value: street))
-        
-        // 序列化 city
-        data.append(encodeString(fieldNumber: 2, value: city))
-        
-        // 序列化 province
-        data.append(encodeString(fieldNumber: 3, value: province))
-        
-        // 序列化 zipCode
-        data.append(encodeString(fieldNumber: 4, value: zipCode))
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
+struct PBAddress: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+    static let protoMessageName: String = "PBAddress"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [1: .same(proto: "city"), 2: .same(proto: "street")]
+    var city: String = String()
+    var street: String = String()
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
             switch fieldNumber {
-            case 1: // street
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    street = value
-                    index += bytesRead
-                }
-            case 2: // city
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    city = value
-                    index += bytesRead
-                }
-            case 3: // province
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    province = value
-                    index += bytesRead
-                }
-            case 4: // zipCode
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    zipCode = value
-                    index += bytesRead
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
+            case 1: try decoder.decodeSingularStringField(value: &self.city)
+            case 2: try decoder.decodeSingularStringField(value: &self.street)
+            default: break
             }
         }
     }
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !self.city.isEmpty { try visitor.visitSingularStringField(value: self.city, fieldNumber: 1) }
+        if !self.street.isEmpty { try visitor.visitSingularStringField(value: self.street, fieldNumber: 2) }
+        try unknownFields.traverse(visitor: &visitor)
+    }
 }
 
-// API 请求消息
-class APIRequest {
-    enum RequestType: Int32 {
-        case login = 1
-        case register = 2
-        case getData = 3
+// 订单消息
+struct PBOrder: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+    static let protoMessageName: String = "PBOrder"
+    static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+        1: .standard(proto: "order_id"),
+        2: .same(proto: "status"),
+        3: .same(proto: "items"),
+        4: .same(proto: "address"),
+        5: .same(proto: "timestamp"),
+    ]
+    var orderID: String = String()
+    var status: PBOrderStatus = .pending
+    var items: [PBProduct] = []
+    var address: PBAddress {
+        get {return _address ?? PBAddress()}
+        set {_address = newValue}
     }
-    
-    var type: RequestType = .getData
+    private var _address: PBAddress? = nil
+    var hasAddress: Bool {return self._address != nil}
     var timestamp: Int64 = 0
-    var loginParams: LoginParams? = nil
-    var registerParams: RegisterParams? = nil
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 type
-        data.append(encodeVarint(fieldNumber: 1, wireType: 0, value: UInt64(type.rawValue)))
-        
-        // 序列化 timestamp
-        data.append(encodeVarint(fieldNumber: 2, wireType: 0, value: UInt64(timestamp)))
-        
-        // 序列化 loginParams
-        if let loginParams = loginParams {
-            let loginData = try loginParams.serializedData()
-            data.append(encodeMessage(fieldNumber: 3, value: loginData))
-        }
-        
-        // 序列化 registerParams
-        if let registerParams = registerParams {
-            let registerData = try registerParams.serializedData()
-            data.append(encodeMessage(fieldNumber: 4, value: registerData))
-        }
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+        while let fieldNumber = try decoder.nextFieldNumber() {
             switch fieldNumber {
-            case 1: // type
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    if let type = RequestType(rawValue: Int32(value)) {
-                        self.type = type
-                    }
-                    index += bytesRead
-                }
-            case 2: // timestamp
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    timestamp = Int64(value)
-                    index += bytesRead
-                }
-            case 3: // loginParams
-                if wireType == 2 {
-                    let (length, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    index += bytesRead
-                    let loginData = serializedData.subdata(in: index..<index+Int(length))
-                    loginParams = try LoginParams(serializedData: loginData)
-                    index += Int(length)
-                }
-            case 4: // registerParams
-                if wireType == 2 {
-                    let (length, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    index += bytesRead
-                    let registerData = serializedData.subdata(in: index..<index+Int(length))
-                    registerParams = try RegisterParams(serializedData: registerData)
-                    index += Int(length)
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
+            case 1: try decoder.decodeSingularStringField(value: &self.orderID)
+            case 2: try decoder.decodeSingularEnumField(value: &self.status)
+            case 3: try decoder.decodeRepeatedMessageField(value: &self.items)
+            case 4: try decoder.decodeSingularMessageField(value: &self._address)
+            case 5: try decoder.decodeSingularInt64Field(value: &self.timestamp)
+            default: break
             }
         }
     }
-}
-
-// 登录参数
-class LoginParams {
-    var username: String = ""
-    var password: String = ""
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 username
-        data.append(encodeString(fieldNumber: 1, value: username))
-        
-        // 序列化 password
-        data.append(encodeString(fieldNumber: 2, value: password))
-        
-        return data
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+        if !self.orderID.isEmpty { try visitor.visitSingularStringField(value: self.orderID, fieldNumber: 1) }
+        if self.status != .pending { try visitor.visitSingularEnumField(value: self.status, fieldNumber: 2) }
+        if !self.items.isEmpty { try visitor.visitRepeatedMessageField(value: self.items, fieldNumber: 3) }
+        if let v = self._address { try visitor.visitSingularMessageField(value: v, fieldNumber: 4) }
+        if self.timestamp != 0 { try visitor.visitSingularInt64Field(value: self.timestamp, fieldNumber: 5) }
+        try unknownFields.traverse(visitor: &visitor)
     }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
-            switch fieldNumber {
-            case 1: // username
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    username = value
-                    index += bytesRead
-                }
-            case 2: // password
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    password = value
-                    index += bytesRead
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
-            }
-        }
-    }
-}
-
-// 注册参数
-class RegisterParams {
-    var username: String = ""
-    var password: String = ""
-    var email: String = ""
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 username
-        data.append(encodeString(fieldNumber: 1, value: username))
-        
-        // 序列化 password
-        data.append(encodeString(fieldNumber: 2, value: password))
-        
-        // 序列化 email
-        data.append(encodeString(fieldNumber: 3, value: email))
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
-            switch fieldNumber {
-            case 1: // username
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    username = value
-                    index += bytesRead
-                }
-            case 2: // password
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    password = value
-                    index += bytesRead
-                }
-            case 3: // email
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    email = value
-                    index += bytesRead
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
-            }
-        }
-    }
-}
-
-// API 响应消息
-class APIResponse {
-    var code: Int32 = 0
-    var message: String = ""
-    var userInfo: UserInfo = UserInfo()
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 code
-        data.append(encodeVarint(fieldNumber: 1, wireType: 0, value: UInt64(code)))
-        
-        // 序列化 message
-        data.append(encodeString(fieldNumber: 2, value: message))
-        
-        // 序列化 userInfo
-        let userInfoData = try userInfo.serializedData()
-        data.append(encodeMessage(fieldNumber: 3, value: userInfoData))
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
-            switch fieldNumber {
-            case 1: // code
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    code = Int32(value)
-                    index += bytesRead
-                }
-            case 2: // message
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    message = value
-                    index += bytesRead
-                }
-            case 3: // userInfo
-                if wireType == 2 {
-                    let (length, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    index += bytesRead
-                    let userInfoData = serializedData.subdata(in: index..<index+Int(length))
-                    userInfo = try UserInfo(serializedData: userInfoData)
-                    index += Int(length)
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
-            }
-        }
-    }
-}
-
-// 用户信息
-class UserInfo {
-    var id: Int32 = 0
-    var username: String = ""
-    var nickname: String = ""
-    var avatar: String = ""
-    
-    /// 序列化
-    func serializedData() throws -> Data {
-        var data = Data()
-        
-        // 序列化 id
-        data.append(encodeVarint(fieldNumber: 1, wireType: 0, value: UInt64(id)))
-        
-        // 序列化 username
-        data.append(encodeString(fieldNumber: 2, value: username))
-        
-        // 序列化 nickname
-        data.append(encodeString(fieldNumber: 3, value: nickname))
-        
-        // 序列化 avatar
-        data.append(encodeString(fieldNumber: 4, value: avatar))
-        
-        return data
-    }
-    
-    /// 反序列化
-    convenience init(serializedData: Data) throws {
-        self.init()
-        var index = 0
-        
-        while index < serializedData.count {
-            let (fieldNumber, wireType, bytesRead) = decodeTag(data: serializedData, index: index)
-            index += bytesRead
-            
-            switch fieldNumber {
-            case 1: // id
-                if wireType == 0 {
-                    let (value, bytesRead) = decodeVarint(data: serializedData, index: index)
-                    id = Int32(value)
-                    index += bytesRead
-                }
-            case 2: // username
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    username = value
-                    index += bytesRead
-                }
-            case 3: // nickname
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    nickname = value
-                    index += bytesRead
-                }
-            case 4: // avatar
-                if wireType == 2 {
-                    let (value, bytesRead) = decodeString(data: serializedData, index: index)
-                    avatar = value
-                    index += bytesRead
-                }
-            default:
-                index += skipField(data: serializedData, index: index, wireType: wireType)
-            }
-        }
-    }
-}
-
-// Protocol Buffer 编码/解码工具函数
-
-/// 编码 varint
-func encodeVarint(fieldNumber: Int, wireType: Int, value: UInt64) -> Data {
-    var data = Data()
-    // 编码 tag
-    let tag = UInt64((fieldNumber << 3) | wireType)
-    data.append(encodeVarintValue(tag))
-    // 编码 value
-    data.append(encodeVarintValue(value))
-    return data
-}
-
-/// 编码 varint 值
-func encodeVarintValue(_ value: UInt64) -> Data {
-    var data = Data()
-    var v = value
-    while v >= 0x80 {
-        data.append(UInt8(v & 0x7F | 0x80))
-        v >>= 7
-    }
-    data.append(UInt8(v))
-    return data
-}
-
-/// 编码字符串
-func encodeString(fieldNumber: Int, value: String) -> Data {
-    var data = Data()
-    // 编码 tag
-    let tag = UInt64((fieldNumber << 3) | 2) // wireType 2 表示长度前缀
-    data.append(encodeVarintValue(tag))
-    // 编码长度
-    data.append(encodeVarintValue(UInt64(value.utf8.count)))
-    // 编码内容
-    data.append(value.data(using: .utf8)!)  // 强制解包，实际项目中应该处理
-    return data
-}
-
-/// 编码布尔值
-func encodeBool(fieldNumber: Int, value: Bool) -> Data {
-    return encodeVarint(fieldNumber: fieldNumber, wireType: 0, value: value ? 1 : 0)
-}
-
-/// 编码 double
-func encodeDouble(fieldNumber: Int, value: Double) -> Data {
-    var data = Data()
-    // 编码 tag
-    let tag = UInt64((fieldNumber << 3) | 1) // wireType 1 表示 64 位
-    data.append(encodeVarintValue(tag))
-    // 编码值
-    let bytes = withUnsafeBytes(of: value.bitPattern) { Array($0) }
-    data.append(contentsOf: bytes)
-    return data
-}
-
-/// 编码嵌套消息
-func encodeMessage(fieldNumber: Int, value: Data) -> Data {
-    var data = Data()
-    // 编码 tag
-    let tag = UInt64((fieldNumber << 3) | 2) // wireType 2 表示长度前缀
-    data.append(encodeVarintValue(tag))
-    // 编码长度
-    data.append(encodeVarintValue(UInt64(value.count)))
-    // 编码内容
-    data.append(value)
-    return data
-}
-
-/// 解码 tag
-func decodeTag(data: Data, index: Int) -> (fieldNumber: Int, wireType: Int, bytesRead: Int) {
-    var index = index
-    var tag: UInt64 = 0
-    var shift: UInt64 = 0
-    var bytesRead = 0
-    
-    while index < data.count {
-        let byte = data[index]
-        tag |= UInt64(byte & 0x7F) << shift
-        index += 1
-        bytesRead += 1
-        if byte < 0x80 {
-            break
-        }
-        shift += 7
-    }
-    
-    let fieldNumber = Int(tag >> 3)
-    let wireType = Int(tag & 0x7)
-    return (fieldNumber, wireType, bytesRead)
-}
-
-/// 解码 varint
-func decodeVarint(data: Data, index: Int) -> (value: UInt64, bytesRead: Int) {
-    var index = index
-    var value: UInt64 = 0
-    var shift: UInt64 = 0
-    var bytesRead = 0
-    
-    while index < data.count {
-        let byte = data[index]
-        value |= UInt64(byte & 0x7F) << shift
-        index += 1
-        bytesRead += 1
-        if byte < 0x80 {
-            break
-        }
-        shift += 7
-    }
-    
-    return (value, bytesRead)
-}
-
-/// 解码字符串
-func decodeString(data: Data, index: Int) -> (value: String, bytesRead: Int) {
-    let (length, lengthBytes) = decodeVarint(data: data, index: index)
-    let contentStart = index + lengthBytes
-    let contentEnd = contentStart + Int(length)
-    let contentData = data.subdata(in: contentStart..<contentEnd)
-    let string = String(data: contentData, encoding: .utf8) ?? ""
-    return (string, lengthBytes + Int(length))
-}
-
-/// 解码 double
-func decodeDouble(data: Data, index: Int) -> Double {
-    let bytes = data.subdata(in: index..<index+8)
-    let value = bytes.withUnsafeBytes { $0.load(as: UInt64.self) }
-    return Double(bitPattern: value)
-}
-
-/// 跳过字段
-func skipField(data: Data, index: Int, wireType: Int) -> Int {
-    var index = index
-    
-    switch wireType {
-    case 0: // varint
-        while index < data.count && data[index] >= 0x80 {
-            index += 1
-        }
-        index += 1
-    case 1: // 64-bit
-        index += 8
-    case 2: // length-delimited
-        let (length, lengthBytes) = decodeVarint(data: data, index: index)
-        index += lengthBytes + Int(length)
-    case 3, 4: // start group, end group (deprecated)
-        fatalError("Group wire type is deprecated")
-    case 5: // 32-bit
-        index += 4
-    default:
-        fatalError("Invalid wire type")
-    }
-    
-    return index - index
 }

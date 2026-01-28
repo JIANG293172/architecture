@@ -27,6 +27,7 @@ PODS:
     - RxSwift (= 6.9.0)
   - RxSwift (6.9.0)
   - SnapKit (5.7.1)
+  - SwiftProtobuf (1.33.3)
 
 DEPENDENCIES:
   - Alamofire
@@ -38,6 +39,7 @@ DEPENDENCIES:
   - RxRelay (~> 6.5)
   - RxSwift (~> 6.5)
   - SnapKit
+  - SwiftProtobuf
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
@@ -51,6 +53,7 @@ SPEC REPOS:
     - RxRelay
     - RxSwift
     - SnapKit
+    - SwiftProtobuf
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
@@ -63,7 +66,8 @@ SPEC CHECKSUMS:
   RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
   RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
+  SwiftProtobuf: e1b437c8e31a4c5577b643249a0bb62ed4f02153
 
-PODFILE CHECKSUM: 62fb7d24dea315a9516a0d50f9f66f3ff34505fc
+PODFILE CHECKSUM: 92c1aa476aab2b522dd7f4ed615882c0ca14a48e
 
 COCOAPODS: 1.16.2
