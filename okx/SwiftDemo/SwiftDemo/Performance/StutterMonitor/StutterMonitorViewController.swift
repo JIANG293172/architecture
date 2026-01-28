@@ -13,12 +13,27 @@ class StutterMonitorViewController: UIViewController {
     private let statusLabel = UILabel()
     /// 日志文本视图
     private let logTextView = UITextView()
+    /// 保存原始的标准输出和标准错误文件描述符
+    private var originalStdout: Int32?
+    private var originalStderr: Int32?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Stutter Monitor"
         view.backgroundColor = .white
         setupUI()
+    }
+    
+    deinit {
+        // 恢复原始的文件描述符
+        if let stdout = originalStdout {
+            dup2(stdout, STDOUT_FILENO)
+            close(stdout)
+        }
+        if let stderr = originalStderr {
+            dup2(stderr, STDERR_FILENO)
+            close(stderr)
+        }
     }
     
     /// 设置用户界面
@@ -119,9 +134,17 @@ class StutterMonitorViewController: UIViewController {
         DispatchQueue.main.async {
             let timestamp = self.getCurrentTimestamp()
             self.logTextView.text += "[\(timestamp)] \(log)\n"
-            // 滚动到底部
-            let bottom = NSMakeRange(self.logTextView.text.count - 1, 1)
-            self.logTextView.scrollRangeToVisible(bottom)
+            // 安全地滚动到底部
+            self.scrollToBottom()
+        }
+    }
+    
+    /// 滚动到底部
+    private func scrollToBottom() {
+        let textCount = logTextView.text.count
+        if textCount > 0 {
+            let bottom = NSMakeRange(textCount - 1, 1)
+            logTextView.scrollRangeToVisible(bottom)
         }
     }
     
@@ -133,23 +156,39 @@ class StutterMonitorViewController: UIViewController {
     }
     
     /// 重定向控制台日志到文本视图
-    private func redirectConsoleLogToTextView() {
-        let pipe = Pipe()
-        let fileHandle = pipe.fileHandleForReading
-        
-        dup2(pipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
-        dup2(pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
-        
-        fileHandle.readabilityHandler = { [weak self] handle in
-            let data = handle.availableData
-            if let string = String(data: data, encoding: .utf8) {
-                DispatchQueue.main.async {
-                    self?.logTextView.text += string
-                    // 滚动到底部
-                    let bottom = NSMakeRange((self?.logTextView.text.count ?? 0) - 1, 1)
-                    self?.logTextView.scrollRangeToVisible(bottom)
-                }
-            }
-        }
-    }
+//    private func redirectConsoleLogToTextView() {
+//        let pipe = Pipe()
+//        let fileHandle = pipe.fileHandleForReading
+//        
+//        // 保存原始的标准输出和标准错误文件描述符
+//        originalStdout = dup(STDOUT_FILENO)
+//        originalStderr = dup(STDERR_FILENO)
+//        
+//        // 重定向标准输出和标准错误到管道
+//        dup2(pipe.fileHandleForWriting.fileDescriptor, STDOUT_FILENO)
+//        dup2(pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+//        
+//        fileHandle.readabilityHandler = { [weak self] handle in
+//            guard let self = self else { return }
+//            
+//            let data = handle.availableData
+//            guard !data.isEmpty else { return }
+//            
+//            if let string = String(data: data, encoding: .utf8) {
+//                DispatchQueue.main.async { [weak self] in
+//                    guard let self = self else { return }
+//                    
+//                    // 确保视图控制器仍然存在
+//                    guard self.isViewLoaded && self.view.window != nil else { return }
+//                    
+//                    // 更新文本
+//                    self.logTextView.text += string
+//                    
+//                    // 滚动到底部
+//                    self.scrollToBottom()
+//                }
+//            }
+//        }
+//    }
+    
 }
