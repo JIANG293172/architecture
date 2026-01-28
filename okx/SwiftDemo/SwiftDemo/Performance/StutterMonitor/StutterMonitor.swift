@@ -83,6 +83,9 @@ class PerformanceMonitor {
     /// 监控线程入口
     private func monitorThreadEntry() {
         autoreleasepool {
+            // 延迟执行，给主线程一些时间
+            Thread.sleep(forTimeInterval: 0.5)
+            
             while !Thread.current.isCancelled {
                 // 检查是否应该继续监控
                 lock.lock()
