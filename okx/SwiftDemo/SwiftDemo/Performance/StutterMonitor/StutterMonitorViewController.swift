@@ -91,16 +91,16 @@ class StutterMonitorViewController: UIViewController {
     
     /// 启动按钮点击事件
     @objc private func startButtonTapped() {
-        StutterMonitor.shared.startMonitor()
+        PerformanceMonitor.start()
         updateStatusLabel(isMonitoring: true)
-        appendLog("已启动卡顿检测")
+        appendLog("已启动性能监控")
     }
     
     /// 停止按钮点击事件
     @objc private func stopButtonTapped() {
-        StutterMonitor.shared.stopMonitor()
+        PerformanceMonitor.stop()
         updateStatusLabel(isMonitoring: false)
-        appendLog("已停止卡顿检测")
+        appendLog("已停止性能监控")
     }
     
     /// 模拟卡顿按钮点击事件

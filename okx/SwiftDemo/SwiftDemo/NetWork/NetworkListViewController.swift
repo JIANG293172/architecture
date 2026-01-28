@@ -13,7 +13,8 @@ class NetworkListViewController: ViewController {
     /// 网络演示列表，包含演示标题和对应的视图控制器类名
     /// 思路：使用字典数组存储网络演示信息，便于动态创建对应的演示页面
     private let demoList: [[String: String]] = [
-        ["title": "PropertyWrapper", "vcClassName": "PropertyWrapperViewController"]
+        ["title": "PropertyWrapper", "vcClassName": "PropertyWrapperViewController"],
+        ["title": "ProtocolBuffer", "vcClassName": "ProtocolBufferViewController"]
     ]
     
     override func viewDidLoad() {
