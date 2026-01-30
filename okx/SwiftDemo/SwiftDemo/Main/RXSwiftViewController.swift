@@ -549,18 +549,18 @@ class AppManager {
     }
 }
 
-// 观察者模式示例（使用RxSwift）
-class NotificationCenter {
-    let notificationSubject = PublishSubject<String>()
-    
-    func postNotification(_ message: String) {
-        notificationSubject.onNext(message)
-    }
-    
-    func subscribeToNotifications() -> Observable<String> {
-        return notificationSubject
-    }
-}
+//// 观察者模式示例（使用RxSwift）
+//class NotificationCenter {
+//    let notificationSubject = PublishSubject<String>()
+//    
+//    func postNotification(_ message: String) {
+//        notificationSubject.onNext(message)
+//    }
+//    
+//    func subscribeToNotifications() -> Observable<String> {
+//        return notificationSubject
+//    }
+//}
 
 // 工厂模式示例
 protocol Animal {
