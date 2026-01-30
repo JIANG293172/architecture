@@ -55,7 +55,12 @@ class RxMVVMDemoViewController: UIViewController {
         statusLabel.numberOfLines = 0
         statusLabel.font = .systemFont(ofSize: 14)
         
-        operatorDemoButton.setTitle("运行 Rx 操作符演示 (控制台输出)", for: .normal)
+        operatorDemoButton.setTitle("🚀 运行 RxSwift 全面特性演示 (控制台)", for: .normal)
+        operatorDemoButton.backgroundColor = .systemOrange
+        operatorDemoButton.setTitleColor(.white, for: .normal)
+        operatorDemoButton.layer.cornerRadius = 8
+        operatorDemoButton.titleLabel?.font = .boldSystemFont(ofSize: 14)
+        operatorDemoButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
@@ -132,7 +137,7 @@ class RxMVVMDemoViewController: UIViewController {
             
         operatorDemoButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.runCommonRxOperatorsDemo()
+                self?.viewModel.runComprehensiveRxDemo()
             })
             .disposed(by: disposeBag)
             
