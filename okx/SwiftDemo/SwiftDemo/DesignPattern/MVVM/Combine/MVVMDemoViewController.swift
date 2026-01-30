@@ -31,25 +31,28 @@ class MVVMDemoViewController: UIViewController {
         ])
         
         // 设置按钮点击事件
-        loginView.combineDemoButton.addTarget(self, action: #selector(runCombineDemos), for: .touchUpInside)
-        loginView.refreshDemoButton.addTarget(self, action: #selector(showRefreshDemo), for: .touchUpInside)
+        loginView.combineDemoButton.tapPublisher
+            .sink { [weak self] in self?.runCombineDemos() }
+            .store(in: &cancellables)
+            
+        loginView.refreshDemoButton.tapPublisher
+            .sink { [weak self] in self?.showRefreshDemo() }
+            .store(in: &cancellables)
     }
     
     private func setupBindings() {
         // MARK: - View -> ViewModel (输入)
         
-        // 用户名改变 - 添加防抖处理，避免频繁更新
-        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: loginView.usernameField)
-            .compactMap { ($0.object as? UITextField)?.text }
+        // 用户名改变 - 使用自定义的 textPublisher
+        loginView.usernameField.textPublisher
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main) // 300ms 防抖
             .sink { [weak self] text in
                 self?.viewModel.username = text
             }
             .store(in: &cancellables)
             
-        // 密码改变 - 添加防抖处理
-        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: loginView.passwordField)
-            .compactMap { ($0.object as? UITextField)?.text }
+        // 密码改变 - 使用自定义的 textPublisher
+        loginView.passwordField.textPublisher
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main) // 300ms 防抖
             .sink { [weak self] text in
                 self?.viewModel.password = text
@@ -119,45 +122,20 @@ class MVVMDemoViewController: UIViewController {
     
     /// 处理按钮点击事件，添加防重复点击功能
     private func setupButtonPublishers() {
-        // 创建按钮点击的 PassthroughSubject
-        let futureButtonTap = PassthroughSubject<Void, Never>()
-        let taskButtonTap = PassthroughSubject<Void, Never>()
-        
-        // 替换传统的 addTarget 方式
-        loginView.loginFutureButton.addTarget(self, action: #selector(futureButtonTapped), for: .touchUpInside)
-        loginView.loginTaskButton.addTarget(self, action: #selector(taskButtonTapped), for: .touchUpInside)
-        
-        // 处理 Future 登录按钮点击 - 添加防重复点击（1秒内只响应一次）
-        futureButtonTap
+        // 直接使用扩展的 tapPublisher，无需 addTarget 和手动 Subject
+        loginView.loginFutureButton.tapPublisher
             .throttle(for: .seconds(1), scheduler: RunLoop.main, latest: false) // 1秒内只响应一次
-            .sink {
-                self.viewModel.loginWithFuture()
+            .sink { [weak self] in
+                self?.viewModel.loginWithFuture()
             }
             .store(in: &cancellables)
         
         // 处理 Task 登录按钮点击 - 添加防重复点击（1秒内只响应一次）
-        taskButtonTap
+        loginView.loginTaskButton.tapPublisher
             .throttle(for: .seconds(1), scheduler: RunLoop.main, latest: false) // 1秒内只响应一次
-            .sink {
-                self.viewModel.loginWithTask()
+            .sink { [weak self] in
+                self?.viewModel.loginWithTask()
             }
             .store(in: &cancellables)
-        
-        // 存储按钮点击的 PassthroughSubject
-        self.futureButtonTapSubject = futureButtonTap
-        self.taskButtonTapSubject = taskButtonTap
-    }
-    
-    // 按钮点击的 PassthroughSubject
-    private var futureButtonTapSubject: PassthroughSubject<Void, Never>?
-    private var taskButtonTapSubject: PassthroughSubject<Void, Never>?
-    
-    // 按钮点击事件处理
-    @objc private func futureButtonTapped() {
-        futureButtonTapSubject?.send()
-    }
-    
-    @objc private func taskButtonTapped() {
-        taskButtonTapSubject?.send()
     }
 }
