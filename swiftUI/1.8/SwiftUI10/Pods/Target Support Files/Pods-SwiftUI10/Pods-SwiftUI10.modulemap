@@ -1,6 +1,0 @@
-module Pods_SwiftUI10 {
-  umbrella header "Pods-SwiftUI10-umbrella.h"
-
-  export *
-  module * { export * }
-}
