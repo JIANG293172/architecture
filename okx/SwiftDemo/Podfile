@@ -23,6 +23,8 @@ target 'SwiftDemo' do
   pod 'SwiftProtobuf'           # Swift Protobuf support
   pod 'CocoaMQTT', '~> 2.1'     # MQTT library for iOS
   pod 'MqttCocoaAsyncSocket'    # Support for CocoaMQTT
+  pod 'CombineDataBus', :path => './LocalPods/CombineDataBus' # 本地 Combine 数据总线组件
+  pod 'RxDataBus', :path => './LocalPods/RxDataBus'           # 本地 RxSwift 数据总线组件
 
   # 为测试目标添加依赖
   target 'SwiftDemoTests' do

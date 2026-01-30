@@ -19,6 +19,9 @@ class RefreshControlDemoViewController: UIViewController {
     // MARK: - Combine 属性
     
     private var cancellables = Set<AnyCancellable>()
+    
+//    - Publisher ：所有数据流的基础抽象，被动触发，不可手动控制。
+//    - Subject ：特殊的 Publisher ，可手动发送值和完成事件，适合手动触发事件或管理状态。
     private let refreshTrigger = PassthroughSubject<Void, Never>()
     private var timer: AnyCancellable?
     
