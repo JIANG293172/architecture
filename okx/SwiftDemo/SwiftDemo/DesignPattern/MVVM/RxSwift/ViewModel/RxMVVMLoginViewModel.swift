@@ -6,16 +6,16 @@ import RxCocoa
 class RxMVVMLoginViewModel {
     
     // MARK: - Inputs
-    let username = BehaviorRelay<String>(value: "") /// 这个类似于Combine里面的publisher，或则是 passthroughSubject，他们都是发布者
-    let password = BehaviorRelay<String>(value: "") /// 发布者
-    let loginTapped = PublishRelay<Void>() /// 发布者
+    let username = BehaviorRelay<String>(value: "")
+    let password = BehaviorRelay<String>(value: "") /// 发布者  CurrentValueSubject / @Published   UI 状态同步（如用户名、开关状态）
+    let loginTapped = PublishRelay<Void>() /// 发布者 /// 这个类似于Combine里面的publisher，或则是 passthroughSubject，他们都是发布者
     
     // MARK: - Outputs
-    let isLoading = BehaviorRelay<Bool>(value: false)
+    let isLoading = BehaviorRelay<Bool>(value: false)  /// PassthroughSubject  功能对  纯 UI 事件（如按钮点击）
     let loginResult = PublishRelay<Result<RxMVVMLoginUser, RxLoginError>>()
     
     
-    let isLoginEnabled: Observable<Bool>
+    let isLoginEnabled: Observable<Bool> /// Publisher  各种异步操作（如网络请求）
     let errorMessage: Observable<String?>
     
     private let disposeBag = DisposeBag()
