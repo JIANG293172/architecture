@@ -1,0 +1,281 @@
+容错：
+1.卡住。
+2.精确。
+3.语法放后面。
+
+
+注重：沟通风格、状态。
+
+请一并提供该岗位的详情介绍
+
+OKX iOS 移动端软件工程师岗位详情
+OKX 是全球领先的加密资产交易所与 Web3 基础设施提供商，移动端产品服务千万级日活用户。本次 iOS 开发岗隶属其全球移动研发团队，聚焦加密交易、资产管理、OKX Wallet 等核心业务开发，要求适配全球用户需求，保障金融级应用的高性能与高安全性。
+1. 核心技术能力要求
+具备扎实的 iOS 原生开发经验，熟练掌握 Swift/Objective-C，深入理解 ARC、闭包循环引用、结构体 COW、POP 等 Swift 底层特性；精通 UIKit 底层原理，能基于 Core Graphics/Metal 实现高性能 UI 与复杂图表开发。
+2. 工程与并发能力要求
+拥有扎实的数据结构与算法基础，能应对高难度算法考核；熟练掌握 GCD、Swift 新并发模型，能处理 WebSocket 高并发行情流；运用 Combine/RxSwift 实现数据联动，遵循 TDD、CI/CD 等敏捷开发流程。
+3. 业务与协作能力要求
+了解区块链 / Web3 基础，熟悉私钥安全存储等钱包相关技术者优先；有大规模应用性能优化经验；具备良好的跨团队协作能力与英语沟通能力，适配全球跨时区协作。
+
+
+small talk: (寒暄，友好状态)
+1. 问候（节奏舒缓，礼貌自然，适配面试开场）
+Good afternoon, xx! Nice to meet you.
+How is it going today?
+I’m doing great, thanks. I’m really happy to be here for this interview.
+
+2. 话题（衔接自然，语法规范，聊天气不生硬）
+I’m currently in Chongqing, and it’s sunny here today.
+What’s the weather like in your city, Singapore?
+That sounds good.
+I hope the weather stays nice there for you!
+
+
+开场的自我介绍 (Shall I start with my self-introduction?)
+My name is Jiang Tao.I graduated from Hangzhou Dianzi University. 
+I have a bachelor's degree.
+I have 8 years of experience in iOS development
+I’m good at using Objective-C and Swift."
+
+I have strong experience in crash fixing, memory leak prevention, app size optimization and performance optimization.
+I'm skilled in breaking down large projects into components and using the MVVM architecture.
+
+一.My career started at Tonghuashun, where I worked on a stock trading app for millions of users. 
+I was responsible for crash collection, user behavior analysis, and developing the trading module.
+
+二.When I was working at Quwei Tech, 
+I was responsible for developing mobile short video editing and in-app purchase features. 
+I successfully reduced the app crash rate from 3% to under 0.5%.
+
+三.When I was working at Kugou Music, 
+I was responsible for the friend recommendation system. 
+I improved the loading speed of the friends page by 60%.
+
+四、When I was working at Dongchedi, part of ByteDance.
+I was responsible for the componentization of a key business module, splitting it into 8 independent parts. 
+I also fixed some of the app's most complex crashes.
+
+五.I’m currently working at Changan Automobile, where I’m responsible for the core Vehicle Control SDK.
+I led the componentization of this SDK, which cut SDK integration costs by 60%.
+I also reduced the app size from 800MB to 400MB, and lowered the crash rate from 0.5% to 0.03%.
+
+"With 8 years in the industry, I'm a proactive learner. I write clean, high-quality code with a focus on performance and flexibility. That's a little about me. Thank you for listening."
+
+
+宏观类话题
+
+我的优点   strength advantage  3 word in your colleague. 
+Reliable：I write clean, high-quality code, and always consider error handling to make the app more stable.
+Smart：When my iOS team faces difficult problems, I always find effective ways to solve them.
+Friendly：I’m patient to help teammates, and always put the team’s benefits first.
+
+My skills align with the OKX role in 5 key areas:
+1)I'm have a good understanding of basic iOS knowledge. I also have experience in app internationalization.
+
+2)I led the componentization work, built private component libraries, and developed custom routers to enable cross-module communication.
+
+3)At Changan Auto, I worked on app size optimization, app launch optimization, crash governance and other related optimizations.
+
+4)I'm familiar with data security, and meet high security standards for crypto trading.
+
+5)I have rich cross-team collaboration experience, including working with cross-regional and multilingual teams.
+
+
+你的缺点 
+I lack hands-on experience in cross-platform development. 
+Recently I’ve been learning Flutter in a systematic way. 
+Its layout logic is similar to SwiftUI, 
+and I’ve practiced integrating Flutter modules with CocoaPods, 
+and building communication through MethodChannel.
+
+
+为什么选择这家企业
+I’m applying for the iOS role at OKX because my technical experience and career plan align well with OKX’s platform values.
+
+1)OKX has high-DAU products with complex scenarios like trading and wallet. 
+This matches my experience in high-DAU app optimization, componentization and architecture design.
+
+2)I believe blockchain reshapes financial trust, 
+The mobile team can deeply participate in core businesses like transaction optimization and wallet security.
+
+
+职业规划
+Short-term Plans
+I’ll study crypto financial-grade security and master industry business logic to meet financial scenario needs.
+I’ll improve my high-concurrency and performance skills, combine them with blockchain business, and become a developer who knows both tech and business well.
+
+Long-term Plans
+I’ll learn Flutter well and gain hands-on experience, master cross-platform module development, and improve my multi-platform business support abilities.
+I’ll also learn how to set up AI agents and apply AI to client-side development, integrating it into daily work processes.
+
+
+
+仔细梳理自己简历中的工作经历、亮点项目以及成就
+一.Core Achievements at Changan Automobile
+1）I led the ground-up componentization of the monolithic vehicle control module, refactoring it into a 3-layer architecture:
+Foundation Layer: Network, storage and basic utilities
+Common Layer: Shared capabilities, payment capabilities and user behavior collection
+Business Layer: Remote vehicle control, Bluetooth key control and in-app shopping 
+
+2)Designed a router based on runtime message forwarding.
+The router stores component protocol definitions, 
+dynamically creates protocol-conforming classes at runtime, 
+and forwards messages through runtime to realize complete component decoupling.
+
+二.Core Achievements at DongCheDi
+I refactored the B-side dealer module from MVC to MVVM architecture, enabling low coupling and long-term maintainability.
+1)View Layer: Focuses on UI rendering and user interaction
+2)ViewModel Layer: Processes user input actions and delivers business logic results to the View Layer
+3)Model Layer: Defines standardized data models
+
+三.Core Achievements at Kugou Music
+I led the full reconstruction and optimization of the Friend Recommendation Page
+1）Cut redundant code in the recommendation module, improving maintainability.
+2）I accelerated recommendation data loading by 60%. 
+By using Instruments Time Profile to find lag caused by nested loops, 
+
+I replaced nested traversals with dictionary-based data caching to reduce time complexity.
+
+四.Core Achievements at XiaoYing
+I led the crash governance of Xiaoyingji.
+1)I fixed the most frequent crashes on the picture page, 
+which were caused by a multi-thread data race issue. 
+I fixed it with thread-safe mechanisms to prevent concurrent resource contention.
+
+2)For Unrecognized Selector crashes, 
+I leveraged the Objective-C runtime message forwarding mechanism 
+— by intercepting forwardingTargetForSelector: and adding empty implementations for missing methods.
+
+五.Core Achievements at tonghuashun
+I built an iOS crash log collection system tailored for financial scenarios.
+1)Dual-Level Crash Collection: I captured uncaught object-level exceptions via exception handlers, and system-level crashes via signal handlers.
+
+2）I collected critical debugging data (ASLR offsets, app base addresses, raw crash addresses); 
+I calculated the actual code locations using the formula: Actual Address = Crash Address - ASLR Offset - Base Address; 
+then mapped these addresses to function names via dSYM files.
+
+
+描述一件最成功/印象最深刻/最有成就感的事情
+My Most Rewarding Achievement: 
+As the core iOS developer at Changan Automobile, I led the full componentization transformation of the iOS vehicle control project.
+
+The biggest challenge was the old monolithic codebase: 
+the main project directly copied third-party library code, causing many integration conflicts between apps
+Reusing features across apps was hard
+we wasted lots of time on duplicate work.
+
+To solve these problems, I split the monolithic project into private libraries, 
+then designed a 3-tier component architecture 
+and a runtime Router to fully separate components.
+
+The results were great: 
+we built a reusable Vehicle Control SDK for 5 Changan apps. 
+It greatly shortened cross-app delivery time 
+and reduced redundant code a lot, 
+saving lots of engineering hours yearly. 
+
+Besides, I trained over 20 team members on componentization, improving our engineering efficiency a lot.
+
+
+描述一件最困难/最有挑战性的事情是如何解决的
+The biggest challenge I had was fixing the long-running online crashes in the Dongchedi dealer system – standard tools couldn’t decode these crashes.
+— the logs only showed hex addresses, not function names. This affected tens of thousands of daily users.
+
+To fix this, I created a custom manual symbol fix process based on basic iOS principles:
+
+1.Get crash key info: 
+We collect core data such as crash address and ASLR offset.
+
+2.Calculate symbol offset: 
+Exact offset = crash address - ASLR (Address Space Layout Randomization).
+
+3.Find the exact symbol: 
+We map crash offsets to exact function names using version-matched dSYM files and symbol tools.
+
+In the end, I reduced the dealer system’s crash rate by 30%. 
+I also shared this method with the 30 members of our iOS team.
+
+
+根据职位的描述，面试官可能会预设一个具体的场景，回答应对办法
+如何安全的保存用户的私钥
+To store users' private keys safely on iOS, we use Secure Enclave — a special hardware part in Apple’s chips.
+Its main rule: Private keys never leave the Secure Enclave as plain text. All encrypting and signing work is done directly in this separate hardware. So keys are not exposed to the app’s memory or iOS system, even if the device is hacked.
+Basic steps:
+1)Create a key pair in the Secure Enclave;
+2)Use the public key from the Secure Enclave to encrypt the user’s private key, then save the encrypted data in Keychain;
+3)When needed, decrypt and use the private key inside the Secure Enclave, then delete it from memory after use.
+Adding FaceID/TouchID for verification makes it even safer.
+
+
+专业相关问题的简单讨论
+一.What is the composition of the object structure in OC?
+It is composed of an isa pointer and property pointers. The isa pointer consists of many properties, such as has_assoc, weak_referenced, extra_rc, and has_sidetable_rc. Although the isa pointer contains a wealth of information, it only occupies 8 bytes, which improves the efficiency of OC.
+
+
+二.MQTT Connection Establishment Process Steps
+I. TCP Handshake Phase
+Purpose: This step is to establish a reliable byte stream transmission channel.
+Process
+Client: Send SYN to request a connection establishment.
+Server: Allocate resources and send SYN and ACK for confirmation.
+Client: Send ACK after confirmation.
+Packet Capture and TroubleshootingWe can use Wireshark to view TCP handshake packets.
+
+II. TLS Handshake Phase
+Purpose: Establish an encrypted channel and authenticate the server's identity.
+ProcessTLS 1.2
+Client: Client Hello
+Server: Server Hello (selected encryption algorithm), Certificate (certificate chain), 
+Server Key ExchangeClient: Client Key Exchange, [Certificate Verify (for mutual authentication)], ChangeCipherSpec, 
+FinishedServer: ChangeCipherSpec, Finished
+
+Troubleshooting MethodsDebugging devices: Obtain TLS logs via the system Console.app.Online users: Set the parameter CFNETWORK_DIAGNOSTICS in info.plist, then obtain logs locally.
+
+III. MQTT Handshake
+Purpose: Establish an MQTT session.
+ProcessClient: CONNECT (with parameters such as ClientID, Keep-Alive)
+Server: CONNACK (Reason Code 0x00=Success, Session Present)
+
+
+三.What situations can cause a deadlock?
+The main reason is two tasks waiting for each other! For example, when we create a task on a synchronous queue while the queue is executing another task, a deadlock will occur.
+This is the most common scenario we encounter. We should always ask ourselves: is the task we are creating waiting for another task? This mostly happens in a synchronous queue!
+
+
+四.Why does Swift design Copy on Write?
+Swift uses value type syntax to use arrays, but saves the data on the heap. It automatically manages the copying of arrays.
+
+Copy on Write is an optimization technique for arrays.All the properties share the same data while the arrays have no changes.Only when the data is changed and the array has a reference count greater than one, it will copy the data to a new pointer.The optimized array has some features:
+
+1._buffer: points to the address of the data on the heap.
+2.refcount: reference count
+3.isUnique
+4.Elements: the address of the elements on the heap.
+5.Count: the number of elements.
+
+五.Flutter has the same declarative UI syntax as SwiftUI: both describe what the UI looks like. 
+Flutter uses `setState` to notify of changes, while SwiftUI uses `@State`/`@Binding` to observe changes; 
+finally, Flutter calls the `build` function to refresh the UI, and SwiftUI calls the `body` property to refresh the UI. 
+
+六.What is Metal? How is it different from OpenGL ES on iOS?
+Metal is Apple’s high performance graphics engine which uses the GPU directly. Metal uses MTLDevice to get a GPU reference, and renders on MTKView. We use asynchronous threads to process the data, and use MTLBuffer to send drawing data from the CPU to the GPU. This makes the UI interaction fluent.
+ Compared to OpenGL ES: Metal is more efficient (closer to GPU), runs faster on Apple devices, and is better optimized for their chips. OpenGL ES is cross-platform but less tailored to Apple’s hardware, so it’s slower in comparison.
+
+
+
+Communication skills
+I focus on clear communication and follow-up confirmation. I talk with product, UI and backend teams in simple language to align on needs, and write a summary after meetings to avoid misunderstandings and extra work.
+
+Teamwork
+The key is helping each other and working toward the same goals. I make clear everyone’s duties, use our strengths, help colleagues actively, and share experience and tools to hit team goals together.
+
+Complex problem-solving
+The core is breaking down problems step by step and solving them with specific methods. I split hard problems into small, easy-to-handle parts, find solutions, polish details, and check many times to get past difficulties.
+
+Conflict resolution
+I focus on understanding others and finding a win-win way. I face conflicts directly, analyze everyone’s needs fairly with data and facts, and suggest compromise plans that keep core goals and meet others’ needs.
+
+
+最后我的疑问：
+Could you please tell me the structure of the team?
+Thank you for sharing. I don’t have any other questions for now.
