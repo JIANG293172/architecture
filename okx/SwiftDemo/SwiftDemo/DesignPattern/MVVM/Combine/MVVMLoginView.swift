@@ -16,6 +16,7 @@ class MVVMLoginView: UIView {
     
     // 演示区域
     let combineDemoButton = UIButton(type: .system)
+    let refreshDemoButton = UIButton(type: .system)
     let explanationLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -111,6 +112,13 @@ class MVVMLoginView: UIView {
         
         combineDemoButton.setTitle("运行更多 Combine API 演示 (控制台查看)", for: .normal)
         stackView.addArrangedSubview(combineDemoButton)
+        
+        // 添加刷新频率控制演示按钮
+        refreshDemoButton.setTitle("Combine 刷新频率控制演示", for: .normal)
+        refreshDemoButton.backgroundColor = .systemGreen
+        refreshDemoButton.setTitleColor(.white, for: .normal)
+        refreshDemoButton.layer.cornerRadius = 8
+        stackView.addArrangedSubview(refreshDemoButton)
     }
     
     private func addHeader(title: String) {

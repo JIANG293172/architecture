@@ -32,6 +32,7 @@ class MVVMDemoViewController: UIViewController {
         
         // 设置按钮点击事件
         loginView.combineDemoButton.addTarget(self, action: #selector(runCombineDemos), for: .touchUpInside)
+        loginView.refreshDemoButton.addTarget(self, action: #selector(showRefreshDemo), for: .touchUpInside)
     }
     
     private func setupBindings() {
@@ -107,6 +108,11 @@ class MVVMDemoViewController: UIViewController {
     
     @objc private func runCombineDemos() {
         viewModel.runCommonCombineDemos()
+    }
+    
+    @objc private func showRefreshDemo() {
+        let refreshDemoVC = RefreshControlDemoViewController()
+        navigationController?.pushViewController(refreshDemoVC, animated: true)
     }
     
     // MARK: - 按钮点击事件处理（使用 Combine 防重复点击）
