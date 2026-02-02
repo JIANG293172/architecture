@@ -15,7 +15,7 @@ class RxMVVMLoginViewModel {
     let isLoading = BehaviorRelay<Bool>(value: false)  /// PassthroughSubject  功能对  纯 UI 事件（如按钮点击）
     let loginResult = PublishRelay<Result<RxMVVMLoginUser, RxLoginError>>()
     
-//    PublishSubject   passthroughSubject  类似  BehaviorRelay 是单项的
+//    PublishSubject   passthroughSubject  类似 PublishReplay 是单项的
 //    BehaviorSubject  CurrentValueSubject 类似 BehaviorRelay 也是单项的
     
     let isLoginEnabled: Observable<Bool> /// Publisher  各种异步操作（如网络请求）
