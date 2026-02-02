@@ -1,6 +1,39 @@
 import Foundation
 
 /// 下载管理器：Facade 模式，管理所有下载任务
+///
+///
+
+//- URLSessionDownloadTask 的断点原理 :
+//  
+//  - 暂停 : 调用 cancel(byProducingResumeData:) 。系统会生成一个 resumeData (XML 格式)，包含已下载字节、ETag、服务器 URL 等。
+//  - 恢复 : 使用 session.downloadTask(withResumeData:) 。
+//  - 代码参考 : DownloadTask.swift
+//- 异常中断处理 (Network Kill) :
+//  
+//  - 当 App 崩溃或网络突然断开时，系统会回调 urlSession(_:task:didCompleteWithError:) 。
+//  - 核心细节 : 必须从 error.userInfo[NSURLSessionDownloadTaskResumeData] 中提取 resumeData 并手动保存，否则之前的下载进度会丢失。
+//  - 代码参考 : DownloadManager.swift 的 didCompleteWithError 部分。
+//- 后台下载 (Background Session) :
+//  
+//  - 使用了 URLSessionConfiguration.background 。这确保了即使用户手动杀死 App 或系统挂起 App，下载任务依然由系统的守护进程继续执行。
+//
+//
+//
+//1. 架构思想 : "我采用 Facade（外观模式） 统一管理下载任务，
+//并引入了专门的 Persistence（持久化层） 来处理断点数据的读写。这种职责分离确保了任务管理与状态存储的解耦。"
+
+//2. 文件管理安全 : "在处理 didFinishDownloadingTo 时，我考虑到系统提供的路径是临时的。我的组件会在回调的第一时间使用 FileManager 将其移动到沙盒的 Documents 目录，防止数据被系统清理。"
+//3. 并发与线程安全 : "为了支持多任务并行，我使用了 NSLock 保护任务字典，并确保所有的进度和状态回调都切换到主线程，避免 UI 竞争问题。"
+
+//### 4. 如何体验演示？
+//1. 点击主页面的 “Business Architecture (Payment Kit)” （这里我把入口放在了业务架构目录下）。
+//2. 选择 “断点续传架构” 。
+//3. 点击 “开始下载” ，你会看到进度条滚动。
+//4. 点击 “暂停” ，再次点击 “继续” ，你会发现进度条从之前的位置继续，而不是重新开始。
+
+
+
 public final class DownloadManager: NSObject {
     
     public static let shared = DownloadManager()
@@ -12,7 +45,7 @@ public final class DownloadManager: NSObject {
     
     private override init() {
         super.init()
-        // 面试回答点：Background Session 支持应用退出后继续下载
+        // 点：Background Session 支持应用退出后继续下载
         let config = URLSessionConfiguration.background(withIdentifier: "com.downloadkit.background")
         self.session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
     }
