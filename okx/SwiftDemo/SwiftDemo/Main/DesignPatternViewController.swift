@@ -24,7 +24,8 @@ class DesignPatternViewController: ViewController {
         ["title": "MVVM Combine Architecture", "vcClassName": "MVVMDemoViewController"],
         ["title": "MVVM RxSwift Architecture", "vcClassName": "RxMVVMDemoViewController"],
         ["title": "Combine DataBus (Local Pod)", "vcClassName": "DataBusDemoViewController"],
-        ["title": "RxSwift DataBus (Local Pod)", "vcClassName": "RxDataBusDemoViewController"]
+        ["title": "RxSwift DataBus (Local Pod)", "vcClassName": "RxDataBusDemoViewController"],
+        ["title": "Business Architecture (Payment Kit)", "vcClassName": "ArchitectureListViewController"]
     ]
     
     override func viewDidLoad() {

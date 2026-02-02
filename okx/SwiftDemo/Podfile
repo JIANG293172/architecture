@@ -25,6 +25,8 @@ target 'SwiftDemo' do
   pod 'MqttCocoaAsyncSocket'    # Support for CocoaMQTT
   pod 'CombineDataBus', :path => './LocalPods/CombineDataBus' # 本地 Combine 数据总线组件
   pod 'RxDataBus', :path => './LocalPods/RxDataBus'           # 本地 RxSwift 数据总线组件
+  pod 'PaymentKit', :path => './LocalPods/PaymentKit'         # 本地支付架构组件
+  pod 'DownloadKit', :path => './LocalPods/DownloadKit'       # 本地断点续传组件
 
   # 为测试目标添加依赖
   target 'SwiftDemoTests' do
