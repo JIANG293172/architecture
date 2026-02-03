@@ -36,6 +36,7 @@
 		5CC920212F224DD400795E9C /* Exceptions for "SwiftDemo" folder in "SwiftDemo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				English/prepared.txt,
 				Info.plist,
 				Tests/AuthenticationManagerTests.swift,
 				Tests/Demo5ViewControllerTests.swift,
@@ -48,6 +49,7 @@
 		5CD945052F234F1D00328F28 /* Exceptions for "SwiftDemo" folder in "SwiftDemoTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				English/prepared.txt,
 				Tests/AuthenticationManagerTests.swift,
 				Tests/Demo5ViewControllerTests.swift,
 				Tests/LoginServiceTests.swift,

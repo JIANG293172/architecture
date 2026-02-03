@@ -1,0 +1,109 @@
+================================================================================
+# iOS Developer International Interview & Work English Plan (8-Week Intensive)
+# 针对 8 年经验 iOS 开发者的海外面试与日常工作英语学习计划
+================================================================================
+
+## 0. 核心策略：从“背诵”转向“结构化表达”
+你目前的 `prepared.txt` 已经覆盖了大部分面试题，但最大的挑战在于“听不懂细节追问”和“回答生硬”。
+计划的核心：听力先行 -> 关键词联想 -> 模板化输出。
+
+---
+
+## 1. 每日学习日程表 (建议每日投入 60-90 分钟)
+
+### [Morning: Input] 20 Mins - 磨耳朵 (通勤/洗漱时)
+*   **内容**: 听 iOS 相关的技术播客或 YouTube 视频。
+*   **目标**: 熟悉专业名词的发音（如：Combine, Concurrency, Architecture）。
+*   **推荐**: YouTube 搜索 "iOS Interview Questions" 或 "SwiftLee".
+
+### [Lunch: Vocabulary] 15 Mins - 词汇积累
+*   **内容**: 每天学习 5 个“动作动词”或“描述性形容词”。
+*   **目标**: 能够描述代码行为（如：Refactor, Decouple, Optimize, Eliminate, Scalable）。
+
+### [Evening: Output] 45 Mins - 核心训练
+*   **15 Mins - Shadowing (影子练习)**: 跟着技术视频读，模仿语调。
+*   **20 Mins - Mocking (模拟问答)**: 对着镜子或录音，回答一个技术细节题。
+*   **10 Mins - AI Practice**: 使用 ChatGPT Voice Mode 进行对话练习。
+
+---
+
+## 2. 八周进阶路线图
+
+### 第一阶段：个人故事与项目基石 (Week 1-2)
+*   **重点**: 熟练掌握 Self-introduction 和 Project Experience。
+*   **任务**: 将 `prepared.txt` 中的项目经历拆解为 STAR 原则（Situation, Task, Action, Result）。
+*   **学习重点**: 过去式的使用（I led, I solved, I reduced）。
+
+### 第二阶段：技术深度细节 (Week 3-4)
+*   **重点**: 内存管理 (ARC)、多线程 (GCD/Concurrency)、Swift 特性 (POP/COW)。
+*   **任务**: 准备“Why”和“How”的问题。例如：“Why use Struct instead of Class?”
+*   **学习重点**: 因果关系词 (Because of, Due to, Leads to, Result in)。
+
+### 第三阶段：架构与系统设计 (Week 5-6)
+*   **重点**: MVVM, Clean Architecture, Componentization, Modularization.
+*   **任务**: 描述你设计的 Router 或组件化架构。
+*   **学习重点**: 空间方位词 (Layer, Top of, decouple between, integration).
+
+### 第四阶段：日常工作沟通与模拟面试 (Week 7-8)
+*   **重点**: Daily Standup, PR Review, Sprint Planning.
+*   **任务**: 模拟和 Backend 联调接口，或在会议中提出不同意见。
+*   **学习重点**: 礼貌用语 (I suggest, What if we..., I'm concerned about...).
+
+---
+
+## 3. 技术细节回答模板 (针对你担心的细节追问)
+
+### 场景 A：当你需要解释一个复杂的 Bug 或性能优化
+*   **Step 1 (Discovery)**: "I noticed a lag/crash when users were..."
+*   **Step 2 (Investigation)**: "I used Instruments Time Profile to trace the issue and found that..."
+*   **Step 3 (Root Cause)**: "The root cause was a dead-lock/data-race/memory-leak in the XYZ module."
+*   **Step 4 (Solution)**: "I refactored the code by adding a recursive lock/using weak self/batching requests."
+*   **Step 5 (Result)**: "As a result, the crash rate dropped by 20%."
+
+### 场景 B：当你没听懂面试官的问题时 (万能补救)
+*   "Sorry, could you please rephrase that?" (能换个说法吗？)
+*   "Are you asking about the implementation details of [Technical Term]?" (你是在问关于XX的实现细节吗？)
+*   "Let me double-check if I understand correctly..." (让我确认下我理解得对不对...)
+
+---
+
+## 4. 日常工作沟通模板
+
+### Daily Standup (每日站会)
+*   "Yesterday, I finished the implementation of the login module."
+*   "Today, I'm going to work on the unit tests for the network kit."
+*   "I'm currently blocked by the backend API; I'm waiting for their documentation."
+
+### PR Review (代码评审)
+*   "This looks good to me, but I think we can optimize the loop here."
+*   "Could you please add a comment to explain this logic?"
+*   "I'm concerned about the potential memory leak here due to a retain cycle."
+
+---
+
+## 5. 学习资源清单 (必看)
+
+### YouTube 频道 (技术 + 英语)
+1.  **Swiftful Thinking**: 语法和 UI 讲解非常清晰，适合学表达。
+2.  **iOS Academy**: 涵盖很多面试题。
+3.  **Vincent Pradeau**: 深入讲解 Swift 底层细节。
+
+### 网站 & 博客
+1.  **SwiftLee (avanderlee.com)**: 优秀的 Swift 文章，句子结构标准。
+2.  **Hacking with Swift**: Paul Hudson 的文章非常适合学习描述技术概念。
+3.  **LeetCode (English Version)**: 习惯用英语描述算法逻辑（Swap, Pointer, Traverse）。
+
+### AI 工具
+*   **ChatGPT/Claude**: 
+    - 输入指令："Act as an iOS Interviwer, ask me a follow-up question about [Memory Management]."
+    - 练习对话，并要求它纠正你的语法。
+
+---
+
+## 6. 给 8 年资深开发的特别建议
+1.  **不要怕语法错误**: 外国同事更在意你的 **Logic (逻辑)** 和 **Clarity (清晰度)**。
+2.  **画图**: 如果说不清楚，利用 Zoom 的白板功能画出架构图，边画边说 "This layer communicates with..."。
+3.  **慢一点**: 说英语快不代表好，发音清晰、有停顿感更显专业。
+
+================================================================================
+文件创建完毕，祝你面试顺利！

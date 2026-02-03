@@ -1,0 +1,57 @@
+Week,Day,Morning (20m) - Input,Lunch (15m) - Vocab,Evening (45m) - Output/Task,Daily Goal
+Week 1,Day 1,iOS Interview YouTube (Intro),Greetings,Practice Self-introduction (v1),Perfect Small Talk
+Week 1,Day 2,Swift Podcast (Basics),Background,Self-intro: Education & Early career,Fluency in Background
+Week 1,Day 3,YouTube: Tech Interview Tips,Experience,Self-intro: Recent roles (Changan/Byte),Focus on Key Achievements
+Week 1,Day 4,iOS Academy: Soft Skills,Responsibilities,Full Self-introduction recording,No looking at notes
+Week 1,Day 5,Tech Talk: Personal Branding,Strengths,Answer: "What are your strengths?",3 key traits with examples
+Week 1,Day 6,YouTube: Why this company?,Weaknesses,Answer: "What is your weakness?",Focus on Learning (Flutter)
+Week 1,Day 7,Review Week 1 videos,Aspirations,Mock Interview: Introduction phase,Natural flow
+Week 2,Day 8,Project Case Study: Stock App,Refactor,Describe Tonghuashun project,STAR: Situation/Task
+Week 2,Day 9,YouTube: Crash Reporting,Optimize,Describe Tonghuashun: Crash system,STAR: Action/Result
+Week 2,Day 10,Project: Video Editing App,Efficiency,Describe Quwei: Video editing features,STAR: Action
+Week 2,Day 11,YouTube: App Store IAP,Integration,Describe Quwei: IAP & Crash reduction,STAR: Result (3% to 0.5%)
+Week 2,Day 12,Tech Blog: Performance,Latency,Shadowing: Describing performance fixes,Mimic intonation
+Week 2,Day 13,YouTube: UI Optimization,Bottleneck,Describe Kugou: Friend rec system,STAR: Action (Instruments)
+Week 2,Day 14,Review Week 2 Projects,Achievements,Full Project Story: Tonghuashun/Quwei,Confidence in past roles
+Week 3,Day 15,Componentization Overview,Decouple,Describe Dongchedi: Componentization,Explain "Why" decouple
+Week 3,Day 16,YouTube: Routing in iOS,Architecture,Describe Router implementation,Explain Runtime/Forwarding
+Week 3,Day 17,Project: Vehicle Control,Foundation,Describe Changan: 3-layer architecture,Explain Foundation/Business
+Week 3,Day 18,YouTube: SDK Development,Scalability,Describe Changan: SDK Integration cost,STAR: Result (60% saved)
+Week 3,Day 19,App Size Optimization blog,Redundant,Describe App size reduction (800MB to 400MB),Explain techniques used
+Week 3,Day 20,YouTube: Crash Governance,Contention,Describe Multi-thread race fix,Explain Thread-safety
+Week 3,Day 21,Review Changan/Byte Projects,Robust,Full Project Story: Changan/Byte,Expert level detail
+Week 4,Day 22,Memory Management (ARC),Retain Cycle,Explain ARC & Strong/Weak/Unowned,Clear conceptual explanation
+Week 4,Day 23,YouTube: Side Tables in OC,Reference,Explain Object Structure (isa/rc),Deep dive detail
+Week 4,Day 24,Concurrency: GCD basics,Deadlock,Explain Deadlock scenarios,Sync vs Async explanation
+Week 4,Day 25,YouTube: Swift Concurrency,Asynchronous,Explain Async/Await vs GCD,Future-proof tech talk
+Week 4,Day 26,Network: TCP/TLS Handshake,Encryption,Explain MQTT/TLS Connection flow,Explain Wireshark/Console.app
+Week 4,Day 27,YouTube: SSL Pinning,Authentication,Explain Certificate Pinning (NetworkKit),Explain MITM prevention
+Week 4,Day 28,Review Week 4 Tech,Handshake,Mock: Hard Tech Questions,Precision in terms
+Week 5,Day 29,Swift: Struct vs Class,Value Type,Explain Copy on Write (COW),Explain Heap vs Stack
+Week 5,Day 30,YouTube: Protocol Oriented (POP),Abstraction,Explain POP vs OOP,Explain flexibility/decoupling
+Week 5,Day 31,SwiftUI vs UIKit,Declarative,Compare SwiftUI/Flutter/UIKit,State management talk
+Week 5,Day 32,YouTube: Metal/GPU,Rendering,Explain Metal vs OpenGL ES,Explain MTLDevice/MTKView
+Week 5,Day 33,Data Security: Secure Enclave,Keychain,Explain Private Key storage,Explain hardware isolation
+Week 5,Day 34,YouTube: Combine Framework,Publisher,Explain Combine: Debounce/Throttle,Explain PassthroughSubject
+Week 5,Day 35,Review Week 5 Tech,Subscriber,Mock: Swift & UI Deep Dive,Handle "Why" questions
+Week 6,Day 36,Design Patterns: Facade,Singleton,Explain Facade (Network/PaymentKit),Use "Unified entry point"
+Week 6,Day 37,Pattern: Strategy/Adapter,Compliance,Explain Strategy (Payment channels),Explain Adapter (Logger)
+Week 6,Day 38,Pattern: Interceptor,Middleware,Explain Interceptor (Token/Params),Explain Chain of Responsibility
+Week 6,Day 39,YouTube: System Design,Modularization,Explain Componentization Architecture,High-level design talk
+Week 6,Day 40,YouTube: Clean Architecture,Layers,Explain MVVM vs MVC vs VIPER,Pros and Cons analysis
+Week 6,Day 41,TDD & CI/CD basics,Automation,Talk about TDD/Unit Testing (XCTest),Quality assurance talk
+Week 6,Day 42,Review Week 6 Patterns,Maintainable,Mock: System Design interview,Architect mindset
+Week 7,Day 43,Podcast: Daily Standups,Update,Practice: "Yesterday I did...",Clear status reporting
+Week 7,Day 44,YouTube: Sprint Planning,Priority,Practice: Estimating tasks/points,Negotiation phrases
+Week 7,Day 45,PR Review comments blog,Suggestion,Practice: Writing/Speaking PR reviews,Polite but firm
+Week 7,Day 46,Meeting: Handling conflict,Perspective,Practice: "I disagree because...",Professional debate
+Week 7,Day 47,Collaborating with Backend,Endpoint,Practice: Discussing API specs,Contract-first talk
+Week 7,Day 48,Collaborating with Product,Requirement,Practice: Clarifying requirements,Avoid over-engineering
+Week 7,Day 49,Review Week 7 Workplace,Collaboration,Mock: Workplace Scenarios,Soft skills polish
+Week 8,Day 50,Full Mock: HR Round,Career Plan,Practice: Why OKX? Why abroad?,Motivation & Fit
+Week 8,Day 51,Full Mock: Tech Round 1,Fundamental,Practice: Memory/Swift/UI,Speed & Accuracy
+Week 8,Day 52,Full Mock: Tech Round 2,Architecture,Practice: Componentization/Design,Design depth
+Week 8,Day 53,Full Mock: Management/Lead,Mentorship,Practice: Leading teams/Mentoring,Seniority signals
+Week 8,Day 54,YouTube: Salary Negotiation,Compensation,Practice: Discussing salary/benefits,Confident negotiation
+Week 8,Day 55,Final Review: Hard words,Pronunciation,Record and listen to yourself,Final polish
+Week 8,Day 56,Relax & Final Prep,Confidence,Final Mental Walkthrough,Ready for Interview
