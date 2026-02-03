@@ -15,7 +15,7 @@ public final class WeChatPayChannel: PaymentChannelProtocol {
         print("🚀 [WeChatPay] 正在调用微信 SDK...")
         
         /* 
-         面试话术：
+         封装话术：
          1. 构造 PayReq 对象，填充 partnerId, prepayId, nonceStr, timeStamp, sign 等参数。
          2. 调用 WXApi.send(req) 发起跳转。
          3. 结果在 onResp 回调中处理。

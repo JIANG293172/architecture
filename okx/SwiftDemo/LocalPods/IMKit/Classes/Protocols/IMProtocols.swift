@@ -1,14 +1,14 @@
 import Foundation
 
 /// IM 消息基础协议 - 所有业务消息需遵循此协议
-/// 面试要点：IM 系统消息协议设计（Protocols Buffer vs JSON）
+/// 封装要点：IM 系统消息协议设计（Protocols Buffer vs JSON）
 /// 在高性能 IM 中，通常推荐使用 PB (Protocols Buffer) 来减少数据包大小和序列化开销
 public protocol IMMessageProtocol {
     /// 消息唯一标识 (msgId)
     var msgId: String { get }
     
     /// 序列号 (seqId) - 用于保证消息时序性
-    /// 面试要点：如何解决消息乱序问题？
+    /// 封装要点：如何解决消息乱序问题？
     /// 答：服务端生成全局单调递增的 seqId，客户端根据 seqId 进行排序和去重
     var seqId: Int64 { get }
     
@@ -36,7 +36,7 @@ public enum IMMessageType: String, Codable {
 }
 
 /// 传输层协议抽象
-/// 面试要点：为什么要做传输层抽象？
+/// 封装要点：为什么要做传输层抽象？
 /// 答：为了支持多种长连接协议（MQTT/WebSocket/gRPC），解耦业务逻辑与底层通信实现
 public protocol IMTransportProtocol: AnyObject {
     var isConnected: Bool { get }

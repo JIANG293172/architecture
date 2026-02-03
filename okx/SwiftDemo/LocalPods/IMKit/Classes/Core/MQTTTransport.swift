@@ -2,7 +2,7 @@ import Foundation
 import CocoaMQTT
 
 /// 基于 MQTT 的传输层实现 (Adapter Pattern)
-/// 面试要点：IM 为什么选择 MQTT 而不是原生 WebSocket？
+/// 封装要点：IM 为什么选择 MQTT 而不是原生 WebSocket？
 /// 答：1. MQTT 拥有原生 QoS 机制 (0, 1, 2) 保证消息可靠性；
 ///    2. 协议开销小，心跳包极小，省电省流量；
 ///    3. 天然支持发布/订阅模式，适合群聊场景。

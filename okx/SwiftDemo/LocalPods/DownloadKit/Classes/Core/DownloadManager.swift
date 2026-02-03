@@ -91,7 +91,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
         let destination = persistence.finalPath(for: url)
         
         do {
-            // 面试回答点：didFinishDownloadingTo 提供的是临时路径，必须立即移动到持久化目录
+            // 封装回答点：didFinishDownloadingTo 提供的是临时路径，必须立即移动到持久化目录
             if FileManager.default.fileExists(atPath: destination.path) {
                 try FileManager.default.removeItem(at: destination)
             }
@@ -118,7 +118,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
         guard let url = task.originalRequest?.url ?? task.currentRequest?.url else { return }
         
         if let error = error as NSError? {
-            // 面试重点：网络异常中断（如断网）时，从 error.userInfo 中提取 resumeData
+            // 封装重点：网络异常中断（如断网）时，从 error.userInfo 中提取 resumeData
             if let resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
                 persistence.saveResumeData(resumeData, for: url)
                 print("⚠️ [DownloadManager] 网络中断，已自动保存断点: \(url.lastPathComponent)")

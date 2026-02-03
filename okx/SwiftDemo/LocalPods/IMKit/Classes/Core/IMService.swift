@@ -1,7 +1,7 @@
 import Foundation
 
 /// IM 核心服务类 (Facade Pattern)
-/// 面试要点：IM 系统如何保证消息不丢失？
+/// 封装要点：IM 系统如何保证消息不丢失？
 /// 答：1. 应用层 ACK：客户端收到消息后，向服务端回复 ACK 消息；
 ///    2. 重试机制：发送端在一定时间内未收到 ACK 则触发重试；
 ///    3. 离线拉取：客户端上线后主动拉取离线期间的 seqId 缺口。
@@ -26,7 +26,7 @@ public class IMService: IMTransportDelegate {
     }
     
     /// 发送聊天消息
-    /// 面试要点：发送消息的流程？
+    /// 封装要点：发送消息的流程？
     /// 答：1. 本地入库（状态：发送中）；2. 传输层发送；3. 开启超时定时器；4. 收到 ACK 后更新数据库状态。
     public func sendMessage(_ message: IMMessageProtocol, topic: String) {
         guard let data = message.encode() else { return }
@@ -59,7 +59,7 @@ public class IMService: IMTransportDelegate {
     
     public func transport(_ transport: IMTransportProtocol, didDisconnect error: Error?) {
         print("🔌 [IMService] 连接断开: \(error?.localizedDescription ?? "未知")")
-        // 面试要点：指数退避算法进行重连
+        // 封装要点：指数退避算法进行重连
         // retryCount++ -> delay = 2^retryCount
     }
 }

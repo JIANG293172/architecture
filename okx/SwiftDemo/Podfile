@@ -28,6 +28,7 @@ target 'SwiftDemo' do
   pod 'PaymentKit', :path => './LocalPods/PaymentKit'         # 本地支付架构组件
   pod 'DownloadKit', :path => './LocalPods/DownloadKit'       # 本地断点续传组件
   pod 'IMKit', :path => './LocalPods/IMKit'               # 本地 IM 架构组件
+  pod 'NetworkKit', :path => './LocalPods/NetworkKit'     # 本地网络组件
 
   # 为测试目标添加依赖
   target 'SwiftDemoTests' do

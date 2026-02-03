@@ -1,6 +1,6 @@
 import Foundation
 
-/// 断点数据管理：面试重点 - 如何确保持久化和一致性
+/// 断点数据管理：封装重点 - 如何确保持久化和一致性
 public final class DownloadPersistence {
     
     private let queue = DispatchQueue(label: "com.downloadkit.persistence")

@@ -7,7 +7,8 @@ class ArchitectureListViewController: UIViewController {
     private let items: [(title: String, subtitle: String, target: UIViewController.Type)] = [
         ("支付组件架构", "支付 SDK 封装与多渠道路由设计", PayDemoViewController.self),
         ("断点续传架构", "大文件下载、状态持久化与断点续传", ResumeDownloadViewController.self),
-        ("IM 即时通讯架构", "高性能长连接、消息可靠性与时序性设计", IMDemoViewController.self)
+        ("IM 即时通讯架构", "高性能长连接、消息可靠性与时序性设计", IMDemoViewController.self),
+        ("HTTPS 网络架构", "Alamofire 封装、TLS 双向认证、Token 刷新拦截", NetworkDemoViewController.self)
     ]
     
     override func viewDidLoad() {

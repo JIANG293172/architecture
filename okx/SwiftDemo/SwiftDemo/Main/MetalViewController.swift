@@ -151,7 +151,7 @@ class MetalViewController: UIViewController {
     // MARK: - Metal设置
     private func setupMetal() {
         // 1. 获取Metal设备
-        // 面试考点：Metal设备是与GPU通信的桥梁，每个iOS设备通常只有一个Metal设备
+        // 封装考点：Metal设备是与GPU通信的桥梁，每个iOS设备通常只有一个Metal设备
         device = MTLCreateSystemDefaultDevice()
         guard device != nil else {
             fatalError("Metal is not supported on this device")
@@ -163,22 +163,22 @@ class MetalViewController: UIViewController {
         metalView.clearColor = MTLClearColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
         
         // 3. 创建命令队列
-        // 面试考点：命令队列负责将渲染命令提交给GPU执行
+        // 封装考点：命令队列负责将渲染命令提交给GPU执行
         commandQueue = device.makeCommandQueue()
         
         // 4. 创建渲染管线
-        // 面试考点：渲染管线定义了从顶点数据到最终像素的处理流程
+        // 封装考点：渲染管线定义了从顶点数据到最终像素的处理流程
         createRenderPipeline()
         
         // 5. 创建uniforms缓冲区
-        // 面试考点：uniforms是对所有顶点都相同的数据，如变换矩阵、颜色等
+        // 封装考点：uniforms是对所有顶点都相同的数据，如变换矩阵、颜色等
         uniformBuffer = device.makeBuffer(length: MemoryLayout<Uniforms>.stride, options: [])
     }
     
     // MARK: - 创建渲染管线
     private func createRenderPipeline() {
         // 加载顶点着色器和片段着色器
-        // 面试考点：Metal使用Metal Shading Language (MSL)编写着色器，类似于C++
+        // 封装考点：Metal使用Metal Shading Language (MSL)编写着色器，类似于C++
         let library = device.makeDefaultLibrary()
         let vertexFunction = library?.makeFunction(name: "vertexShader")
         let fragmentFunction = library?.makeFunction(name: "fragmentShader")
@@ -213,11 +213,11 @@ class MetalViewController: UIViewController {
         }
         
         // 创建顶点缓冲区
-        // 面试考点：顶点缓冲区存储顶点数据，GPU可以直接访问，提高性能
+        // 封装考点：顶点缓冲区存储顶点数据，GPU可以直接访问，提高性能
         vertexBuffer = device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])
         
         // 创建索引缓冲区
-        // 面试考点：索引缓冲区存储顶点索引，减少重复顶点数据，节省内存
+        // 封装考点：索引缓冲区存储顶点索引，减少重复顶点数据，节省内存
         indexBuffer = device.makeBuffer(bytes: indices, length: indices.count * MemoryLayout<UInt16>.stride, options: [])
     }
     
@@ -339,7 +339,7 @@ class MetalViewController: UIViewController {
     
     // MARK: - 数据结构
     // 顶点结构
-    // 面试考点：顶点结构定义了每个顶点的数据，如位置、颜色、纹理坐标等
+    // 封装考点：顶点结构定义了每个顶点的数据，如位置、颜色、纹理坐标等
     struct Vertex {
         var position: SIMD2<Float>
         var color: SIMD4<Float>
@@ -353,22 +353,22 @@ class MetalViewController: UIViewController {
 }
 
 // MARK: - MTKViewDelegate
-// 面试考点：MTKViewDelegate协议定义了Metal视图的渲染回调方法
+// 封装考点：MTKViewDelegate协议定义了Metal视图的渲染回调方法
 extension MetalViewController: MTKViewDelegate {
     
     // 绘制方法
-    // 面试考点：draw方法是Metal渲染的核心，负责执行渲染命令
+    // 封装考点：draw方法是Metal渲染的核心，负责执行渲染命令
     func draw(in view: MTKView) {
         guard let drawable = view.currentDrawable, let renderPassDescriptor = view.currentRenderPassDescriptor else {
             return
         }
         
         // 创建命令缓冲区
-        // 面试考点：命令缓冲区存储要提交给GPU的命令
+        // 封装考点：命令缓冲区存储要提交给GPU的命令
         let commandBuffer = commandQueue.makeCommandBuffer()
         
         // 创建渲染命令编码器
-        // 面试考点：渲染命令编码器用于编码渲染命令，如设置管线状态、绑定缓冲区、绘制等
+        // 封装考点：渲染命令编码器用于编码渲染命令，如设置管线状态、绑定缓冲区、绘制等
         let renderEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         
         // 设置渲染管线状态
@@ -396,7 +396,7 @@ extension MetalViewController: MTKViewDelegate {
         commandBuffer?.present(drawable)
         
         // 提交命令缓冲区
-        // 面试考点：提交命令缓冲区后，GPU会执行其中的命令
+        // 封装考点：提交命令缓冲区后，GPU会执行其中的命令
         commandBuffer?.commit()
     }
     
@@ -440,7 +440,7 @@ OKX等金融公司的应用场景：
 4. 数据可视化：高效处理和渲染大量市场数据
 5. 动画效果：实现平滑的图表过渡和动画效果
 
-面试考点总结：
+封装考点总结：
 1. Metal基本概念：设备、命令队列、渲染管线、着色器等
 2. 渲染流程：从顶点数据到最终像素的处理过程
 3. 性能优化：使用缓冲区、减少CPU-GPU数据传输、合理使用uniforms等

@@ -42,7 +42,6 @@
 				Tests/LoginServiceTests.swift,
 				Tests/LoginViewModelTests.swift,
 				Tests/ThemeManagerTests.swift,
-				Main/ResumeDownloadViewController.swift,
 			);
 			target = 5CC9200E2F224DD400795E9C /* SwiftDemo */;
 		};

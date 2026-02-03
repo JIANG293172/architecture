@@ -486,9 +486,9 @@ struct RxSwiftOperatorsDemoView: View {
     }
 }
 
-// MARK: - Swift 常见面试知识点
+// MARK: - Swift 常见封装知识点
 /*
- Swift 常见面试知识点：
+ Swift 常见封装知识点：
  
  1. Swift 特性：
     - 值类型 vs 引用类型

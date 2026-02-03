@@ -20,7 +20,7 @@ public final class AliPayChannel: PaymentChannelProtocol {
         print("🚀 [AliPay] 正在调用支付宝 SDK...")
         
         /* 
-         面试话术：
+         封装话术：
          这里会调用 AliPaySDK.defaultService().payOrder(token, fromScheme: "your_scheme") { result in
              // 解析支付宝返回的 resultStatus (9000成功, 6001取消等)
              // 映射为我们统一的 PaymentResult

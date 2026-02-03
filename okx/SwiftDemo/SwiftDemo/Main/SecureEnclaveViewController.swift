@@ -11,7 +11,7 @@ import Security
 import CryptoKit
 
 // MARK: - 扩展：Data转十六进制字符串
-// 面试考点：如何安全地展示和处理二进制数据
+// 封装考点：如何安全地展示和处理二进制数据
 extension Data {
     var hexString: String {
         return map { String(format: "%02x", $0) }.joined()
@@ -176,7 +176,7 @@ class SecureEnclaveViewController: UIViewController {
     // MARK: - 核心流程实现
     
     // 步骤1：生成比特币私钥（32字节）
-    // 面试考点：如何安全生成加密货币私钥
+    // 封装考点：如何安全生成加密货币私钥
     @objc private func generateBitcoinPrivateKey() {
         do {
             // 生成32字节随机私钥（比特币标准）
@@ -204,13 +204,13 @@ class SecureEnclaveViewController: UIViewController {
     }
     
     // 创建Secure Enclave密钥对
-    // 面试考点：如何正确配置Secure Enclave密钥生成参数
+    // 封装考点：如何正确配置Secure Enclave密钥生成参数
     private func createSecureEnclaveKeyPair() throws {
         // 生成标签数据
         let tagData = secureEnclaveKeyTag.data(using: .utf8)! as CFData
         
         // RSA密钥对生成参数
-        // 面试考点：Secure Enclave RSA密钥生成的关键参数
+        // 封装考点：Secure Enclave RSA密钥生成的关键参数
         let attributes: [String: Any] = [
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
             kSecAttrKeySizeInBits as String: 2048,
@@ -222,7 +222,7 @@ class SecureEnclaveViewController: UIViewController {
         ]
         
         // 生成RSA密钥对
-        // 面试考点：Secure Enclave的核心API调用
+        // 封装考点：Secure Enclave的核心API调用
         var error: Unmanaged<CFError>?
         guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error),
               let publicKey = SecKeyCopyPublicKey(privateKey) else {
@@ -235,7 +235,7 @@ class SecureEnclaveViewController: UIViewController {
     }
     
     // 步骤3-4：加密比特币私钥并存储到Keychain
-    // 面试考点：如何安全加密和存储私钥
+    // 封装考点：如何安全加密和存储私钥
     @objc private func encryptAndStorePrivateKey() {
         do {
             guard let bitcoinPrivateKey = bitcoinPrivateKey, let publicKey = secureEnclavePublicKey else {
@@ -243,7 +243,7 @@ class SecureEnclaveViewController: UIViewController {
             }
             
             // 使用Secure Enclave公钥加密比特币私钥
-            // 面试考点：RSA加密的核心API调用
+            // 封装考点：RSA加密的核心API调用
             var error: Unmanaged<CFError>?
             guard let encryptedData = SecKeyCreateEncryptedData(
                 publicKey,
@@ -255,7 +255,7 @@ class SecureEnclaveViewController: UIViewController {
             }
             
             // 将加密后的私钥存储到Keychain
-            // 面试考点：如何安全配置Keychain存储参数
+            // 封装考点：如何安全配置Keychain存储参数
             try storeEncryptedKeyToKeychain(encryptedData: encryptedData)
             
             // 存储加密数据到内存
@@ -272,7 +272,7 @@ class SecureEnclaveViewController: UIViewController {
     }
     
     // 将加密后的私钥存储到Keychain
-    // 面试考点：Keychain安全存储的最佳实践
+    // 封装考点：Keychain安全存储的最佳实践
     private func storeEncryptedKeyToKeychain(encryptedData: Data) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -311,7 +311,7 @@ class SecureEnclaveViewController: UIViewController {
     }
     
     // 步骤5：交易签名（含内存清零）
-    // 面试考点：如何安全进行交易签名并管理内存中的私钥
+    // 封装考点：如何安全进行交易签名并管理内存中的私钥
     @objc private func signTransaction() {
         do {
             // 从Keychain读取加密的私钥
@@ -322,7 +322,7 @@ class SecureEnclaveViewController: UIViewController {
             }
             
             // 使用Secure Enclave私钥解密
-            // 面试考点：Secure Enclave解密的核心API调用
+            // 封装考点：Secure Enclave解密的核心API调用
             var error: Unmanaged<CFError>?
             guard let decryptedPrivateKey = SecKeyCreateDecryptedData(
                 privateKey,
@@ -339,11 +339,11 @@ class SecureEnclaveViewController: UIViewController {
             }
             
             // 使用比特币私钥签名交易
-            // 面试考点：如何使用私钥进行数字签名
+            // 封装考点：如何使用私钥进行数字签名
             let signature = try signWithBitcoinPrivateKey(privateKey: decryptedPrivateKey, data: testTransactionData)
             
             // 步骤5e：立即清零内存中的私钥
-            // 面试考点：如何防止内存中的私钥泄露
+            // 封装考点：如何防止内存中的私钥泄露
             var mutablePrivateKey = decryptedPrivateKey
             mutablePrivateKey.resetBytes(in: 0..<mutablePrivateKey.count)
             
@@ -375,7 +375,7 @@ class SecureEnclaveViewController: UIViewController {
     }
     
     // 步骤6：清空内存中的私钥
-    // 面试考点：内存安全的最佳实践
+    // 封装考点：内存安全的最佳实践
     @objc private func clearMemory() {
         // 清零内存中的私钥
         if var privateKey = bitcoinPrivateKey {
@@ -407,7 +407,7 @@ class SecureEnclaveViewController: UIViewController {
     }
 }
 
-// MARK: - Secure Enclave 原理与面试考点
+// MARK: - Secure Enclave 原理与封装考点
 /*
 Secure Enclave 核心原理：
 1. 硬件隔离：独立于主处理器的硬件安全区域
@@ -416,7 +416,7 @@ Secure Enclave 核心原理：
 4. 安全启动：独立的安全启动过程
 5. 生物识别集成：直接与Touch ID/Face ID集成
 
-面试考点总结：
+封装考点总结：
 
 1. 私钥生成与管理：
    - 如何安全生成32字节比特币私钥
@@ -458,7 +458,7 @@ Secure Enclave 核心原理：
    - 如何优化频繁签名的性能
    - 内存使用的优化
 
-OKX等加密货币公司的面试问题：
+OKX等加密货币公司的封装问题：
 1. 如何设计一个安全的加密货币钱包架构
 2. Secure Enclave在钱包安全中的具体应用
 3. 如何防止私钥在传输和存储过程中泄露

@@ -20,7 +20,7 @@ struct Uniforms {
 };
 
 // 顶点着色器
-// 面试考点：顶点着色器负责将顶点坐标转换为裁剪空间坐标
+// 封装考点：顶点着色器负责将顶点坐标转换为裁剪空间坐标
 vertex VertexOut vertexShader(constant Vertex *vertices [[buffer(0)]],
                              constant Uniforms *uniforms [[buffer(1)]],
                              uint vid [[vertex_id]]) {
@@ -34,7 +34,7 @@ vertex VertexOut vertexShader(constant Vertex *vertices [[buffer(0)]],
 }
 
 // 片段着色器
-// 面试考点：片段着色器负责计算每个像素的最终颜色
+// 封装考点：片段着色器负责计算每个像素的最终颜色
 fragment float4 fragmentShader(VertexOut in [[stage_in]],
                               constant Uniforms *uniforms [[buffer(1)]]) {
     // 简单返回顶点颜色

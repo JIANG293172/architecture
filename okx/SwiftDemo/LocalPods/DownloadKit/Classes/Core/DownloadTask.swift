@@ -19,7 +19,7 @@ public final class DownloadTask: NSObject {
     }
     
     /// 开始/恢复下载
-    /// 面试回答点：
+    /// 封装回答点：
     /// 1. 首次下载：使用 session.downloadTask(with: url)
     /// 2. 断点续传：从本地读取 resumeData，使用 session.downloadTask(withResumeData: data)
     func resume(in session: URLSession) {
@@ -38,7 +38,7 @@ public final class DownloadTask: NSObject {
     }
     
     /// 暂停下载
-    /// 面试回答点：
+    /// 封装回答点：
     /// 调用 cancel(byProducingResumeData:) 是断点续传的关键。
     /// 系统会回调并提供 resumeData，我们需要将其持久化。
     func pause() {

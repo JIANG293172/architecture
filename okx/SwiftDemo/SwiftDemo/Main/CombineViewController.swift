@@ -323,7 +323,7 @@ class LoginService {
     // 模拟登录API调用
     func login(username: String, password: String) -> AnyPublisher<Bool, Error> {
         // 使用Future创建一个Publisher
-        // 面试点：Future是Combine中创建单个值Publisher的常用方式
+        // 封装点：Future是Combine中创建单个值Publisher的常用方式
         return Future<Bool, Error> {promise in
             // 模拟网络延迟
             DispatchQueue.global().asyncAfter(deadline: .now() + 1.5) {
@@ -336,13 +336,13 @@ class LoginService {
                 }
             }
         }
-        .eraseToAnyPublisher() // 面试点：eraseToAnyPublisher用于类型擦除，隐藏具体实现
+        .eraseToAnyPublisher() // 封装点：eraseToAnyPublisher用于类型擦除，隐藏具体实现
     }
 }
 
 // MARK: - Combine常用操作符示例
 /*
- Combine面试常见问题与解答：
+ Combine封装常见问题与解答：
  
  1. 什么是Combine？
     Combine是Apple在iOS 13+推出的响应式编程框架，用于处理异步事件流。
