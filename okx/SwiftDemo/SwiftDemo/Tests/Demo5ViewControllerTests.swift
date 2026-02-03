@@ -4,10 +4,10 @@ import UIKit
 
 /// Demo5ViewController 测试用例
 /// 测试视图控制器的功能
-class Demo5ViewControllerTests: XCTestCase {
+class CombineViewControllerTests: XCTestCase {
     
     // MARK: - 测试对象
-    private var viewController: Demo5ViewController!
+    private var viewController: CombineViewController!
     
     // MARK: - 测试生命周期
     
@@ -15,7 +15,7 @@ class Demo5ViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // 创建测试对象
-        viewController = Demo5ViewController()
+        viewController = CombineViewController()
         // 加载视图
         viewController.loadViewIfNeeded()
     }
