@@ -1,0 +1,107 @@
+# OKX iOS Interview Guide - Full English Edition
+
+This guide is tailored for the OKX iOS Software Engineer position, based on your 8-year experience and the specific requirements of OKX (Global team, Web3/Trading, High Performance/Security).
+
+---
+
+## Part 1: Opening & Small Talk
+*Goal: Build rapport and show confidence.*
+
+- **Greetings:** 
+    - "Good afternoon! It’s a pleasure to meet you. How is your day going so far?"
+    - "I’m doing great, thank you for asking. I’ve been looking forward to this interview."
+- **Ice Breaking (Weather/Location):**
+    - "I’m currently based in Chongqing. It’s [sunny/cloudy] here today. How’s the weather in [Singapore/Hong Kong/Dubai]?"
+- **Transition to Interview:**
+    - "I'm ready whenever you are. Shall I start with a brief introduction of myself?"
+
+---
+
+## Part 2: Self-Introduction (The 8-Year Story)
+*Focus on: High-DAU apps, Componentization, and Performance.*
+
+"My name is Jiang Tao. I graduated from Hangzhou Dianzi University with a bachelor's degree. I have **8 years of experience** in iOS development, specializing in both **Objective-C and Swift**.
+
+Throughout my career, I have worked at several top-tier companies:
+1. **Changan Automobile (Current):** I lead the **componentization** of the core Vehicle Control SDK, reducing integration costs by 60% and cutting app size by half (800MB to 400MB).
+2. **Dongchedi (ByteDance):** I refactored key business modules into 8 independent components and handled complex crash governance.
+3. **Kugou Music:** I optimized the Friend Recommendation system, improving loading speeds by 60%.
+4. **Quwei Tech & Tonghuashun:** I gained deep experience in stock trading modules, in-app purchases, and building crash collection systems for millions of users.
+
+I consider myself a **performance-driven** developer. I have a strong track record in crash fixing, memory management, and architecture design using MVVM and Router-based patterns. I am excited about the opportunity at OKX to apply my expertise in high-concurrency and high-security scenarios."
+
+---
+
+## Part 3: Project Deep Dive (STAR Method)
+*Use these templates for "Tell me about a time..." questions.*
+
+### 1. Componentization & SDK Design (Changan Auto)
+- **Situation:** The project was a monolithic codebase with duplicate code, making it hard to reuse features across different car-control apps.
+- **Task:** Decouple the project and create a reusable SDK.
+- **Action:** I designed a **3-layer architecture** (Foundation, Common, Business) and implemented a **Runtime-based Router**. This router uses protocol definitions and message forwarding to handle cross-module calls without direct dependencies.
+- **Result:** We built a single SDK used by 5 different apps, significantly reducing redundant work and delivery time.
+
+### 2. Crash Governance (Dongchedi/Xiaoying)
+- **Situation:** We faced "un-decodable" crashes and multi-threaded data races that affected user experience.
+- **Task:** Reduce the crash rate and improve stability.
+- **Action:** 
+    - For decodability: I created a manual symbolication process using **ASLR offsets** and **dSYM files** to map hex addresses to function names.
+    - For data races: I identified contention points using Thread Sanitizer and applied **Dispatch Queues** and locks to ensure thread safety.
+- **Result:** Reduced the crash rate from 0.5% to 0.03% at Changan and solved long-standing issues at Dongchedi.
+
+---
+
+## Part 4: Technical Q&A (OKX Favorites)
+
+### 1. Swift & iOS Basics
+- **Q: Explain Copy-on-Write (COW) in Swift.**
+  - **A:** "COW is an optimization for value types like Arrays and Dictionaries. Multiple variables share the same memory buffer until one of them modifies the data. At that point, a copy is made. This saves memory and improves performance for large collections."
+- **Q: Struct vs. Class?**
+  - **A:** "Structs are value types (stored on stack, thread-safe by default), while Classes are reference types (stored on heap, supports inheritance). I prefer Structs for data models and Classes for objects with state, like ViewControllers or Managers."
+- **Q: How do you handle Memory Management (ARC)?**
+  - **A:** "I use `weak` or `unowned` references to break retain cycles, especially in closures and delegate patterns. I also use Instruments (Leaks/Allocations) to detect memory growth."
+
+### 2. Networking & Concurrency (Critical for Trading)
+- **Q: How would you handle high-frequency WebSocket data (like ticker prices)?**
+  - **A:** "I would process the incoming data on a background serial queue to avoid blocking the Main Thread. I’d use a 'throttling' or 'debouncing' mechanism (perhaps via Combine) to update the UI only at a rate the user can perceive, ensuring a smooth 60fps experience."
+- **Q: Describe the MQTT/TLS handshake.**
+  - **A:** "It starts with a 3-way TCP handshake, followed by the TLS handshake for encryption (Client/Server Hello, Certificate verification), and finally the MQTT CONNECT packet. For troubleshooting, I use Wireshark or system logs via Console.app."
+
+### 3. Security (Wallet & Private Keys)
+- **Q: How do you securely store a Private Key on iOS?**
+  - **A:** "The gold standard is using the **Secure Enclave**. I generate a key pair inside the Secure Enclave so the private key never leaves the hardware. I use the public key to encrypt sensitive data and store it in the **Keychain**. For extra security, I require FaceID/TouchID authentication before accessing the key."
+
+---
+
+## Part 5: Behavioral & OKX Culture
+
+- **Q: Why OKX?**
+  - "OKX is a leader in Web3. I am fascinated by how blockchain reshapes financial trust. My experience in high-DAU trading apps (Tonghuashun) and high-security SDKs (Changan) makes me a perfect fit for the OKX Wallet and Trading teams."
+- **Q: What is your greatest strength?**
+  - "I am **Reliable**. I don't just write code; I write maintainable, well-tested code. I always consider edge cases and error handling because, in financial apps, stability is everything."
+- **Q: What is your weakness?**
+  - "I have less hands-on experience with cross-platform frameworks like Flutter. However, I’ve been systematically learning Flutter recently, focusing on MethodChannels and its similarity to SwiftUI's declarative syntax."
+
+---
+
+## Part 6: Questions for the Interviewer
+*Show your interest in their engineering culture.*
+
+1. "What does the typical development workflow look like in the OKX global team?"
+2. "How does the team balance rapid feature delivery with the high-security requirements of a crypto app?"
+3. "Are there opportunities to contribute to the architectural direction of the OKX Wallet or Trading modules?"
+4. "What is the biggest technical challenge the iOS team is currently facing?"
+
+---
+
+## Part 7: Key Vocabulary Cheat Sheet (For Quick Review)
+- **Componentization:** 组件化
+- **Decoupling:** 解耦
+- **Thread Safety:** 线程安全
+- **High Concurrency:** 高并发
+- **Latency:** 延迟
+- **Memory Leak:** 内存泄漏
+- **Refactoring:** 重构
+- **Scalability:** 可扩展性
+- **Robustness:** 鲁棒性/稳定性
+- **Encryption:** 加密
