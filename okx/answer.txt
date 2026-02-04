@@ -286,6 +286,203 @@ a view that loads and displays an image from a url asynchronnously.
     }
 
 
+101.concurrency: executing multiple tasks at the same time
+
+102.gcd(grand central dispatch):
+a low-api for managing concurrent tasks using queues.
+
+103.what is a serial quque.
+a queue that executes one task at a time in order.
+
+104.what is concurrent queue.
+a queue that that can execute multiple task simultaneously.
+
+105.what is main queue.
+a serial queue taht runs on the main thread for ui tasks.
+
+106.difference between sync and async
+sync waits for completion; async returns immediately.
+sync can not create new thread, add task on current thread
+async can add new threads. will not lag current thread.
+
+107.what is deadlock
+when two or more task wait for each other to finish, stoping all progress
+
+108.what is rece condition.
+when multiple threads access shared data at the same time, leading to unpredicatable results.
+
+109.hwo to fix rece condictions.
+use lock,serial queues, or semaphores.
+
+110.waht is dipatchGroup
+a way to monitor a set of tasks and perform and action when all finish.
+
+111.what is dispatchworkitem
+an object taht encapsulates a block of code to be executed.
+
+112.explain operation and oprationqueue
+a high-level obstraction over gcd that supports dependencies and cancellation.
+
+113.what is quality of service
+a way to prioritize task.
+
+114.what is async await
+a modern swift syntax for writing asynchronous code that looks sychronous.
+
+115.what is a task
+a unit of asychronous work in the new concurrency model.
+
+116.what is taskGroup
+A way to manage a dynamic number of child tasks.
+
+117.what is an actor.
+a reference type that protects its state form data races ensuring serial access.
+
+118.what is @mainActor
+a global actor taht ensures code runs on the main thread.
+
+119.what is sendable protorol
+a protocol indicating a type is safe to pass across concurrency boundaries.
+struct User: Sendable { // 可省略，编译器自动推断
+    let id: Int
+    let name: String // 所有属性为 let（不可变）
+}
+
+120.how to cancel a task.
+use task.cancel() and check task.iscanceled whthin the task
+
+121.what is checkedcontinuation
+a bridge between traditional completion handlers and async / await
+
+122.what is task.sleep()
+suspends the current task for a give duration without blocking the thread.
+
+123.difference between task and task.detached
+task inherits contect , detached does not
+
+124.what is structured concurrency
+a model where the lifetime of child tasks is tied to their parent.
+
+125.what is priority inversion
+when a low-priority task holds a resource needed by a high-priority task.
+
+126.what is semaphore
+a synchronization primitive that controls access to a shared resouce using counter.
+
+127.what is thread sanitizer
+a tools to find data race in your code.
+
+
+128.how to handle errors in async fucctions.
+use async throws and try await
+
+// 2. 声明 async throws 异步函数（可能抛出错误）
+func fetchUserData(from urlString: String) async throws -> Data {
+    // 校验URL（失败则抛错）
+    guard let url = URL(string: urlString) else {
+        throw NetworkError.invalidURL
+    }
+    
+    // 异步请求（URLSession.data(from:) 本身是 async throws 函数）
+    do {
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NetworkError.requestFailed("Invalid status code")
+        }
+        return data
+    } catch {
+        throw NetworkError.requestFailed(error.localizedDescription)
+    }
+}
+
+
+
+129.what is asyncsequeue 
+a protocol for values that are delivered asynchronously over time.
+// 示例：异步流式读取网络数据（URLSession.bytes 是 AsyncSequence）
+func streamNetworkData(from urlString: String) async throws {
+    guard let url = URL(string: urlString) else {
+        throw NSError(domain: "InvalidURL", code: -1)
+    }
+    
+    // 获取异步字节序列
+    let (bytesSequence, _) = try await URLSession.shared.bytes(from: url)
+    
+    // 用 for-await-in 异步遍历序列（每拿到一批字节就执行一次）
+    var totalBytes = 0
+    for try await byteChunk in bytesSequence {
+        totalBytes += byteChunk.count
+        print("Received \(byteChunk.count) bytes, total: \(totalBytes)")
+    }
+    print("Stream completed, total bytes: \(totalBytes)")
+}
+
+
+130. what is taskpriority
+defines how much cpu time a task should get relative to other.
+
+import Foundation
+
+// 示例1：创建不同优先级的任务
+func taskPriorityExample() async {
+    // 1. 高优先级任务（UI相关）
+    let highPriorityTask = Task(priority: .high) {
+        print("High priority task started")
+        try await Task.sleep(nanoseconds: 500_000_000) // 模拟耗时UI操作
+        print("High priority task completed")
+        return "UI updated"
+    }
+    
+    // 2. 低优先级任务（后台缓存）
+    let lowPriorityTask = Task(priority: .low) {
+        print("Low priority task started")
+        try await Task.sleep(nanoseconds: 500_000_000) // 模拟后台操作
+        print("Low priority task completed")
+        return "Cache synced"
+    }
+    
+    // 等待结果（高优先级任务通常会先完成）
+    let highResult = await highPriorityTask.value
+    let lowResult = await lowPriorityTask.value
+    print("Results: \(highResult), \(lowResult)")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
