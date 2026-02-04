@@ -1,0 +1,429 @@
+# 200 iOS English Interview Questions & Answers (Full Version)
+
+This document contains a comprehensive set of 200 questions and answers tailored for senior iOS developers, focusing on OKX's technical stack (Swift, Concurrency, Security, Web3).
+
+---
+
+## Category 1: Swift Language & Internals (1-40)
+
+1. **Q: What is the difference between `let` and `var`?**
+   A: `let` defines a constant (immutable), while `var` defines a variable (mutable). Swift prefers `let` for safety.
+2. **Q: What are value types vs. reference types?**
+   A: Value types (struct, enum) copy data on assignment. Reference types (class) share a single instance.
+3. **Q: Explain Optional and Optional Binding.**
+   A: Optionals handle the absence of a value. We unwrap them using `if let` or `guard let`.
+4. **Q: What is Nil Coalescing?**
+   A: Using `??`（double question mark） to provide a default value if an optional is `nil`.
+5. **Q: What is a Retain Cycle?**
+   A: When two objects hold strong references to each other, preventing deallocation.
+6. **Q: How does ARC work?**
+   A: Automatic Reference Counting tracks the number of strong references to an object and deallocates it when the count reaches zero.
+7. **Q: Difference between `weak` and `unowned`?**
+   A: `weak` is optional and becomes `nil` when the object is gone. `unowned` is non-optional and crashes if accessed after deallocation.
+8. **Q: What is Copy-on-Write (COW)?**
+   A: An optimization for value types like Arrays where data is only copied when modified.
+9. **Q: What is a Closure?**
+   A: A self-contained block of code that can capture variables from its surrounding context.
+10. **Q: Explain `@escaping` closures.**
+    A: A closure that is called after the function returns, requiring explicit memory management.
+11. **Q: What are Generics?**
+    A: They allow writing flexible, reusable code that works with any type.
+12. **Q: What is a Protocol?**
+    A: A blueprint of methods or properties that a class, struct, or enum must implement.
+13. **Q: What is a Protocol Extension?**
+    A: It provides default implementations for protocol methods.
+14. **Q: Explain the difference between `Self` and `self`.**
+    A: `self` refers to the instance; `Self` refers to the type.
+15. **Q: What is an Enum with Associated Values?**
+    A: An enum where cases can store additional data of different types.
+16. **Q: What is a Computed Property?**
+    A: A property that doesn't store a value but provides a getter/setter to calculate one.
+17. **Q: What is a Lazy Property?**
+    A: A property initialized only when first accessed.
+18. **Q: What is the difference between `Any` and `AnyObject`?**
+    A: `Any` covers all types; `AnyObject` covers only classes.
+19. **Q: Explain `defer` keyword.**
+    A: It ensures a block of code runs just before leaving the current scope.
+20. **Q: What is a Tuple?**
+    A: A grouping of multiple values into a single compound value.
+21. **Q: What is Type Aliasing?**
+    A: Giving a new name to an existing type for clarity.
+22. **Q: What is a failable initializer?**
+    A: An `init?` that can return `nil` if initialization fails.
+23. **Q: Explain `final` keyword.**
+    A: Prevents a class from being inherited or a method from being overridden.
+24. **Q: What is a Designated Initializer vs Convenience Initializer?**
+    A: Designated is the primary init; Convenience must call a designated init of the same class.
+25. **Q: What is a Singleton?**
+    A: A pattern ensuring a class has only one instance with a global point of access.
+26. **Q: What is the `Error` protocol?**
+    A: A type representing values that can be thrown as errors.
+27. **Q: Explain `do-catch` blocks.**
+    A: A mechanism to handle errors thrown by functions.
+28. **Q: What is `try?` vs `try!`?**
+    A: `try?` returns an optional; `try!` crashes if an error is thrown.
+29. **Q: What is an Opaque Type (`some`)?**
+    A: Hides the concrete return type while ensuring it conforms to a protocol.
+30. **Q: What is a Result type?**
+    A: An enum representing success with a value or failure with an error.
+31. **Q: What is Property Wrapping (`@propertyWrapper`)?**
+    A: A layer of logic between property storage and definition (e.g., `@Published`).
+32. **Q: Explain `KeyPath`.**
+    A: A way to refer to a property of a type without invoking it.
+33. **Q: What is `dynamicCallable`?**
+    A: Allows instances of a type to be "called" like functions.
+34. **Q: What is `Codable`?**
+    A: A typealias for `Encodable & Decodable`, used for JSON parsing.
+35. **Q: Difference between `String` and `NSString`?**
+    A: `String` is a Swift struct (value type); `NSString` is an Objective-C class (reference type).
+36. **Q: What is a `Hashable` protocol?**
+    A: Allows a type to be used as a key in a Dictionary or a Set.
+37. **Q: What is `Equatable`?**
+    A: Allows comparing two instances using `==`.
+38. **Q: Explain Access Control (`private`, `fileprivate`, `internal`, `public`, `open`).**
+    A: Limits the visibility of code across files and modules.
+39. **Q: What is a `Nested Type`?**
+    A: Defining a type within another type to reflect their relationship.
+40. **Q: What is a `Standard Library`?**
+    A: The core set of types and functions provided by Swift.
+
+## Category 2: UIKit & UI Performance (41-75)
+
+41. **Q: Explain the View Controller Lifecycle.**
+    A: `viewDidLoad`, `viewWillAppear`, `viewDidAppear`, `viewWillDisappear`, `viewDidDisappear`.
+42. **Q: What is the difference between `frame` and `bounds`?**
+    A: `frame` is in the superview's coordinate system; `bounds` is in its own.
+43. **Q: How to optimize `UITableView` performance?**
+    A: Cell reuse, avoiding heavy computation in `cellForRowAt`, pre-calculating heights.
+44. **Q: What is `Auto Layout`?**
+    A: A constraint-based layout system to handle different screen sizes.
+45. **Q: What is `Intrinsic Content Size`?**
+    A: The natural size a view needs to display its content.
+46. **Q: Explain `setNeedsLayout` vs `layoutIfNeeded`.**
+    A: `setNeedsLayout` marks a view for update; `layoutIfNeeded` forces it immediately.
+47. **Q: What is the Responder Chain?**
+    A: A hierarchy of objects that handle events like touches.
+48. **Q: How to handle Keyboard covering a TextField?**
+    A: Observe keyboard notifications and adjust the view's content offset or constraints.
+49. **Q: What is `UIStackView`?**
+    A: A view that manages a collection of subviews in a linear layout.
+50. **Q: Difference between `draw(_:)` and `layoutSubviews()`?**
+    A: `draw` is for custom drawing with Core Graphics; `layoutSubviews` is for positioning subviews.
+51. **Q: What is `Safe Area`?**
+    A: The area of a view that is not covered by bars (status bar, navigation bar, etc.).
+52. **Q: How to create a Custom View?**
+    A: Subclass `UIView` and override `init(frame:)` and `init?(coder:)`.
+53. **Q: What is `UIAppearance`?**
+    A: A protocol to customize the appearance of all instances of a class.
+54. **Q: Explain `UIPageViewController`.**
+    A: A controller that manages a sequence of pages.
+55. **Q: What is `UICollectionViewFlowLayout`?**
+    A: A layout that organizes items into a grid or line.
+56. **Q: How to perform an Animation in UIKit?**
+    A: Use `UIView.animate(withDuration:animations:)`.
+57. **Q: What is `CALayer`?**
+    A: A low-level object for managing visual content, used by `UIView`.
+58. **Q: What is `Off-screen Rendering`?**
+    A: When the GPU renders a layer in a separate buffer (e.g., for shadows or masks), affecting performance.
+59. **Q: How to reduce App Launch time?**
+    A: Minimize static initializers, reduce the number of dynamic libraries, and defer non-critical work.
+60. **Q: What is `Main Thread`?**
+    A: The thread where all UI updates must happen.
+61. **Q: What is `Instruments`?**
+    A: A performance analysis tool for profiling CPU, memory, and energy usage.
+62. **Q: How to detect Memory Leaks?**
+    A: Using the Leaks instrument or the Memory Graph Debugger in Xcode.
+63. **Q: What is `Core Graphics`?**
+    A: A 2D drawing engine for creating shapes, paths, and gradients.
+64. **Q: What is `Core Animation`?**
+    A: A framework for creating smooth, hardware-accelerated animations.
+65. **Q: Explain `UIGestureRecognizer`.**
+    A: An object that detects specific touch patterns like taps, swipes, and pinches.
+66. **Q: How to handle multi-touch?**
+    A: Set `isMultipleTouchEnabled = true` on the view.
+67. **Q: What is `UIStoryboard`?**
+    A: A visual way to design the app's UI and navigation flow.
+68. **Q: What are `XIB` files?**
+    A: XML files representing a single view or view controller.
+69. **Q: Difference between `UITableView` and `UICollectionView`?**
+    A: TableView is for single-column lists; CollectionView is for complex, multi-dimensional layouts.
+70. **Q: What is `Asset Catalog`?**
+    A: A central place to manage images, colors, and icons for different devices.
+71. **Q: How to support Dark Mode?**
+    A: Use dynamic colors and images, or check `traitCollection.userInterfaceStyle`.
+72. **Q: What is `Dynamic Type`?**
+    A: A feature allowing users to choose their preferred text size.
+73. **Q: Explain `UIWindow`.**
+    A: The backdrop for your app's UI and the object that dispatches events to views.
+74. **Q: What is `SceneDelegate`?**
+    A: Handles life-cycle events for a specific instance of your app's UI (introduced in iOS 13).
+75. **Q: How to implement a Blur Effect?**
+    A: Use `UIVisualEffectView` with `UIBlurEffect`.
+
+## Category 3: SwiftUI (76-100)
+
+76. **Q: What is SwiftUI?**
+    A: A declarative framework for building UIs across all Apple platforms.
+77. **Q: What is a `View` in SwiftUI?**
+    A: A protocol that describes part of a user interface.
+78. **Q: Explain `@State`.**
+    A: A property wrapper for simple, local state within a view.
+79. **Q: Explain `@Binding`.**
+    A: A property wrapper used to share state between a parent and child view.
+80. **Q: Explain `@ObservedObject`.**
+    A: Used for external objects that conform to `ObservableObject`.
+81. **Q: Explain `@StateObject`.**
+    A: Similar to `@ObservedObject` but ensures the object is only created once.
+82. **Q: Explain `@EnvironmentObject`.**
+    A: A way to share data across many views without passing it explicitly.
+83. **Q: What is the `body` property?**
+    A: The computed property where you define a view's content.
+84. **Q: What is `VStack`, `HStack`, and `ZStack`?**
+    A: Vertical, Horizontal, and Depth-based layout containers.
+85. **Q: How to perform navigation in SwiftUI?**
+    A: Use `NavigationView` and `NavigationLink`.
+86. **Q: What is `List` in SwiftUI?**
+    A: A container that presents data in a single column of scrollable rows.
+87. **Q: How to handle user input in SwiftUI?**
+    A: Using components like `TextField`, `Toggle`, and `Slider`.
+88. **Q: What is `Modifier`?**
+    A: A method that creates a new view by transforming an existing one (e.g., `.padding()`).
+89. **Q: How to perform animations in SwiftUI?**
+    A: Using `.animation()` or `withAnimation { }`.
+90. **Q: What is `ViewBuilder`?**
+    A: A parameter attribute that allows creating views from closures.
+91. **Q: How to integrate UIKit into SwiftUI?**
+    A: Use `UIViewRepresentable` or `UIViewControllerRepresentable`.
+92. **Q: How to integrate SwiftUI into UIKit?**
+    A: Use `UIHostingController`.
+93. **Q: What is `AnyView`?**
+    A: A type-erased view used when you need to return different view types.
+94. **Q: What is `@AppStorage`?**
+    A: A property wrapper for reading/writing to `UserDefaults`.
+95. **Q: What is `@SceneStorage`?**
+    A: Used for state restoration within a specific scene.
+96. **Q: How to handle life-cycle in SwiftUI?**
+    A: Using `.onAppear()` and `.onDisappear()`.
+97. **Q: What is `GeometryReader`?**
+    A: A view that provides its parent's size and coordinate space to its children.
+98. **Q: How to create custom modifiers?**
+    A: Conform to the `ViewModifier` protocol.
+99. **Q: What is `Preference` in SwiftUI?**
+    A: A way to pass data from child views up to parent views.
+100. **Q: Explain `AsyncImage`.**
+     A: A view that loads and displays an image from a URL asynchronously.
+
+## Category 4: Concurrency (Async/Await, GCD) (101-130)
+
+101. **Q: What is Concurrency?**
+     A: Executing multiple tasks at the same time.
+102. **Q: What is GCD (Grand Central Dispatch)?**
+     A: A low-level API for managing concurrent tasks using queues.
+103. **Q: What is a `Serial Queue`?**
+     A: A queue that executes one task at a time in order.
+104. **Q: What is a `Concurrent Queue`?**
+     A: A queue that can execute multiple tasks simultaneously.
+105. **Q: What is `Main Queue`?**
+     A: A serial queue that runs on the main thread for UI tasks.
+106. **Q: Difference between `sync` and `async`?**
+     A: `sync` waits for completion; `async` returns immediately.
+107. **Q: What is a `Deadlock`?**
+     A: When two or more tasks wait for each other to finish, stopping all progress.
+108. **Q: What is a `Race Condition`?**
+     A: When multiple threads access shared data simultaneously, leading to unpredictable results.
+109. **Q: How to fix Race Conditions?**
+     A: Using locks, serial queues, or semaphores.
+110. **Q: What is `DispatchGroup`?**
+     A: A way to monitor a set of tasks and perform an action when all finish.
+111. **Q: What is `DispatchWorkItem`?**
+     A: An object that encapsulates a block of code to be executed.
+112. **Q: Explain `Operation` and `OperationQueue`.**
+     A: A high-level abstraction over GCD that supports dependencies and cancellation.
+113. **Q: What is `Quality of Service` (QoS)?**
+     A: A way to prioritize tasks (e.g., `userInteractive`, `utility`, `background`).
+114. **Q: What is `async/await`?**
+     A: A modern Swift syntax for writing asynchronous code that looks synchronous.
+115. **Q: What is a `Task`?**
+     A: A unit of asynchronous work in the new concurrency model.
+116. **Q: What is `TaskGroup`?**
+     A: A way to manage a dynamic number of child tasks.
+117. **Q: What is an `Actor`?**
+     A: A reference type that protects its state from data races by ensuring serial access.
+118. **Q: What is `@MainActor`?**
+     A: A global actor that ensures code runs on the main thread.
+119. **Q: What is `Sendable` protocol?**
+     A: A protocol indicating a type is safe to pass across concurrency boundaries.
+120. **Q: How to cancel a Task?**
+     A: Use `task.cancel()` and check `Task.isCancelled` within the task.
+121. **Q: What is `CheckedContinuation`?**
+     A: A bridge between traditional completion handlers and `async/await`.
+122. **Q: What is `Task.sleep()`?**
+     A: Suspends the current task for a given duration without blocking the thread.
+123. **Q: Difference between `Task` and `Task.detached`?**
+     A: `Task` inherits context; `detached` does not.
+124. **Q: What is `Structured Concurrency`?**
+     A: A model where the lifetime of child tasks is tied to their parent.
+125. **Q: What is `Priority Inversion`?**
+     A: When a low-priority task holds a resource needed by a high-priority task.
+126. **Q: What is a `Semaphore`?**
+     A: A synchronization primitive that controls access to a shared resource using a counter.
+127. **Q: What is `Thread Sanitizer`?**
+     A: A tool to find data races in your code.
+128. **Q: How to handle errors in `async` functions?**
+     A: Use `async throws` and `try await`.
+129. **Q: What is `AsyncSequence`?**
+     A: A protocol for values that are delivered asynchronously over time.
+130. **Q: What is `TaskPriority`?**
+     A: Defines how much CPU time a task should get relative to others.
+
+## Category 5: Combine & Reactive (131-150)
+
+131. **Q: What is Combine?**
+     A: Apple's reactive framework for processing values over time.
+132. **Q: What is a `Publisher`?**
+     A: A type that emits a sequence of values.
+133. **Q: What is a `Subscriber`?**
+     A: A type that receives values from a publisher.
+134. **Q: What is `Subscription`?**
+     A: The connection between a publisher and a subscriber.
+135. **Q: Explain `Subject` (`PassthroughSubject`, `CurrentValueSubject`).**
+     A: A publisher that you can manually inject values into.
+136. **Q: What is `sink`?**
+     A: A subscriber that performs an action for each received value.
+137. **Q: What is `assign(to:on:)`?**
+     A: A subscriber that assigns received values to a property.
+138. **Q: What is `AnyCancellable`?**
+     A: A token that cancels a subscription when it is deallocated.
+139. **Q: Explain `map` and `filter` in Combine.**
+     A: Operators to transform and filter emitted values.
+140. **Q: What is `flatMap` in Combine?**
+     A: Transforms values into a new publisher and flattens them.
+141. **Q: What is `combineLatest`?**
+     A: Combines the latest values from multiple publishers.
+142. **Q: What is `zip`?**
+     A: Pairs values from multiple publishers as they are emitted.
+143. **Q: Explain `debounce` vs `throttle`.**
+     A: `debounce` waits for a pause; `throttle` limits frequency.
+144. **Q: What is `eraseToAnyPublisher()`?**
+     A: Type erasure to hide the specific publisher type.
+145. **Q: How to handle errors in Combine?**
+     A: Using `catch`, `retry`, or mapping to a `Result`.
+146. **Q: What is `Scheduler`?**
+     A: Defines when and where a task should execute (e.g., `DispatchQueue.main`).
+147. **Q: What is `receive(on:)` vs `subscribe(on:)`?**
+     A: `receive` sets where values are handled; `subscribe` sets where the work starts.
+148. **Q: What is `@Published`?**
+     A: A property wrapper that creates a publisher for a property.
+149. **Q: What is `Just` publisher?**
+     A: A publisher that emits a single value and then finishes.
+150. **Q: What is `Empty` publisher?**
+     A: A publisher that emits no values and finishes immediately.
+
+## Category 6: Networking, Security & Web3 (151-180)
+
+151. **Q: What is `URLSession`?**
+     A: The standard API for performing network requests.
+152. **Q: How to perform a GET request?**
+     A: Use `URLSession.shared.dataTask(with:url:)`.
+153. **Q: How to perform a POST request?**
+     A: Create a `URLRequest`, set the method to "POST", and set the `httpBody`.
+154. **Q: What is JSON parsing in Swift?**
+     A: Using `JSONDecoder` to convert data into `Codable` structs.
+155. **Q: How to handle Network Reachability?**
+     A: Use `NWPathMonitor`.
+156. **Q: What is SSL Pinning?**
+     A: Hardcoding a server's certificate or public key in the app to prevent MITM attacks.
+157. **Q: What is `Keychain`?**
+     A: A secure encrypted database for storing sensitive info like passwords.
+158. **Q: What is `ATS` (App Transport Security)?**
+     A: An Apple policy that requires apps to use secure HTTPS connections.
+159. **Q: How to store data locally?**
+     A: `UserDefaults`, `Core Data`, `SQLite`, or `File System`.
+160. **Q: What is `Core Data`?**
+     A: A powerful framework for managing an object graph and persistent storage.
+161. **Q: Explain `NSManagedObjectContext`.**
+     A: A "scratchpad" for working with Core Data objects.
+162. **Q: What is `WebSocket`?**
+     A: A protocol for persistent, two-way communication between client and server.
+163. **Q: What is `OAuth 2.0`?**
+     A: An industry-standard protocol for authorization.
+164. **Q: What is a `JWT` (JSON Web Token)?**
+     A: A compact, URL-safe means of representing claims to be transferred between two parties.
+165. **Q: Explain `Encryption` vs `Hashing`.**
+     A: Encryption is reversible (with a key); Hashing is a one-way transformation.
+166. **Q: What is `AES` (Advanced Encryption Standard)?**
+     A: A widely used symmetric encryption algorithm.
+167. **Q: What is `RSA`?**
+     A: An asymmetric encryption algorithm using a public and private key.
+168. **Q: How to use `FaceID` / `TouchID` in an app?**
+     A: Use the `LocalAuthentication` framework.
+169. **Q: What is `Secure Enclave`?**
+     A: A hardware-based key manager isolated from the main processor.
+170. **Q: What is a `Private Key` in Web3?**
+     A: A secret number that allows you to spend cryptocurrency and sign transactions.
+171. **Q: What is a `Public Key` / `Address`?**
+     A: A derived string used to receive funds.
+172. **Q: What is a `Mnemonic Phrase`?**
+     A: A series of words (usually 12 or 24) that act as a seed for your private keys.
+173. **Q: What is `BIP39`?**
+     A: The standard for generating mnemonic phrases.
+174. **Q: What is `BIP44`?**
+     A: The standard for hierarchical deterministic (HD) wallet paths.
+175. **Q: What is an `RPC` (Remote Procedure Call)?**
+     A: A protocol that allows an app to interact with a blockchain node.
+176. **Q: What is a `Smart Contract`?**
+     A: Self-executing code stored on a blockchain.
+177. **Q: What is `Web3.swift` / `ethers.swift`?**
+     A: Libraries for interacting with the Ethereum blockchain in Swift.
+178. **Q: How to sign a transaction?**
+     A: Use the private key to create a cryptographic signature for the transaction data.
+179. **Q: What is `Gas` in Ethereum?**
+     A: The fee required to perform a transaction or execute a contract.
+180. **Q: Explain `Cold Wallet` vs `Hot Wallet`.**
+     A: Cold wallets are offline (more secure); Hot wallets are online (more convenient).
+
+## Category 7: Architecture, Testing & Behavioral (181-200)
+
+181. **Q: What is MVC?**
+     A: Model-View-Controller; the traditional Apple design pattern.
+182. **Q: What is MVVM?**
+     A: Model-View-ViewModel; separates business logic from the view.
+183. **Q: What is `Coordinator` pattern?**
+     A: Handles navigation logic outside of View Controllers.
+184. **Q: Explain `Dependency Injection`.**
+     A: Providing dependencies to an object rather than it creating them.
+185. **Q: What is `SOLID`?**
+     A: Five principles for better software design (Single Responsibility, Open-Closed, etc.).
+186. **Q: What is Unit Testing?**
+     A: Testing individual components in isolation using `XCTest`.
+187. **Q: What is UI Testing?**
+     A: Testing the app from the user's perspective by interacting with the UI.
+188. **Q: What is `Mocking`?**
+     A: Creating fake objects to simulate the behavior of real dependencies in tests.
+189. **Q: What is `TDD` (Test Driven Development)?**
+     A: Writing tests before writing the actual code.
+190. **Q: What is `CI/CD`?**
+     A: Continuous Integration and Continuous Deployment for automated testing and releases.
+191. **Q: How to handle technical debt?**
+     A: Document it, prioritize it, and refactor code incrementally.
+192. **Q: Tell me about a time you solved a hard bug.**
+     A: (Example: Found a race condition using Thread Sanitizer and fixed it with a serial queue).
+193. **Q: How do you handle conflict with a teammate?**
+     A: (Example: Focused on data and facts, listened to their perspective, and reached a compromise).
+194. **Q: Why do you want to work for OKX?**
+     A: (Example: I'm passionate about Web3 and want to work on high-scale, secure financial products).
+195. **Q: What is your greatest strength?**
+     A: (Example: I'm a proactive learner and focus on writing clean, maintainable code).
+196. **Q: What is your greatest weakness?**
+     A: (Example: I sometimes focus too much on details, but I've learned to balance it with deadlines).
+197. **Q: How do you stay updated with iOS?**
+     A: (Example: Following WWDC, reading blogs like Swift by Sundell, and testing new APIs).
+198. **Q: Where do you see yourself in 5 years?**
+     A: (Example: As a technical lead contributing to core architectures of major platforms).
+199. **Q: What makes a good Senior Developer?**
+     A: (Example: Technical excellence, ownership, and the ability to mentor others).
+200. **Q: Do you have any questions for us?**
+     A: (Example: What is the team's engineering culture? What are the biggest challenges right now?)
+
+---
+End of 200 Questions.

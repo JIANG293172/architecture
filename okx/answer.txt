@@ -1,0 +1,7 @@
+1.use let for constant immultable property, use var for variable multable proerpty
+
+2.value type use copy-on-write on assignment, while reference type share the same instance.
+
+3.optional means the value can be exist or nil, we can use if let to unwrap it, or guart let for earaly exit.
+
+4.
