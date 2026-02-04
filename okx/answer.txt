@@ -19,7 +19,9 @@
 10.a closure is called after the function returns, requiring clarity memory management.
 
 11.what are generics?
+We do not use the centain type, use T to represent a type of value used by input and output. 
 they allow writing flexible, reusable code that works with any teyps.
+
 
 12.a blueprint of methods or properties that a class, struct or enum, must implement.
 swift protocol provide more functions, protocol extension provide default implementions and computed properties.
@@ -53,7 +55,111 @@ a pattern ensuring a class has only one instance with a global pointer of access
 
 26.error protocol is a type representing values that can be thrown as errors.
 
-27.
+27.do catch blocks: a mechanism to handle errors thrown by functions.
+
+28.try? tyr!: try? returns an optional; try! crashes if an error is thrown.
+
+29.opaque type (some): hides the centain reutrn type while ensuring it conforms to a protocol.
+
+30.result type: a enum representing success with a value or failure with an error.
+such as we use in combine, we use future to replace callback closure, the promise is type of Result, use success to return value, and failure to return error.
+
+31.perperty wrapper: a layer of logic between property storage and definition.
+Property Wrappers are a powerful Swift feature that lets you encapsulate property storage and access logic in a reusable way.
+
+32.explain keypath: a way refer to a property of a type without invoking it.
+let nameKeyPath: KeyPath<Person, String> = \Person.name
+
+33.dynamicCallable: allows instances of type to be called like functions.
+
+34.codable: typealias for encodable & decoable, used for json parsing.
+
+35.String & NSString: String is a value type, while NSString is a reference type, inherite form nsobjedct.
+
+36.hashable protocol: allows a type to be used as a key in dictionary or a set.
+
+37.equatable: allow comparing two instances using ==
+static func == (lhs: Product, rhs: Product) -> Bool
+
+38.access control:
+private: Accessible only within the declaration scope
+fileprivate:  Accessible within the entire source file where it’s declared
+internal: Accessible within the same module
+public: ccessible from any module, but cannot be subclassed/overridden outside its defining module.
+open:The most permissive level—accessible from any module, and can be subclassed/overridden outside its defining module (only applies to classes and their members).
+
+39. nested type: defining a type within another type to reflect their relationship.
+
+40.standard library: the core set of types and functions provided by swift.
+
+41.explain the viewcontrolelr life cycle:
+1)init
+3)init(nib) :init viewcontroller form NIB
+2)init(coder) : init from xib/storyboard
+4)loadview: Creates/assigns the VC’s root view
+5)viewdidload: Triggers once the view is fully loaded.
+viewwilllayoutsubviews
+viewdidlayoutsubvies
+6)viewwillappear:
+7)viewdidappear:
+viewwilldisappear
+viewdidappear
+dealloc
+
+42.frame bounds: frame is the postion of superview. 
+bounds is own position, will have influence to subviews.
+
+43.how to optimize uitableview performance: 
+1.cell reuse
+2.avoiding heavy computation
+3.pre-calculating
+
+44.auto layout: a constraint-based layout system to handle difference screen sizes.
+
+45.what is intrinsic content size: the natural size a view need to display its content.
+
+46.explain setneedslayout vs layoutifneeded
+setneedslayout marks a views for update
+layoutifneed forces it immediately
+
+47.responder chain  event handling
+event delivery: 
+use pointinside: WithEvent to find view within the point.
+use hitTest withEvent: to find the hitTest view.
+
+responder chain: 
+find the view who can handle the action from a chain of views. 
+superview viewcontroller window uiapplication appdelete, if all of the can not hanlde the aciton, the action will be discarded
+
+
+48.how to hanle keyboard covering a textfiled:
+observe keyboard notification and adjust the view's content offset or ocnstraints.
+
+49.UIStackView: a view that manages a collection of subviews in a linear layout.
+
+50.difference between draw: and layoutsubview:
+draw if for custom drawing with core grphics; 
+layoutsubviews: is for positioning subviews.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

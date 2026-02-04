@@ -26,7 +26,7 @@ This document contains a comprehensive set of 200 questions and answers tailored
    A: A self-contained block of code that can capture variables from its surrounding context.
 10. **Q: Explain `@escaping` closures.**
     A: A closure that is called after the function returns, requiring explicit memory management.
-11. **Q: What are Generics?**
+11. **Q: What are Generics?** func makeShape<T: Shape>(_ shapeType: T) -> T
     A: They allow writing flexible, reusable code that works with any type.
 12. **Q: What is a Protocol?**
     A: A blueprint of methods or properties that a class, struct, or enum must implement.
@@ -62,7 +62,7 @@ This document contains a comprehensive set of 200 questions and answers tailored
     A: A mechanism to handle errors thrown by functions.
 28. **Q: What is `try?` vs `try!`?**
     A: `try?` returns an optional; `try!` crashes if an error is thrown.
-29. **Q: What is an Opaque Type (`some`)?**
+29. **Q: What is an Opaque Type (`some`)?** func makeDefaultShape() -> some Shape
     A: Hides the concrete return type while ensuring it conforms to a protocol.
 30. **Q: What is a Result type?**
     A: An enum representing success with a value or failure with an error.
