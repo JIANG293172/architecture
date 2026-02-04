@@ -181,6 +181,133 @@ a protocol to customize the appearance of all instances of a clas
 the backdrop for you app's ui and the object that dispatches events to views.
 
 
+76.swiftui: a declarative framework for building uis across all apple platforms.
+
+77.what is a view in swiftui
+a protocol that describes part of a user interface.
+
+78.explain @state
+a property wrapper for simple, local state within a view.
+when the property changed with @state, system will automatically call body to refresh the UI.
+
+79.@binding
+a property wrapper used the share sate between a parent and child view.
+
+80.@observedobject: used for external objects that conform to observableobject.
+
+81.explain @stateobject: similar to @observedobject but ensures the object is only created once.
+
+82.explain environmentobject: a way share data across many views without passing it explicitly.
+
+83. what is body property.
+the computed property where you define a view's content.
+
+84. what is vstack hstack and zstack.
+vertical,horizonal,and depth-based layout containers.
+
+85.how to perform navigatior in swiftui
+use NavigationView
+
+86.what is list in swiftui
+a container that presents data in a single column of scrollable rows.
+like uiscrollview in uikit.
+
+87.how to handle user input in swiftui.
+using components likes TextFiled Toggle Slider
+‘
+88.what is modifier:
+a method that creates a new view by transforming an existing one.
+
+89.how to perfrom animations in swiftui
+use nimation() or withAnimation()
+
+90.what is viewBuilder:
+A parameter attribute that allow creating views form closures.
+
+91.how to integrate uikit into swiftui
+use uiviewrepresentable uiviewcontrollerrepresentable
+
+92.how to integrate swfitui into uikit
+use uihostingcontroller
+
+93.what is anyview
+a type, erased view used when hyou need to return different view types.
+
+94.what is @appstorage
+a property wrapper for reading /writing to userdefault
+
+95.what is scenestorage
+used for state restoration within a specific scene.
+
+96.how to handle life-cycle in swiftui
+use onappear() and ondisapper
+
+97.what is geometryreader
+a view that provides its parent's size and coordinate space to its children
+
+98.how to create custom modifier.
+comform to the viewmodifier protocol
+
+struct PrimaryButtonModifier: ViewModifier {
+    // 可选：添加可配置参数（让 Modifier 更灵活）
+    let bgColor: Color
+    let cornerRadius: CGFloat
+    
+    // 2. 实现 ViewModifier 协议的核心方法：body(content:)
+    // content：被修改的原视图（比如 Button/Text）
+    func body(content: Content) -> some View {
+        content
+            .font(.headline)          // 修改字体
+            .padding(.vertical, 12)   // 垂直内边距
+            .padding(.horizontal, 24) // 水平内边距
+            .background(bgColor)      // 背景色（可配置）
+            .foregroundColor(.white)  // 文字色
+            .cornerRadius(cornerRadius) // 圆角（可配置）
+            .shadow(radius: 3)        // 阴影
+    }
+    
+    // 可选：提供默认参数的初始化方法
+    init(bgColor: Color = .blue, cornerRadius: CGFloat = 8) {
+        self.bgColor = bgColor
+        self.cornerRadius = cornerRadius
+    }
+}
+
+99.what is perference in swiftui
+a way to pass data from child views upto parent views.
+
+100.expalin asyncimage
+a view that loads and displays an image from a url asynchronnously.
+
+    var body: some View {
+        // 最简用法：仅传URL，默认占位符为空白
+        AsyncImage(url: imageURL)
+            .frame(width: 200, height: 200)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
