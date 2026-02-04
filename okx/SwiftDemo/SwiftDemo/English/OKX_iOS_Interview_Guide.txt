@@ -51,7 +51,7 @@ I consider myself a **performance-driven** developer. I have a strong track reco
 
 ---
 
-## Part 4: Technical Q&A (OKX Favorites)
+## Part 4: Technical Q&A (OKX Favorites & Real Interview Points)
 
 ### 1. Swift & iOS Basics
 - **Q: Explain Copy-on-Write (COW) in Swift.**
@@ -60,23 +60,50 @@ I consider myself a **performance-driven** developer. I have a strong track reco
   - **A:** "Structs are value types (stored on stack, thread-safe by default), while Classes are reference types (stored on heap, supports inheritance). I prefer Structs for data models and Classes for objects with state, like ViewControllers or Managers."
 - **Q: How do you handle Memory Management (ARC)?**
   - **A:** "I use `weak` or `unowned` references to break retain cycles, especially in closures and delegate patterns. I also use Instruments (Leaks/Allocations) to detect memory growth."
+- **Q: What is the difference between `weak` and `unowned`?**
+  - **A:** "`weak` is for references that can become `nil` at any time; it must be an optional. `unowned` is for references that are expected to never be `nil` during their lifetime. Using `unowned` on a deallocated object causes a crash, so `weak` is generally safer."
 
 ### 2. Networking & Concurrency (Critical for Trading)
 - **Q: How would you handle high-frequency WebSocket data (like ticker prices)?**
-  - **A:** "I would process the incoming data on a background serial queue to avoid blocking the Main Thread. I’d use a 'throttling' or 'debouncing' mechanism (perhaps via Combine) to update the UI only at a rate the user can perceive, ensuring a smooth 60fps experience."
+  - **A:** "I would process the incoming data on a background serial queue to avoid blocking the Main Thread. I’d use a 'throttling' or 'debouncing' mechanism (perhaps via Combine) to update the UI only at a rate the user can perceive (e.g., every 100ms), ensuring a smooth 60fps experience. I also use data diffing to only update the changed cells in a list."
 - **Q: Describe the MQTT/TLS handshake.**
   - **A:** "It starts with a 3-way TCP handshake, followed by the TLS handshake for encryption (Client/Server Hello, Certificate verification), and finally the MQTT CONNECT packet. For troubleshooting, I use Wireshark or system logs via Console.app."
+- **Q: How do you implement SSL Pinning in iOS?**
+  - **A:** "I implement the `URLSessionDelegate` method `urlSession(_:didReceive:completionHandler:)`. I compare the server's certificate or public key with a local copy bundled in the app. This prevents Man-in-the-Middle (MITM) attacks, which is vital for financial security."
 
-### 3. Security (Wallet & Private Keys)
+### 3. Security & Web3 (Wallet Specifics)
 - **Q: How do you securely store a Private Key on iOS?**
   - **A:** "The gold standard is using the **Secure Enclave**. I generate a key pair inside the Secure Enclave so the private key never leaves the hardware. I use the public key to encrypt sensitive data and store it in the **Keychain**. For extra security, I require FaceID/TouchID authentication before accessing the key."
+- **Q: What are BIP39 and mnemonic phrases?**
+  - **A:** "BIP39 is a standard for generating a deterministic wallet from a list of 12 or 24 mnemonic words. These words represent a 'seed' that can generate all private keys for a wallet. On iOS, we must ensure these words are never stored in plain text or captured in screenshots/clipboard."
+
+### 4. UI & Performance
+- **Q: How do you optimize a complex list with many different cell types?**
+  - **A:** "I use a 'Data-Driven' approach where each cell type has its own ViewModel. I pre-calculate cell heights (if not using Auto Layout) and ensure the Main Thread is not doing any heavy processing during scrolling. I also use `reusableCells` correctly and avoid expensive operations in `cellForRowAt`."
+- **Q: SwiftUI vs. UIKit? How do you handle state in SwiftUI?**
+  - **A:** "UIKit is imperative and mature, while SwiftUI is declarative and efficient for rapid UI development. In SwiftUI, I use `@State` for local private state, `@Binding` for two-way communication with child views, and `@StateObject` or `@ObservedObject` for managing business logic in ViewModels."
+
+### 5. Algorithms & System Design (Frequent OKX Topics)
+- **Q: How would you design an LRU Cache for image downloading?**
+  - **A:** "I would use a **Dictionary** for O(1) access and a **Doubly Linked List** to maintain the order of usage. When an item is accessed, I move it to the head. When the cache is full, I remove the tail. This ensures that the least recently used items are evicted first."
+- **Q: Design a system to handle real-time chat messages in a high-concurrency environment.**
+  - **A:** "I'd use a WebSocket connection for real-time delivery and a local database (like SQLite/Realm) for offline storage. To handle high concurrency, I'd implement a message queue, use background serial queues for database writes, and apply 'message batching' to update the UI efficiently."
+- **Common Algorithm Topics at OKX:**
+  - String manipulation (e.g., Valid Parentheses, Longest Substring).
+  - Linked List (e.g., Reverse Linked List, Detect Cycle).
+  - Binary Tree (e.g., Level Order Traversal, Maximum Depth).
+  - Sorting & Searching (e.g., Binary Search, Merge Sort).
 
 ---
 
-## Part 5: Behavioral & OKX Culture
+## Part 5: Behavioral & OKX Culture (Real Experience Points)
 
 - **Q: Why OKX?**
-  - "OKX is a leader in Web3. I am fascinated by how blockchain reshapes financial trust. My experience in high-DAU trading apps (Tonghuashun) and high-security SDKs (Changan) makes me a perfect fit for the OKX Wallet and Trading teams."
+  - "OKX is a leader in Web3. I am fascinated by how blockchain reshapes financial trust. My experience in high-DAU trading apps (Tonghuashun) and high-security SDKs (Changan) makes me a perfect fit for the OKX Wallet and Trading teams. I also appreciate OKX's global and remote-friendly culture."
+- **Q: How do you handle working in a global, cross-time-zone team?**
+  - "I focus on **Asynchronous Communication**. I write clear, detailed documentation and PR descriptions so my teammates can understand my work even if I'm offline. I also use tools like Slack and Jira effectively and am flexible with meeting times when critical synchronization is needed."
+- **Q: Tell me about a conflict you had with a stakeholder or teammate.**
+  - "In a previous project, a designer wanted a very complex animation that caused frame drops on older devices. I shared performance data from Instruments with them and proposed a simplified version that kept the 'feel' of the design while maintaining 60fps. We reached a compromise that balanced UX and performance."
 - **Q: What is your greatest strength?**
   - "I am **Reliable**. I don't just write code; I write maintainable, well-tested code. I always consider edge cases and error handling because, in financial apps, stability is everything."
 - **Q: What is your weakness?**
