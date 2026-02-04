@@ -12,7 +12,7 @@ This document contains a comprehensive set of 200 questions and answers tailored
    A: Value types (struct, enum) copy data on assignment. Reference types (class) share a single instance.
 3. **Q: Explain Optional and Optional Binding.**
    A: Optionals handle the absence of a value. We unwrap them using `if let` or `guard let`.
-4. **Q: What is Nil Coalescing?**
+4. **Q: What is Nil Coalescing?** 空值合并运算符
    A: Using `??`（double question mark） to provide a default value if an optional is `nil`.
 5. **Q: What is a Retain Cycle?**
    A: When two objects hold strong references to each other, preventing deallocation.

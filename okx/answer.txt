@@ -4,4 +4,110 @@
 
 3.optional means the value can be exist or nil, we can use if let to unwrap it, or guart let for earaly exit.
 
-4.
+4.ues double question mark to provide a default value if the optional is nil.
+
+5.when tow objects hold strong reference form each others. perventing deallocation.
+
+6.automatic reference counting tracks the number of strong references to an object and dallocates it when count reaches zero.
+
+7.weak is optional; the object will be set to nil when deallocated. unowned is non-optional; accessing the object after it is deallocated will cause a crash.
+
+8.copy-on-write is an optimization for value type in swift, copy the struct only when modified and refercount is greater than one, struct hold some properties: refercount elements count buffer, pointer the memoery in heap.
+
+9.A closure is an implicit function; it can capture variables from its surrounding context, and a closure is connected to a pointer to the executable function code, the captured variables, and a flag to mark whether it is an escaping closure.
+
+10.a closure is called after the function returns, requiring clarity memory management.
+
+11.what are generics?
+they allow writing flexible, reusable code that works with any teyps.
+
+12.a blueprint of methods or properties that a class, struct or enum, must implement.
+swift protocol provide more functions, protocol extension provide default implementions and computed properties.
+
+13.protocol extension provide a defalut implementions for protocol.
+
+14.self refer to the instance, Self refer to the Type.
+
+15.enum associated values: the enum case can store additional data of different types.
+
+16.computed property: a perpery that doesn‘t store value but provide get/set to calculate one.
+
+17.lazy property: a object  be initialized  when first accessed.
+
+18.Any, AnyObject： any is refer to Any type, AnyObject is refer to classes.
+
+19.defer: it ensure a closure code runs after levaving the scope.
+
+20.tuple: a grouping of multiple values into a single cmobined value
+
+21. Type aliascing: giving a new name to an existing type for clarity.
+
+22.failable initializer: an init that can reture nil if initializarion fials.
+
+23. final keyword: prevents a class from being inherited or a method from being overridden.
+
+24.designated is primary init, convenience initializer must call a designanted init for the same class.
+
+25.what is singleton
+a pattern ensuring a class has only one instance with a global pointer of accesss.
+
+26.error protocol is a type representing values that can be thrown as errors.
+
+27.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
