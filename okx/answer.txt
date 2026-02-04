@@ -142,6 +142,71 @@ draw if for custom drawing with core grphics;
 layoutsubviews: is for positioning subviews.
 
 
+51.safe area: the area of a view that is not coverd by bars(status bar, navigation bar, etc.)
+
+52.how to create a custion view
+subclass uiview and override init(frame:) init coder:
+
+53.what is uiappearance
+a protocol to customize the appearance of all instances of a clas
+
+57.what is calayer: a low-level object for managing visual content, used by uiview.
+
+58.off-screen rendering: when the gpu renders a layer in a separate buffer, copy to screen buffer. affecting perfermance.
+
+59.how to reduce app launch time:
+1.reduce dynamic frameworks.
+2.reduce c++ static construction function.
+3.replae +load with +initialize
+4.lazy load properties.
+5.asynchronize load third-part sdk.
+6.do not initialze none critical sdk while app launching
+7.reduce redundant code / libraries.
+8.do not lag the main thread.
+
+
+61.what is insturments: a performance analysis tools for profilling cpu /memory/energy usage.
+
+62.how to detect memory leaks: using the leaks instrument or the memory graph debugger in xcode.
+
+63.core graphics: a 2d drawing engine for creating shapes, paths, and gradients.
+
+64.core animation: a foramwork for creating smooth/hard-ware-accelerated animations.
+
+65.explain uigesturerecognizer: an object that detects specific touch patterns like taps,swipes,pinches.
+
+72.what is dynamic type: a feature allowing users to choose their perferred text size.
+
+73.UIWindow: UIWindow-UIView-UIResponder
+the backdrop for you app's ui and the object that dispatches events to views.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
