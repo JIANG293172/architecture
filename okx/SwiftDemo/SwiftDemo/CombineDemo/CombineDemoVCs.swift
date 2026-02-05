@@ -332,6 +332,12 @@ class FlatMapDemoVC: BaseCombineDemoVC {
      * It 'flattens' the nested publishers into a single output stream.
      * Difference: map returns a value, flatMap returns a publisher.
      */
+    
+    
+//    Can the data processed by map be directly passed to filter, and then the data processed by filter be sent to receiveValue?
+//    A:
+//    Absolutely yes. This is a core usage of Combine’s pipeline chaining. The original values emitted by the publisher first go through map for transformation, then the transformed results are passed directly to filter for conditional screening—only the values that pass the filter condition will be finally delivered to the receiveValue closure of sink/assign. The operators are executed in a sequential upstream-to-downstream order.
+        
     override func runDemo() {
         super.runDemo()
         
