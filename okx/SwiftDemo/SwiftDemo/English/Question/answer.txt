@@ -485,13 +485,19 @@ func taskPriorityExample() async {
 131.what is combine
 Core Definition
 Combine is a reactive programming framework developed by Apple for unifying asynchronous data streams in iOS.
-It provides a declarative, declarative way to handle asynchronous operations—such as network requests, user interactions, or timer events—by modeling data flows as a pipeline of publishers and subscribers.
+Handle asynchronous operations
+—such as network requests, 
+user interactions, or 
+timer events
+—by modeling data flows as a pipeline of publishers and subscribers.
 
 Core Concepts
 Combine’s core is built around two fundamental components:
-Publisher: A protocol that represents a stream of data (or errors) that can be observed over time. It’s the "data source" that emits values (e.g., network responses, button tap events).
+Publisher: A protocol that represents a stream of data (or errors) that can be observed over time. 
+It’s the "data source" that emits values (e.g., network responses, button tap events).
 
-Subscriber: An object that consumes data from a publisher. It defines how to handle the emitted values (e.g., update UI, store data, or handle errors).
+Subscriber: An object that consumes data from a publisher. 
+It defines how to handle the emitted values (e.g., update UI, store data, or handle errors).
 Key Features
 
 
@@ -1355,149 +1361,6 @@ let emptyPublisher = Empty<String, Never>() // 无值、无错误、立即完成
                 }
             )
             .store(in: &cancellables)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

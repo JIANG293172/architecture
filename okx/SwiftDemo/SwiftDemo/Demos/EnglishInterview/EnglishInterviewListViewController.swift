@@ -5,7 +5,8 @@ class EnglishInterviewListViewController: UIViewController {
     private let tableView = UITableView()
     private let topics: [[String: String]] = [
         ["title": "1. UIViewController Lifecycle (Step-by-Step)", "id": "lifecycle"],
-        ["title": "2. Complete Lifecycle Demo (All-in-One)", "id": "complete_vc"]
+        ["title": "2. Complete Lifecycle Demo (All-in-One)", "id": "complete_vc"],
+        ["title": "3. Combine Framework Demos (131-150)", "id": "combine"]
     ]
     
     override func viewDidLoad() {
@@ -45,6 +46,9 @@ extension EnglishInterviewListViewController: UITableViewDelegate, UITableViewDa
             navigationController?.pushViewController(vc, animated: true)
         } else if topicId == "complete_vc" {
             let vc = CompleteVC(vcType: "Programmatic", customData: "Full Lifecycle Test")
+            navigationController?.pushViewController(vc, animated: true)
+        } else if topicId == "combine" {
+            let vc = CombineDemoListViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
     }

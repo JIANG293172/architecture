@@ -13,8 +13,7 @@ extension UIControl {
 /// 自定义 UIControl Publisher
 struct UIControlPublisher<Control: UIControl>: Publisher {
     typealias Output = Control
-    typealias Failure = Never
-    
+    typealias Failure = Never 
     let control: Control
     let event: UIControl.Event
     
