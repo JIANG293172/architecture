@@ -545,12 +545,13 @@ It’s the closure that handles the "end state" of the Publisher’s stream (eit
 
 
 135.explain subject(passthroughsubject, currentvaluesubject)
-A Subject is a special type of Publisher in Combine that lets you manually inject values (or errors/completion) into the stream—unlike regular Publishers (e.g., array publishers) that emit pre-defined values, Subjects give you full control to send values on demand.
+A Subject is a special type of Publisher in Combine that lets you manually inject values (or errors/completion) into the stream
+—unlike regular Publishers (e.g., array publishers) that emit pre-defined values, 
+Subjects give you full control to send values on demand.
 
 There are two core concrete implementations of Subject:
 PassthroughSubject:
-It has no initial value and only emits values that are sent after a Subscriber subscribes to it. New subscribers will only receive values injected after their subscription (they don’t get historical values).
-Use case: Emit one-time events (e.g., button taps, network request triggers).
+It has no initial value and only emits values that are sent after a Subscriber subscribes to it. 
 
 CurrentValueSubject:
 It requires an initial value (it always holds the latest value) and emits the current value to new subscribers immediately upon subscription, then continues to emit new values as they’re injected.
@@ -621,7 +622,9 @@ example.demonstrateSubjects()
 
 
 136.what is sink?
-sink() is a convenience method in Combine that creates a lightweight Subscriber—exactly as you described, it’s designed to perform a custom action for each value received from a Publisher. Additionally, it lets you handle the Publisher’s stream termination (via a receiveCompletion closure) for success or error cases, making it one of the most commonly used methods to subscribe to Publishers in iOS/macOS development.
+sink() is a convenience method in Combine that creates a lightweight Subscriber
+—exactly as you described, it’s designed to perform a custom action for each value received from a Publisher. 
+Additionally, it lets you handle the Publisher’s stream termination (via a receiveCompletion closure) for success or error cases, making it one of the most commonly used methods to subscribe to Publishers in iOS/macOS development.
 
 Crucially, sink() returns an AnyCancellable object: this holds the Subscription (connection between Publisher and Subscriber) and lets you cancel the subscription manually to stop receiving values, preventing memory leaks.
 
