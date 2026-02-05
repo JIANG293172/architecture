@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 class EnglishInterviewListViewController: UIViewController {
     
@@ -6,7 +7,8 @@ class EnglishInterviewListViewController: UIViewController {
     private let topics: [[String: String]] = [
         ["title": "1. UIViewController Lifecycle (Step-by-Step)", "id": "lifecycle"],
         ["title": "2. Complete Lifecycle Demo (All-in-One)", "id": "complete_vc"],
-        ["title": "3. Combine Framework Demos (131-150)", "id": "combine"]
+        ["title": "3. Combine Framework Demos (131-150)", "id": "combine"],
+        ["title": "4. SwiftUI Interview Demos (76-100)", "id": "swiftui"]
     ]
     
     override func viewDidLoad() {
@@ -50,6 +52,11 @@ extension EnglishInterviewListViewController: UITableViewDelegate, UITableViewDa
         } else if topicId == "combine" {
             let vc = CombineDemoListViewController()
             navigationController?.pushViewController(vc, animated: true)
+        } else if topicId == "swiftui" {
+            let swiftUIView = SwiftUIDemoListView()
+            let hostingController = UIHostingController(rootView: swiftUIView)
+            hostingController.title = "SwiftUI Demos"
+            navigationController?.pushViewController(hostingController, animated: true)
         }
     }
 }
