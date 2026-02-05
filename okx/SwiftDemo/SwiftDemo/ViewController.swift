@@ -24,7 +24,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         ["title": "设计模式", "vcClassName": "DesignPatternViewController"],
         ["title": "算法", "vcClassName": "AlgorithmListViewController"],
         ["title": "性能", "vcClassName": "PerformanceListViewController"],
-        ["title": "网络", "vcClassName": "NetworkListViewController"]
+        ["title": "网络", "vcClassName": "NetworkListViewController"],
+        ["title": "English Interview", "vcClassName": "EnglishInterviewListViewController"]
     ]
     
     override func viewDidLoad() {
@@ -82,7 +83,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         // Use runtime to create view controller from class name
         if let vcClass = NSClassFromString("SwiftDemo." + vcClassName) as? UIViewController.Type {
-            let targetVC = vcClass.init()
+            let targetVC = vcClass.init(nibName: nil, bundle: nil)
             navigationController?.pushViewController(targetVC, animated: true)
         }
     }
