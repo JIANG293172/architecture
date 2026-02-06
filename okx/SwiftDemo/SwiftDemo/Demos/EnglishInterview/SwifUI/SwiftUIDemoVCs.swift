@@ -185,13 +185,23 @@ struct SwiftUIDemoListView: View {
         DemoItem(id: 78, title: "78. @State", description: "Local State Management", view: AnyView(StateDemoView())),
         DemoItem(id: 79, title: "79. @Binding", description: "Two-way Data Binding", view: AnyView(BindingDemoView())),
         DemoItem(id: 81, title: "81. @StateObject", description: "Owned Observable Objects", view: AnyView(ObjectDemoView())),
+        DemoItem(id: 82, title: "Login (Combine)", description: "SwiftUI + Combine Login", view: AnyView(SwiftUILoginDemoView())),
         DemoItem(id: 84, title: "84. Stacks (V/H/Z)", description: "Layout Containers", view: AnyView(StacksDemoView())),
+        DemoItem(id: 85, title: "85. Navigation", description: "Navigating between views", view: AnyView(SwiftUINavigationDemoView())),
+        DemoItem(id: 87, title: "87. User Input", description: "TextField, Toggle, Slider", view: AnyView(UserInputDemoView())),
         DemoItem(id: 88, title: "88. View Modifiers", description: "Transforming Views", view: AnyView(Text("Modifiers are methods that create a new view by transforming an existing one (e.g., .padding(), .font()).").padding())),
-        DemoItem(id: 91, title: "91. UIKit Integration", description: "UIViewRepresentable", view: AnyView(Text("Use UIViewRepresentable to wrap UIKit views (like MKMapView) into SwiftUI views."))),
+        DemoItem(id: 89, title: "89. Animations", description: "implicit/explicit animations", view: AnyView(AnimationDemoView())),
+        DemoItem(id: 90, title: "90. ViewBuilder", description: "Custom View Containers", view: AnyView(ViewBuilderDemoView())),
+        DemoItem(id: 91, title: "91. UIKit Integration", description: "UIViewRepresentable", view: AnyView(SwiftUIUIKitIntegrationDemoView())),
         DemoItem(id: 93, title: "93. AnyView", description: "Type Erasure for Views", view: AnyView(Text("AnyView is a type-erased view. Use it when you need to return different view types from a single property or function."))),
+        DemoItem(id: 94, title: "94. @AppStorage", description: "UserDefaults in SwiftUI", view: AnyView(AppStorageDemoView())),
+        DemoItem(id: 95, title: "95. @SceneStorage", description: "Scene-based state restoration", view: AnyView(SceneStorageDemoView())),
+        DemoItem(id: 96, title: "96. Life Cycle", description: "onAppear & onDisappear", view: AnyView(LifecycleDemoView())),
         DemoItem(id: 97, title: "97. GeometryReader", description: "Parent Size Awareness", view: AnyView(GeometryDemoView())),
         DemoItem(id: 98, title: "98. Custom Modifiers", description: "Reusable View Styles", view: AnyView(CustomModifierDemoView())),
-        DemoItem(id: 100, title: "100. AsyncImage", description: "Remote Image Loading", view: AnyView(AsyncImageDemoView()))
+        DemoItem(id: 99, title: "99. Preferences", description: "Child to Parent Data Flow", view: AnyView(PreferenceDemoView())),
+        DemoItem(id: 100, title: "100. AsyncImage", description: "Remote Image Loading", view: AnyView(AsyncImageDemoView())),
+        DemoItem(id: 101, title: "101. Concurrency", description: "Swift Concurrency (Task)", view: AnyView(ConcurrencyDemoView()))
     ]
     
     var body: some View {
