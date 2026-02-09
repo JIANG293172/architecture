@@ -10,7 +10,8 @@ class EnglishInterviewListViewController: UIViewController {
         ["title": "3. Combine Framework Demos (131-150)", "id": "combine"],
         ["title": "4. SwiftUI Interview Demos (76-100)", "id": "swiftui"],
         ["title": "5. Modern Concurrency Demos (Actor, Task)", "id": "concurrent"],
-        ["title": "6. Classical Concurrency Demos (GCD, NSOperation)", "id": "classical_concurrent"]
+        ["title": "6. Classical Concurrency Demos (GCD, NSOperation)", "id": "classical_concurrent"],
+        ["title": "7. Swift Language Demos (50 Examples)", "id": "swift_lang"]
     ]
     
     override func viewDidLoad() {
@@ -64,6 +65,9 @@ extension EnglishInterviewListViewController: UITableViewDelegate, UITableViewDa
             navigationController?.pushViewController(vc, animated: true)
         } else if topicId == "classical_concurrent" {
             let vc = ClassicalConcurrencyListViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        } else if topicId == "swift_lang" {
+            let vc = SwiftLanguageDemoListViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
     }
