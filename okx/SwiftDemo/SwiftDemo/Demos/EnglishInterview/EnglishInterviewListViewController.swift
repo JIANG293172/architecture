@@ -12,7 +12,8 @@ class EnglishInterviewListViewController: UIViewController {
         ["title": "5. Modern Concurrency Demos (Actor, Task)", "id": "concurrent"],
         ["title": "6. Classical Concurrency Demos (GCD, NSOperation)", "id": "classical_concurrent"],
         ["title": "7. Swift Language Demos (50 Examples)", "id": "swift_lang"],
-        ["title": "8. iOS 17/18 Observation Framework Demo", "id": "observable"]
+        ["title": "8. iOS 17/18 Observation Framework Demo", "id": "observable"],
+        ["title": "9. UIKit + @Observable (MVVM) Demo", "id": "uikit_observable"]
     ]
     
     override func viewDidLoad() {
@@ -74,6 +75,9 @@ extension EnglishInterviewListViewController: UITableViewDelegate, UITableViewDa
             let view = ObservableDemoView()
             let vc = UIHostingController(rootView: view)
             vc.title = "Observation Framework"
+            navigationController?.pushViewController(vc, animated: true)
+        } else if topicId == "uikit_observable" {
+            let vc = UIKitObservableDemoViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
     }
