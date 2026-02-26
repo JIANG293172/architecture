@@ -19,7 +19,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         ["title": "算法", "vcClassName": "AlgorithmListViewController"],
         ["title": "性能", "vcClassName": "PerformanceListViewController"],
         ["title": "网络", "vcClassName": "NetworkListViewController"],
-        ["title": "English Interview", "vcClassName": "EnglishInterviewListViewController"],
         ["title": "React ", "vcClassName": "JTReactViewController"],
         ["title": "SwiftFoundation ", "vcClassName": "SwiftFoundationViewController"],
     ]

@@ -14,12 +14,13 @@ class SwiftFoundationViewController: UIViewController, UITableViewDelegate, UITa
     
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
+        ["title": "SwiftLanguage", "vcClassName": "SwiftLanguageDemoListViewController"],
+
         ["title": "POP", "vcClassName": "POPViewController"],
         ["title": "SwiftConcurrent", "vcClassName": "SwiftConcurrentViewController"],
         ["title": "UI", "vcClassName": "SwiftUIViewController"],
         ["title": "Lifecycle", "vcClassName": "LifecycleStepViewController"],
         ["title": "Lifecycle CompleteVC", "vcClassName": "CompleteVC"],
-        ["title": "SwiftLanguage", "vcClassName": "SwiftLanguageDemoListViewController"],
         ["title": "UIKitObservable", "vcClassName": "UIKitObservableDemoViewController"],
         ["title": "UIKitLoginObservable", "vcClassName": "UIKitLoginObservableDemoViewController"],
     ]

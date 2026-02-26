@@ -51,37 +51,109 @@ class SwiftLanguageExamples {
     func getAllExamples() -> [SwiftExample] {
         var examples: [SwiftExample] = []
         
-        // --- 1. Higher-Order Functions ---
+        //        "In Swift, the map method is a higher-order function used on collections. Its core purpose is to transform each element into a new value, by applying a given closure to every element, and then return a new collection containing all these transformed values. Importantly, map does not modify the original collection—it always returns a new one, which makes it immutable and safe to use.
         examples.append(SwiftExample(title: "1. Map", explanation: "Transforms each element in a collection.") {
             let numbers = [1, 2, 3]
             let squared = numbers.map { $0 * $0 }
             print("Map: [1, 2, 3] -> \(squared)")
+            
+            /// 输入有可选类型的情况下，返回必须有一个确定的值
+            let numberss2 = [-1, nil , -2, -3]
+            let addNumbers = numberss2.map { number in
+                guard let number = number else {
+                    return 0
+                }
+                let returnValue = number > 0 ? number : -number
+                return returnValue
+            }
+            print(addNumbers)
+
+            let dictions = ["age1": 1, "age2": 2, "age3": 3]
+            print(dictions)
+
+            let changeDictionary = dictions.map { ($0 , String($1)) }
+            print(changeDictionary)
         })
+        
+//     select and retain only the elements that satisfy a given condition (defined by a closure).
+//        It works by iterating over every element in the original collection, evaluating the closure (which returns a Boolean true/false) for each element: if the closure returns true, the element is included in the new collection; if false, it is excluded. Importantly, filter is non-mutating—it never modifies the original collection, and always returns a new collection containing only the filtered elements.
         
         examples.append(SwiftExample(title: "2. Filter", explanation: "Selects elements that satisfy a condition.") {
             let numbers = [1, 2, 3, 4, 5, 6]
             let evens = numbers.filter { $0 % 2 == 0 }
+            
+            /// 输入为可选的情况下，返回必须要一个确定的值
             print("Filter Evens: \(evens)")
+            let numbers2 = [1, 2, nil, 3, 4, 5, 6]
+            let evens2 = numbers2.filter { num in
+                guard let num = num else {
+                    return false
+                }
+                return num % 2 == 0
+            }
+            
+            print("Filter Evens: \(evens2)")
         })
         
+        
+//      combines all elements of the collection into a single value (called the 'accumulator' or 'result value') by applying a closure iteratively.
+//        It takes two key parameters:
+//        An initial value (the starting point of the accumulation);
+//        A closure that takes two arguments (the current accumulated value, and the next element in the collection) and returns a new accumulated value.
         examples.append(SwiftExample(title: "3. Reduce", explanation: "Combines all elements into a single value.") {
             let numbers = [1, 2, 3, 4]
             let sum = numbers.reduce(0, +)
+            
             print("Reduce Sum: \(sum)")
+
+            /// 有可选类型，返回值需要有值
+            let numbers2 = [1, 2, nil, 3, 4]
+            let sum2 = numbers2.reduce(1) { partialResult, num in
+                guard let num = num else {
+                    return partialResult
+                }
+                return partialResult * num
+            }
+            print("Reduce Sum: \(sum2)")
         })
         
+//        transforming elements (like map)
+//        filtering out nil values (unlike map).
+//        It works by iterating over each element in the original collection, applying a transformation closure to it (which can return an optional value), and then including only the non-nil results in the new collection. Importantly, compactMap removes all nil values from the transformed results, so the output collection only contains non-optional, valid values.
         examples.append(SwiftExample(title: "4. CompactMap", explanation: "Transforms elements and removes nil values.") {
             let strings = ["1", "two", "3", "four"]
             let numbers = strings.compactMap { Int($0) }
             print("CompactMap (valid ints): \(numbers)")
+            
+            /// 有可选类型，不能直接返回nil，会导致编译器无法识别类型报错
+            let strings2 = ["1", "two", nil, "3", "four"]
+            let numbers2 = strings2.compactMap { num in
+                guard let num = num  else {
+                    return (nil as Int?)
+                }
+                return Int(num)
+            }
+            print("CompactMap (valid ints): \(numbers2)")
         })
         
+        //        For nested collections (e.g., [[1,2], [3,4]]): It 'flattens' the nested structure into a single-level collection (e.g., [1,2,3,4]), while applying a transformation closure to each element.
+        //        For collections of optional values (e.g., [String?]): It combines unwrapping optionals and filtering out nil values (similar to compactMap for optional elements), then applies a transformation.
         examples.append(SwiftExample(title: "5. FlatMap", explanation: "Flattens nested collections or unwraps nested optionals.") {
             let nested = [[1, 2], [3, 4], [5]]
-            let flattened = nested.flatMap { $0 }
+            let flattened = nested.flatMap {$0}
             print("FlatMap (flattened): \(flattened)")
+            
+            //  含有
+            let nested2 = [[1, 2], [22, nil], [3, 4], [5]]
+            let flattened2 = nested2.flatMap { num in
+                let filteredInnerArray = num.compactMap { $0 }
+                return filteredInnerArray
+            }
+            print("FlatMap (flattened): \(flattened2)")
         })
         
+//        executes a given closure once for each element in the collection—it’s a functional alternative to the traditional for-in loop.
+//        Unlike map/filter/reduce, forEach does not return any value (its return type is Void). It simply iterates over every element and performs a side effect (e.g., printing, modifying a variable, updating UI) for each one.
         examples.append(SwiftExample(title: "6. ForEach", explanation: "Iterates over each element (cannot use break/continue).") {
             [1, 2, 3].forEach { print("ForEach: \($0)") }
         })
@@ -89,20 +161,62 @@ class SwiftLanguageExamples {
         examples.append(SwiftExample(title: "7. Sorted", explanation: "Returns a sorted version of the collection.") {
             let unsorted = [3, 1, 4, 1, 5]
             print("Sorted: \(unsorted.sorted())")
+            
+            
+            let numbers = [3, 1, 4, 1, 5]
+            let descending = numbers.sorted { $0 > $1 }
+            print("Custom sorted (descending): \(descending)") // Output: [5, 4, 3, 1, 1]
+            
+            let numbers3 = [3, 1, 4, 1, 5]
+            // > 表示降序，< 表示升序（运算符作为闭包传入）
+            let descending2 = numbers3.sorted(by: >)
+            print("Sorted with operator (descending): \(descending2)") // Output: [5, 4, 3, 1, 1]
         })
         
+
+        
+        /*
+         "In Swift, partition(by:) is a mutating method for mutable collections (like var arrays) that rearranges elements in-place based on a Boolean predicate (a closure returning true/false).
+         Its core purpose is to split the collection into two contiguous parts:
+         All elements that do NOT satisfy the predicate (return false) come first;
+         All elements that satisfy the predicate (return true) come after;
+         The method returns an Int index—the position of the first element that satisfies the predicate (the boundary between the two parts). Importantly, partition(by:) modifies the original collection (it’s mutating) and does not guarantee sorting within each part.
+        */
         examples.append(SwiftExample(title: "8. Partition", explanation: "Reorders elements based on a predicate.") {
             var numbers = [10, 5, 8, 2, 7]
             let pivot = numbers.partition(by: { $0 > 5 })
             print("Partitioned (split at index \(pivot)): \(numbers)")
         })
         
-        // --- 2. Optionals & Basics ---
+        
+        /*
+         "In Swift, a 'safe unwrapper' refers to language constructs that safely extract the underlying value from an optional type (denoted with ?) without triggering a runtime crash—unlike force unwrapping (using !), which crashes if the optional is nil.
+         The most common safe unwrapper is the if let syntax (optional binding):
+         It checks if the optional contains a non-nil value;
+         If yes: it binds the value to a local constant (e.g., unwrapped) and executes the code block;
+         If no (optional is nil): it skips the code block entirely.
+        */
+        let tempValue = 1
+        var mutableValue = 2
+
+        
+        /*
+         let declares a constant (immutable value) that cannot be reassigned after initialization.
+         var declares a variable (mutable value) that can be modified. Use let by default for safety and performance, only use var when the value needs to change.
+        */
         examples.append(SwiftExample(title: "9. Optional Binding (if let)", explanation: "Safely unwrap optionals.") {
             let name: String? = "Swift"
             if let unwrapped = name { print("Unwrapped: \(unwrapped)") }
         })
         
+        
+        /*
+         "guard let name = name else { return } is a safe unwrapping pattern (optional binding) in Swift:
+         It checks if the optional name has a non-nil value
+         —if yes, it binds the unwrapped value to name (available in the outer scope);
+         if nil, it exits the current scope (via return) immediately.
+         Key benefits: Enforces early exit for invalid nil values, avoids nested code, and maintains Swift’s type safety (no runtime crashes from force unwrapping)."
+         */
         examples.append(SwiftExample(title: "10. Guard Statement", explanation: "Early exit from a function if condition isn't met.") {
             func greet(_ name: String?) {
                 guard let name = name else { return }
@@ -111,17 +225,34 @@ class SwiftLanguageExamples {
             greet("Developer")
         })
         
+        /*
+         "The ?? operator is Swift’s nil coalescing operator: it returns the unwrapped value of an optional if it’s non-nil,
+         or a specified default value if the optional is nil.
+         
+         It’s a concise, safe way to handle optionals without force unwrapping.
+         Example: let username = inputName ?? "Guest" → uses "Guest" as the default if inputName is nil."
+         */
         examples.append(SwiftExample(title: "11. Nil Coalescing (??)", explanation: "Provide a default value for an optional.") {
             let name: String? = nil
             print("User: \(name ?? "Guest")")
         })
         
+        /*
+         "defer is a Swift statement that schedules a block of code to execute when the current scope exits (e.g., end of a function/loop/if block)—regardless of how the scope exits (normal completion, return, throw, or break).
+         
+         It’s commonly used for cleanup tasks like closing files, releasing resources, or resetting state, ensuring cleanup code runs reliably.
+         Example: defer { file.close() } → guarantees the file is closed when the scope exits."
+         */
         examples.append(SwiftExample(title: "12. Defer", explanation: "Code that runs just before the current scope exits.") {
             print("Step 1")
             defer { print("Step 3 (Deferred)") }
             print("Step 2")
         })
         
+        /*
+         "lazy is a Swift property modifier that delays the initialization of a variable until it’s accessed for the first time (not when the containing type is initialized). It’s used for expensive/resource-heavy values (e.g., large data loading, complex computations) to optimize performance—avoids unnecessary initialization if the property is never used.
+         Example: lazy var slowLoad = { ... }() → the closure runs only when slowLoad is first accessed, printing 'Slow loading...' once."
+         */
         examples.append(SwiftExample(title: "13. Lazy Property", explanation: "Calculated only when first accessed.") {
             class LazyDemo {
                 lazy var slowLoad: String = {
@@ -135,6 +266,14 @@ class SwiftLanguageExamples {
         })
         
         // --- 3. Structs & Classes ---
+        /*
+         Inheritance: Structs do not support inheritance (only conform to protocols), while Classes support single inheritance and method overriding.
+         Type nature: Structs are value types (copy entire data on assignment/pass), Classes are reference types (copy only memory address).
+         Memory management: Structs have no reference counting (stack-allocated, lightweight) and no ARC overhead; Classes use ARC (heap-allocated) with reference counting (risk of retain cycles).
+         Initialization: Structs get an automatic memberwise initializer; Classes require manual initializers (no default).
+         Mutability & Identity: Structs are immutable by default (modify only with var), no unique identity (compare with ==); Classes allow modifying mutable properties even for let instances, and have unique identity (compare with ===).
+         Destruction: Structs have no deinit (auto-released with scope); Classes have deinit for custom cleanup logic.
+         */
         examples.append(SwiftExample(title: "14. Struct (Value Type)", explanation: "Passed by copying.") {
             struct Point { var x: Int }
             var p1 = Point(x: 10)
@@ -142,6 +281,28 @@ class SwiftLanguageExamples {
             p2.x = 20
             print("Struct: p1.x=\(p1.x), p2.x=\(p2.x)")
         })
+        
+        
+        /*
+         结构体 外部可以通过var修改变量，内部的函数不要mutating修饰来修改
+         
+         栈上： 修改后，结构体会销毁，在原来的位置重新创建
+         "Your understanding has a key correction: Structs (value types) do NOT use pointers (a reference type/class feature)—var structValue is stored directly in stack memory (not a pointer to heap memory).
+         When you modify a var property (e.g., structValue.name = ""):
+         The original struct data in the same stack memory address is destroyed;
+         A new modified struct instance is created at the same stack address (not a new address);
+         A new stack address is only created if the struct is assigned to another variable (e.g., let copy = structValue), triggering a full copy.
+         Example:
+         
+         堆上
+         
+         "When a struct is a property of a class (reference type), the struct’s data is stored on the heap (as part of the class instance), but modifying the struct’s var properties still follows value type semantics:
+         The class instance (including the struct property) lives at a fixed heap address (the class’s pointer never changes for modification);
+         When you modify the struct’s property (e.g., classInstance.structProperty.name = ""), the original struct data in the class’s heap memory is destroyed, and a new modified struct instance is created in the same heap location (not a new heap address);
+         No new heap address is created—only the struct data within the class’s heap space is replaced (value type copy behavior, but on the heap instead of the stack).
+         Example:
+         
+         */
         
         examples.append(SwiftExample(title: "15. Class (Reference Type)", explanation: "Passed by reference.") {
             class Box { var value: Int = 0 }
