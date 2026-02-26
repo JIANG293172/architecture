@@ -10,7 +10,8 @@ class ArchitectureListViewController: UIViewController {
         ("IM 即时通讯架构", "高性能长连接、消息可靠性与时序性设计", IMDemoViewController.self),
         ("HTTPS 网络架构", "Alamofire 封装、TLS 双向认证、Token 刷新拦截", NetworkDemoViewController.self),
         ("Combine 防抖刷新", "利用 Combine 实现高频 UI 刷新的性能优化", RefreshDemoViewController.self),
-        ("FacebookFeedViewController", "FacebookFeedViewController", FacebookFeedViewController.self)
+        ("FacebookFeedViewController", "FacebookFeedViewController", FacebookFeedViewController.self),
+        ("SecureEnclave", "FacebookFeedViewController", SecureEnclaveViewController.self),
     ]
     
     override func viewDidLoad() {

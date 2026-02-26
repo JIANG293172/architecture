@@ -10,13 +10,11 @@
 
 import UIKit
 
-class SwiftFoundationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SwiftUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
-        ["title": "POP", "vcClassName": "POPViewController"],
-        ["title": "SwiftConcurrent", "vcClassName": "SwiftConcurrentViewController"],
-        ["title": "UI", "vcClassName": "SwiftUIViewController"],
+        ["title": "Metal", "vcClassName": "MetalViewController"],
     ]
     
     override func viewDidLoad() {
