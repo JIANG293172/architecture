@@ -333,7 +333,16 @@ class SwiftLanguageExamples {
          Protocol as type: Enables polymorphism (treat different conforming types uniformly as the protocol type).
          Protocol inheritance: Protocols inherit from other protocols (aggregate requirements, no implementation).
          Optional requirements: @objc protocols support optional requirements (for Objective-C interoperability, class-only conformance).
-         Protocols drive abstraction, polymorphism and code reuse—Swift’s preferred alternative to rigid class inheritance."
+         Protocols drive abstraction, polymorphism and code reuse — Swift’s preferred alternative to rigid class inheritance."
+         
+         */
+        
+        /*
+         协议实现继承
+         "Yes, protocols in Swift do support inheritance—this is a key feature of Swift’s protocol system, but it differs fundamentally from class inheritance:
+         Protocol inheritance allows a child protocol to inherit requirements (methods, properties) from one or more parent protocols (supporting multiple inheritance), which only aggregates all requirements into the child protocol (no implementation is inherited).
+         A type conforming to the child protocol must implement all requirements from both the child and parent protocols combined.
+         Critical limitation: Protocols can only inherit from other protocols—they cannot inherit from concrete types like classes, structs, or enums (concrete types conform to protocols instead)."
          
          */
         
