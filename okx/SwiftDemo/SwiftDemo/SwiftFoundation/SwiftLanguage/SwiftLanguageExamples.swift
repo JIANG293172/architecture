@@ -322,6 +322,21 @@ class SwiftLanguageExamples {
             print("Count: \(c.count)")
         })
         
+        /*
+         
+         "Protocols in Swift are a behavioral contract defining requirements (methods/properties) for types to conform to, core to OOP and Swift’s Protocol-Oriented Programming (POP):
+         Multiple conformance: A single type (struct/class/enum) can conform to multiple protocols, enabling flexible behavior composition (solves single inheritance limits of classes, a key OOP advantage).
+         Default implementations: Protocol extensions provide default behavior for requirements—conforming types inherit it or override as needed (boosts code reuse).
+         No stored properties: Protocols only declare property requirements (with get/get set), not stored properties (they define what a type has, not how to store it).
+         Key additions:
+         Associated types: Make protocols generic (supports type-safe abstraction for reusable components like Collection).
+         Protocol as type: Enables polymorphism (treat different conforming types uniformly as the protocol type).
+         Protocol inheritance: Protocols inherit from other protocols (aggregate requirements, no implementation).
+         Optional requirements: @objc protocols support optional requirements (for Objective-C interoperability, class-only conformance).
+         Protocols drive abstraction, polymorphism and code reuse—Swift’s preferred alternative to rigid class inheritance."
+         
+         */
+        
         // --- 4. Protocols & Generics ---
         examples.append(SwiftExample(title: "17. Protocol Extensions", explanation: "Provide default implementations for protocols.") {
             PersonGreetable().greet()
