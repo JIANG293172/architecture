@@ -15,6 +15,7 @@ class SwiftFoundationViewController: UIViewController, UITableViewDelegate, UITa
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
         ["title": "POP", "vcClassName": "POPViewController"],
+        ["title": "SwiftConcurrent", "vcClassName": "SwiftConcurrentViewController"],
     ]
     
     override func viewDidLoad() {
