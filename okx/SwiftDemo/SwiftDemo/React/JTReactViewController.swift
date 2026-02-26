@@ -16,6 +16,7 @@ class JTReactViewController: UIViewController, UITableViewDelegate, UITableViewD
     private let demoList: [[String: String]] = [
         ["title": "combine", "vcClassName": "CombineDemoListViewController"],
         ["title": "combine login", "vcClassName": "CombineViewController"],
+        ["title": "RXSwift login", "vcClassName": "RXSwiftViewController"],
         
     ]
     

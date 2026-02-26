@@ -10,22 +10,11 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SwiftFoundationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
-        ["title": "Metal", "vcClassName": "MetalViewController"],
-        ["title": "SecureEnclave", "vcClassName": "SecureEnclaveViewController"],
-        ["title": "GCD", "vcClassName": "GCDViewController"],
-        ["title": "续传", "vcClassName": "ResumeDownloadViewController"],
         ["title": "POP", "vcClassName": "POPViewController"],
-        ["title": "设计模式", "vcClassName": "DesignPatternViewController"],
-        ["title": "算法", "vcClassName": "AlgorithmListViewController"],
-        ["title": "性能", "vcClassName": "PerformanceListViewController"],
-        ["title": "网络", "vcClassName": "NetworkListViewController"],
-        ["title": "English Interview", "vcClassName": "EnglishInterviewListViewController"],
-        ["title": "React ", "vcClassName": "JTReactViewController"],
-        ["title": "SwiftFoundation ", "vcClassName": "SwiftFoundationViewController"],
     ]
     
     override func viewDidLoad() {
