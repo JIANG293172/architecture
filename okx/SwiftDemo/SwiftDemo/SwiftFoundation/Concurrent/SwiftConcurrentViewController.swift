@@ -15,6 +15,9 @@ class SwiftConcurrentViewController: UIViewController, UITableViewDelegate, UITa
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
         ["title": "GCD", "vcClassName": "GCDViewController"],
+        ["title": "ClassicalConcurrency", "vcClassName": "ClassicalConcurrencyListViewController"],
+        ["title": "ModernConcurrent", "vcClassName": "ConcurrentDemoListViewController"],
+        
     ]
     
     override func viewDidLoad() {

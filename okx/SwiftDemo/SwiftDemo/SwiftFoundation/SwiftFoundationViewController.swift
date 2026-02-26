@@ -17,6 +17,11 @@ class SwiftFoundationViewController: UIViewController, UITableViewDelegate, UITa
         ["title": "POP", "vcClassName": "POPViewController"],
         ["title": "SwiftConcurrent", "vcClassName": "SwiftConcurrentViewController"],
         ["title": "UI", "vcClassName": "SwiftUIViewController"],
+        ["title": "Lifecycle", "vcClassName": "LifecycleStepViewController"],
+        ["title": "Lifecycle CompleteVC", "vcClassName": "CompleteVC"],
+        ["title": "SwiftLanguage", "vcClassName": "SwiftLanguageDemoListViewController"],
+        ["title": "UIKitObservable", "vcClassName": "UIKitObservableDemoViewController"],
+        ["title": "UIKitLoginObservable", "vcClassName": "UIKitLoginObservableDemoViewController"],
     ]
     
     override func viewDidLoad() {

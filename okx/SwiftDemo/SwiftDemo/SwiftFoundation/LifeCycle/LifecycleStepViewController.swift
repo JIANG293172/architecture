@@ -2,8 +2,8 @@ import UIKit
 
 class LifecycleStepViewController: UIViewController {
     
-    private let stepId: String
-    private let step: LifecycleStep
+    private let stepId: String = "init"
+    private let step: LifecycleStep = LifecycleStep.steps["init"]!
     
     private let scrollView = UIScrollView()
     private let stackView: UIStackView = {
@@ -13,22 +13,9 @@ class LifecycleStepViewController: UIViewController {
         stack.alignment = .fill
         return stack
     }()
-    
-    init(stepId: String) {
-        self.stepId = stepId
-        guard let step = LifecycleStep.steps[stepId] else {
-            fatalError("Step not found: \(stepId)")
-        }
-        self.step = step
-        super.init(nibName: nil, bundle: nil)
-        self.title = step.title
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupUI()
@@ -140,7 +127,7 @@ class LifecycleStepViewController: UIViewController {
     
     @objc private func showNext() {
         guard let nextId = step.nextStepId else { return }
-        let nextVC = LifecycleStepViewController(stepId: nextId)
+        let nextVC = LifecycleStepViewController()
         navigationController?.pushViewController(nextVC, animated: true)
     }
 }
