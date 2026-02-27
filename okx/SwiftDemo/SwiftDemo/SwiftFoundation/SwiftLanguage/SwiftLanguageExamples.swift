@@ -351,6 +351,230 @@ class SwiftLanguageExamples {
             PersonGreetable().greet()
         })
         
+        /*
+         协议中的泛型使用：
+         // 定义带关联类型的协议（泛型协议的等价实现）
+         protocol Container {
+             associatedtype Item  // 关联类型 = 协议的“泛型参数”
+             var items: [Item] { get set }
+             mutating func add(item: Item)
+         }
+
+         // 遵循协议时，决议 Item 的具体类型（编译时）
+         struct IntContainer: Container {
+             // 显式指定关联类型（编译时决议为 Int）
+             typealias Item = Int
+             var items: [Int] = []
+             
+             mutating func add(item: Int) {
+                 items.append(item)
+             }
+         }
+
+         // 隐式推导关联类型（编译时自动识别 Item 为 String）
+         struct StringContainer: Container {
+             var items: [String] = []  // 编译器通过 items 类型推导 Item = String
+             mutating func add(item: String) {
+                 items.append(item)
+             }
+         }
+         
+         
+         协议扩展中使用泛型
+         情况 1：扩展中使用协议的关联类型（最常见）
+         扩展中直接使用协议定义的 associatedtype，类型决议时机和协议关联类型一致 ——编译时（协议被遵循时）。
+         // 扩展 Container 协议，使用关联类型 Item
+         extension Container {
+             func firstItem() -> Item? {  // Item 已在遵循时决议
+                 return items.first
+             }
+         }
+
+         // 编译时已确定 firstItem() 返回 Int
+         var intContainer = IntContainer()
+         intContainer.add(item: 10)
+         print(intContainer.firstItem())  // 输出 Optional(10)
+         
+         情况 2：扩展中自定义泛型参数
+         协议扩展可以单独定义泛型参数（比如 extension Container where ... { func foo<T>(_: T) }），这类泛型的决议时机是：
+         调用该方法 / 属性时编译决议（编译器根据传入的参数类型，在编译阶段确定泛型具体类型）。
+         // 扩展中自定义泛型参数 T
+         extension Container {
+             func wrapItem<T>(with prefix: T) -> (T, Item) {
+                 return (prefix, items.first!)
+             }
+         }
+
+         // 调用时，T 被决议为 String（编译时）
+         let wrapped = intContainer.wrapItem(with: "Number:")
+         print(wrapped)  // 输出 ("Number:", 10)
+
+         // 再次调用时，T 被决议为 Int（编译时）
+         let wrapped2 = intContainer.wrapItem(with: 100)
+         print(wrapped2)  // 输出 (100, 10)
+         
+         3. 特殊场景：协议作为 “存在类型”（Existential Type）
+         Swift 5.7 引入 any 关键字，本质是创建一个存在类型容器，这个容器会在运行时包裹具体的遵循类型实例，从而解决 “类型不确定” 的问题。
+         // 1. 定义带关联类型的协议
+         protocol Container {
+             associatedtype Item
+             var items: [Item] { get }
+             func firstItem() -> Item?
+         }
+
+         // 2. 两个遵循类型
+         struct IntContainer: Container {
+             typealias Item = Int
+             var items: [Int] = [1,2,3]
+             func firstItem() -> Int? { items.first }
+         }
+
+         struct StringContainer: Container {
+             typealias Item = String
+             var items: [String] = ["a","b"]
+             func firstItem() -> String? { items.first }
+         }
+
+         // 3. 存在类型变量（Swift 5.7+）
+         let container: any Container = IntContainer()
+         // 👇 关键：调用 firstItem() 时的决议过程
+         let item = container.firstItem()
+         
+         
+         Any 类型的类型决议时机，他不是泛型，他是类型擦除。
+         func addAnyType(type: Any) 中的 Any 是 Swift 的 “顶级类型”（所有类型都隐式遵循 Any），它的类型决议时机也是运行时，但机制和 any Protocol 完全不同：
+         func addAnyType(type: Any) {
+             // 编译时：编译器不知道 type 的具体类型，仅知道是 Any
+             // 运行时：通过 is/as 关键字才能确定真实类型
+             if let intValue = type as? Int {
+                 print("Int 类型：\(intValue)")
+             } else if let stringValue = type as? String {
+                 print("String 类型：\(stringValue)")
+             }
+         }
+
+         // 调用1：传入 Int
+         addAnyType(type: 10)  // 运行时决议为 Int，输出 "Int 类型：10"
+         // 调用2：传入 String
+         addAnyType(type: "hello")  // 运行时决议为 String，输出 "String 类型：hello"
+         
+         
+         
+         any修饰符
+         一、先理清关键前提：协议分两种
+         Swift 中的协议可以分为两类，这是理解 any 作用的核心：
+         普通协议（无 Self/ 关联类型约束）：比如 Codable、Equatable（非泛型版）、CustomStringConvertible 等；
+         带关联类型的协议（PAT）：比如 Container（前面例子）、Sequence、Collection、IteratorProtocol 等。
+         
+         */
+        
+        
+        /*
+         1. Generics in Swift Protocols (Associated Types)
+         In Swift, we cannot define protocols with generic parameters directly (e.g., protocol Container<T> is invalid). Instead, we use associated types to achieve "generic protocol" behavior, and type resolution happens at compile time when the protocol is conformed to.
+         swift
+         // Define a protocol with associated type (equivalent to generic protocol)
+         protocol Container {
+             associatedtype Item // Associated type = "generic parameter" for the protocol
+             var items: [Item] { get set }
+             mutating func add(item: Item)
+         }
+
+         // Explicit type resolution (Item = Int at compile time)
+         struct IntContainer: Container {
+             typealias Item = Int
+             var items: [Int] = []
+             
+             mutating func add(item: Int) {
+                 items.append(item)
+             }
+         }
+
+         // Implicit type inference (compiler deduces Item = String at compile time)
+         struct StringContainer: Container {
+             var items: [String] = [] // Item inferred from items' type
+             mutating func add(item: String) {
+                 items.append(item)
+             }
+         }
+         When a type conforms to Container, the compiler resolves the Item associated type statically at compile time (either explicitly via typealias or implicitly via context like property/method types).
+         2. Generics in Protocol Extensions
+         Protocol extensions support two common generic patterns, both resolved at compile time (no runtime overhead by default):
+         Case 1: Using Associated Types in Extensions (Most Common)
+         We directly use the protocol’s associated type in extensions—resolution timing matches the associated type (compile time, when the protocol is conformed to):
+         swift
+         extension Container {
+             func firstItem() -> Item? { // Item already resolved at conformance time
+                 return items.first
+             }
+         }
+
+         // Usage: firstItem() returns Int? (resolved at compile time)
+         var intContainer = IntContainer()
+         intContainer.add(item: 10)
+         print(intContainer.firstItem()) // Output: Optional(10)
+         Case 2: Custom Generic Parameters in Extensions
+         We can define standalone generic parameters in extensions. These are resolved at compile time when the method is called (compiler infers the generic type from the passed arguments):
+         swift
+         extension Container {
+             func wrapItem<T>(with prefix: T) -> (T, Item) {
+                 return (prefix, items.first!)
+             }
+         }
+
+         // T resolved to String at compile time
+         let wrapped = intContainer.wrapItem(with: "Number:")
+         print(wrapped) // Output: ("Number:", 10)
+
+         // T resolved to Int at compile time (reused method with different type)
+         let wrapped2 = intContainer.wrapItem(with: 100)
+         print(wrapped2) // Output: (100, 10)
+         3. Special Case: Existential Types (any Keyword, Swift 5.7+)
+         Swift 5.7 introduced the any keyword to enable existential types—a container that wraps concrete conforming instances at runtime, solving the "type uncertainty" issue for protocols with associated types (PATs).
+         swift
+         protocol Container {
+             associatedtype Item
+             var items: [Item] { get }
+             func firstItem() -> Item?
+         }
+
+         struct IntContainer: Container {
+             typealias Item = Int
+             var items: [Int] = [1,2,3]
+             func firstItem() -> Int? { items.first }
+         }
+
+         struct StringContainer: Container {
+             typealias Item = String
+             var items: [String] = ["a","b"]
+             func firstItem() -> String? { items.first }
+         }
+
+         // Existential type variable (Swift 5.7+)
+         let container: any Container = IntContainer()
+         let item = container.firstItem() // Item resolved to Int at runtime
+         The any keyword creates an existential container that stores: (1) the concrete instance (e.g., IntContainer), (2) type metadata (including associated type info).
+         Type resolution for the associated type happens at runtime (compiler can’t know the concrete conforming type at compile time).
+         4. Any Type (Type Erasure)
+         Any is Swift’s top-level type (all types implicitly conform to Any), and its type resolution also happens at runtime—but it’s fundamentally different from any Protocol:
+         swift
+         func addAnyType(type: Any) {
+             // Compile time: no concrete type info (only knows it’s Any)
+             // Runtime: resolve type via `is/as` keywords
+             if let intValue = type as? Int {
+                 print("Int type: \(intValue)")
+             } else if let stringValue = type as? String {
+                 print("String type: \(stringValue)")
+             }
+         }
+
+         // Runtime resolution: Int
+         addAnyType(type: 10) // Output: "Int type: 10"
+         // Runtime resolution: String
+         addAnyType(type: "hello") // Output: "String type: hello"
+         Any uses type erasure (wraps any type, no protocol constraints), while any Protocol only wraps types conforming to the specified protocol.
+         Any loses static type safety (compiler can’t check type errors), so it should be used sparingly (e.g., Objective-C interop).
+         */
         examples.append(SwiftExample(title: "18. Generics", explanation: "Write code that works with any type.") {
             func swapValues<T>(_ a: inout T, _ b: inout T) {
                 let temp = a; a = b; b = temp
@@ -359,6 +583,8 @@ class SwiftLanguageExamples {
             swapValues(&x, &y)
             print("Swapped: x=\(x), y=\(y)")
         })
+        
+        
         
         examples.append(SwiftExample(title: "19. Associated Types", explanation: "Placeholders in protocols for generics.") {
             protocol Container {
@@ -371,6 +597,7 @@ class SwiftLanguageExamples {
             print("Container items: \(IntContainer().items)")
         })
         
+        
         // --- 5. Memory Management ---
         examples.append(SwiftExample(title: "20. Weak Reference", explanation: "Prevents retain cycles, always optional.") {
             print("Weak avoids strong reference cycles.")
@@ -379,6 +606,80 @@ class SwiftLanguageExamples {
         examples.append(SwiftExample(title: "21. Unowned Reference", explanation: "Prevents retain cycles, assumes object exists.") {
             print("Unowned used when lifetime of one object depends on another.")
         })
+        
+        
+        /*
+         This response is structured for technical interviews—clear, comparative, with core concepts, memory behavior, and practical distinctions highlighted (aligned with Swift/ObjC best practices):
+         Opening: Core Definition Distinction
+         First, let’s clarify the fundamental nature of each:
+         Objective-C Blocks: A language feature that encapsulates a unit of code (like a function) as an Objective-C object (conforms to NSObject protocol). They are Objective-C’s implementation of closures, tied to the ObjC runtime.
+         Swift Closures: A modern, type-safe implementation of anonymous functions (closures) in Swift—they are not inherently ObjC objects (unless bridged) and are optimized for Swift’s static typing, with advanced capture semantics and memory management.
+         1. Memory Allocation (Stack vs. Heap)
+         This is one of the most critical distinctions (and aligns with your note about escaping behavior):
+         Objective-C Blocks
+         Blocks have three memory allocation modes (managed by the ObjC runtime):
+         Stack Blocks: Default for non-escaping blocks (declared and used within a single scope, no reference held outside). Allocated on the stack (fast, but destroyed when the scope exits).
+         objc
+         // Stack block (default, non-escaping)
+         void (^stackBlock)(void) = ^{ NSLog(@"Stack block"); };
+         stackBlock();
+         Heap Blocks: Created when a block is copied (via copy method) or when it’s an escaping block (held in a property/global variable, passed to an async API). Allocated on the heap (persistent, but with reference counting overhead).
+         objc
+         // Heap block (escaping: stored in a property)
+         @property (copy) void (^heapBlock)(void);
+         self.heapBlock = ^{ NSLog(@"Heap block (copied)"); };
+         Global Blocks: Blocks with no captured variables (static code). Allocated in global memory (no memory management).
+         objc
+         // Global block (no captured state)
+         void (^globalBlock)(void) = ^{ NSLog(@"Global block"); };
+         Swift Closures
+         Swift simplifies memory allocation with explicit escaping semantics (@escaping):
+         Non-Escaping Closures (default): Allocated on the stack (optimized, no ARC overhead). They cannot outlive the function they’re passed to (e.g., a closure parameter in a synchronous function like Array.forEach).
+         swift
+         // Non-escaping closure (stack-allocated, default)
+         func processNonEscaping(closure: () -> Void) {
+             closure() // Closure dies when processNonEscaping exits
+         }
+         processNonEscaping { print("Stack-allocated closure") }
+         Escaping Closures (@escaping): Must be allocated on the heap (to outlive the function call). Used when the closure is stored (e.g., in a property) or executed asynchronously (e.g., network completion handlers).
+         swift
+         // Escaping closure (heap-allocated)
+         var storedClosure: (() -> Void)?
+         func processEscaping(closure: @escaping () -> Void) {
+             storedClosure = closure // Closure outlives the function call
+         }
+         processEscaping { print("Heap-allocated closure") }
+         Key Optimization: Swift automatically optimizes closures with no captured variables to be static (like ObjC global blocks) — no stack/heap allocation at all.
+         2. Capture Semantics (Variable Capture)
+         Both capture variables from their surrounding scope, but Swift is more explicit and safe:
+         Objective-C Blocks
+         Default Capture: Captures variables as const copies (immutable) unless marked __block (mutable).
+         Object Capture: Captures Objective-C objects as strong references by default (risk of retain cycles if capturing self).
+         objc
+         // ObjC block capture (risk of retain cycle)
+         self.heapBlock = ^{
+             NSLog(@"Captured self: %@", self); // Strong reference to self
+         };
+         // Fix retain cycle: use __weak
+         __weak typeof(self) weakSelf = self;
+         self.heapBlock = ^{
+             NSLog(@"Weak self: %@", weakSelf);
+         };
+         __block Modifier: Makes captured variables mutable and changes capture semantics (no longer a copy—direct reference).
+         Swift Closures
+         Default Capture: Captures values as immutable copies (like ObjC), but uses inout for mutable references (type-safe).
+         Object Capture:
+         Captures reference types as strong references by default (same as ObjC), but Swift requires explicit self (prevents accidental captures).
+         Explicit weak/unowned capture with [weak self]/[unowned self] (safer, more readable than ObjC’s __weak).
+         swift
+         // Swift closure capture (explicit self + weak to avoid retain cycles)
+         storedClosure = { [weak self] in
+             guard let self = self else { return }
+             print("Captured self safely: \(self)")
+         }
+         Value Type Capture: Captures structs/enums as copies (immutable by default); use mutating closures for mutable value type captures.
+         
+         */
         
         examples.append(SwiftExample(title: "22. Closure Capture List", explanation: "Define how variables are captured.") {
             var x = 0
@@ -417,8 +718,93 @@ class SwiftLanguageExamples {
             let s = Score(); s.value = 10
         })
         
+        /*
+         This response is structured for technical interviews—covering core definitions, use cases, syntax, internals, and practical examples (aligned with Swift best practices and common interview focus areas):
+         1. Core Definition of Property Wrappers
+         A property wrapper is a Swift language feature (introduced in Swift 5.1) that encapsulates the common logic for reading/writing properties (e.g., validation, persistence, thread safety, or default values) into a reusable type.
+         Key purpose: Eliminate boilerplate code by separating the storage of a property from its behavior (e.g., instead of writing validation logic for 10 different properties, you define it once in a wrapper and apply it everywhere).
+         Formally, a property wrapper is a struct/enum/class that conforms to the implicit contract of having:
+         A wrappedValue property (the actual value being stored/accessed).
+         Optional: projectedValue (for exposing additional functionality, e.g., a binding in SwiftUI).
+         */
+        
+        /*
+         枚举作为propertywrapper
+         
+         Why Enums CAN Implement Property Wrappers
+         The key insight: Property wrappers do not require the wrapper type to have stored properties—they only require a wrappedValue (computed property) that fulfills the wrapper contract.
+         Enums can define computed properties (and associated values for cases) — this is the loophole that allows them to act as property wrappers. The wrappedValue for an enum-based wrapper is implemented as a computed property (backed by enum case-associated values, not stored properties).
+         Critical Contract for Property Wrappers
+         A type qualifies as a property wrapper if it has:
+         A wrappedValue (computed or stored) that handles get/set for the wrapped property.
+         Optional: A projectedValue (computed) for additional functionality.
+         Enums satisfy this contract by using case-associated values (their native way to hold state) and computed wrappedValue to interact with that state.
+         3. Practical Example: Enum-Based Property Wrapper
+         Let’s implement a property wrapper with an enum (e.g., a wrapper for "non-nil or default" string values) to demonstrate:
+         
+         // Enum-based property wrapper (no stored properties—uses associated values)
+         @propertyWrapper
+         enum DefaultNonEmptyString {
+             // Case 1: Holds a valid non-empty string (state via associated value)
+             case valid(String)
+             // Case 2: Uses a default value (no associated value needed)
+             case empty
+             
+             // Required: Computed wrappedValue (fulfills property wrapper contract)
+             var wrappedValue: String {
+                 get {
+                     switch self {
+                     case .valid(let str): return str
+                     case .empty: return "Default Value"
+                     }
+                 }
+                 set {
+                     // Validation logic: set to .valid if non-empty, else .empty
+                     if !newValue.isEmpty {
+                         self = .valid(newValue)
+                     } else {
+                         self = .empty
+                     }
+                 }
+             }
+             
+             // Initializer (required for property wrapper usage)
+             init(wrappedValue initialValue: String) {
+                 if !initialValue.isEmpty {
+                     self = .valid(initialValue)
+                 } else {
+                     self = .empty
+                 }
+             }
+         }
+
+         // Usage: Apply the enum-based wrapper to a property
+         struct Profile {
+             @DefaultNonEmptyString var displayName: String = ""
+             @DefaultNonEmptyString var bio: String = "Software Engineer"
+         }
+
+         // Test the wrapper
+         var profile = Profile()
+         print(profile.displayName) // Output: "Default Value" (enum case .empty)
+         profile.displayName = "Jane Doe"
+         print(profile.displayName) // Output: "Jane Doe" (enum case .valid("Jane Doe"))
+         profile.displayName = ""
+         print(profile.displayName) // Output: "Default Value" (switches back to .empty)
+         
+         
+         This response addresses the core question (can property wrappers modify computed properties, including enum computed properties) with clear rules, practical examples, and compiler behavior—tailored for technical interviews:
+         1. Core Rule: Property Wrappers CANNOT Modify Computed Properties (By Design)
+         First, the definitive answer (a critical Swift language rule):
+         Property wrappers can only be applied to stored properties (variables/constants that hold state directly). They cannot be applied to computed properties—regardless of whether the computed property is in a struct, class, or enum.
+         This is not a limitation of enums or struct-based wrappers—it is a fundamental constraint of property wrappers in Swift. The compiler will throw an error if you attempt to apply a property wrapper to a computed property.
+         
+         */
         examples.append(SwiftExample(title: "27. Property Wrappers", explanation: "Custom logic for property access.") {
-            struct Post { @Trimmed var title: String }
+            struct Post {
+                @Trimmed var title: String
+            }
+            
             var p = Post(title: "  Hello World  ")
             print("Trimmed title: '\(p.title)'")
         })
