@@ -1,0 +1,65 @@
+第一步：找岗 & 领英运营（精准定位，提高曝光）
+1. 领英找岗核心要点
+关键词搜索：直接搜 iOS Developer、Swift Developer、Mobile Engineer (iOS)、Flutter iOS，叠加 Remote、Canada、Dubai 等地域 / 远程标签
+岗位筛选：优先选 1-30 人申请中 的岗位（竞争小），避开 100 + 人申请的热门岗；重点看 Startup、中资海外分部、科技外企（对国内开发者友好）
+领英主页优化
+标题：iOS Developer | Swift | SwiftUI | MVVM | CI/CD | 5+ Years Experience（直接堆核心技能 + 年限）
+摘要：简洁写核心技能 + 项目亮点（比如Proficient in Swift & SwiftUI, experienced in building high-performance iOS apps），埋满 JD 高频词
+技能标签：添加Swift、Objective-C、SwiftUI、UIKit、MVVM、REST API、Git、CI/CD（ATS 会抓取）
+2. 拆解 JD（抓 ATS 关键词，不踩坑）
+必抓核心词（一字不差抄进简历）
+技术栈：Swift、SwiftUI、UIKit、Combine、Core Data、RESTful API、JSON、Git、CI/CD、Fastlane
+架构：MVVM、MVC、Clean Architecture
+软技能：Agile、Scrum、Cross-functional Team、Problem-solving
+避坑点：JD 没提的技能别乱加，不相关经历（比如纯安卓开发）简写，避免 ATS 判定不匹配
+
+
+第二步：ATS 适配简历修改（过机器关，拿到面试）
+1. 简历格式（机器可读第一）
+极简排版：纯文本 + 简单分栏，不用表格、图片、复杂图标、艺术字体（PDF 格式，文件名：iOS Developer - 姓名.pdf）
+结构清晰：个人信息→核心技能→工作经历→项目经历→教育背景（无大厂 / 高学历可简化教育背景）
+2. 内容修改技巧（1:1 对齐 JD）
+核心技能栏：直接复制 JD 里的技术词，按Languages (Swift/Objective-C)、Frameworks (UIKit/SwiftUI)、Tools (Git/Fastlane)分类
+工作 / 项目经历：用动词+技能+成果句式，埋关键词
+错误：负责iOS开发，做了几个项目
+正确：Developed iOS apps using Swift & UIKit, implemented MVVM architecture to optimize app performance, collaborated with cross-functional team in Agile sprints
+年限匹配：JD 要求 3 年 +，简历就突出5+ Years of iOS Development Experience，不夸大但精准对齐
+
+
+第三步：HR 面试（沟通关，展示稳定性 & 适配性）
+1. 核心考察点
+英语沟通能力（能清晰表达，不用复杂句式）
+求职动机（为什么投这个岗 / 这家公司，是否长期稳定）
+基本信息核实（工作年限、技能真实性、离职原因）
+2. 必准备细节 & 回答
+自我介绍（30 秒）：I'm [姓名], an iOS developer with 5+ years of experience. I'm proficient in Swift, UIKit and SwiftUI. I'm looking for a long-term opportunity to work on challenging iOS projects.
+高频问题
+Why us?：提前看公司官网，说I'm interested in your company's iOS products, and my skills match your job requirements
+离职原因：说Looking for long-term development and new challenges（不吐槽前公司）
+期望薪资：报区间（比如$120,000 - $150,000 per year，参考同地域岗位）
+注意事项：语气礼貌、语速放缓，听不懂就说Could you please repeat that?，别硬答
+
+
+第四部分：技术面试（硬实力关，核心刷人环节）
+1. 考察重点（iOS 专属）
+基础技能：Swift 语法（可选型、闭包、协议）、UIKit/SwiftUI 控件使用、Auto Layout 布局
+架构 & 性能：MVVM 实现、内存管理（ARC、循环引用）、APP 卡顿 / 崩溃优化
+实战能力：接口请求（REST API+JSON 解析）、本地存储（Core Data/UserDefaults）、Git 操作
+算法题：简单～中等（数组 / 字符串处理、链表、二分查找，不用刷难题）
+2. 准备细节
+复习 Swift 基础 + UIKit 核心知识点，整理 1-2 个项目细节（遇到的问题 + 解决方案）
+现场写代码：思路清晰，边写边说，不会就问面试官提示（展示思考过程）
+诚实作答：不会的技术直接说I haven't used it yet, but I can learn it quickly，不撒谎
+
+
+第五步：CTO / 技术负责人面试（软实力关，定录用）
+1. 考察重点
+技术视野（对 iOS 新技术的了解，比如 SwiftUI 最新特性）
+解决复杂问题的能力（项目难点、架构设计思路）
+文化适配（团队协作、学习能力、工作态度）
+英语技术沟通（能聊技术细节、需求方案）
+2. 准备要点
+梳理过往项目中最难的技术问题（比如性能优化、兼容性问题），用STAR逻辑说（场景→任务→行动→结果）
+了解行业新技术（比如 SwiftUI 5、Async/Await），展示学习能力
+态度谦逊：表达愿意融入团队、长期发展，不夸夸其谈
+需要我把 **iOS 技术面试高频题（含答案）和ATS 简历模板（直接填空）** 整理给你吗？

@@ -1,0 +1,760 @@
+1. What is the difference between let and var in Swift?
+Answer:
+let declares a constant (immutable value) that cannot be reassigned after initialization. var declares a variable (mutable value) that can be modified. Use let by default for safety and performance, only use var when the value needs to change.
+2. Explain the concept of Optionals in Swift and why they are important.
+Answer:
+Optionals represent a value that either exists (non-nil) or does not exist (nil). They prevent null reference crashes (a common issue in Objective-C) by forcing explicit handling of nil cases. We unwrap optionals using if let, guard let, forced unwrapping (!), or nil coalescing (??).
+3. What is a closure in Swift? How is it different from a function?
+Answer:
+A closure is a self-contained block of code that can be passed around and executed later. It’s similar to a function but has a more concise syntax and can capture values from its surrounding context. Unlike functions (which have named declarations), closures are often anonymous and used for callbacks/short logic (e.g., Array.sorted(by:)).
+4. What is the difference between struct and class in Swift?
+Answer:
+Aspect    Struct    Class
+Type    Value type (copied on assignment)    Reference type (shared instance)
+Inheritance    No    Yes
+Deinitializers    No    Yes
+Mutability    mutating keyword for methods    Mutable by default
+Use case    Simple data models (e.g., CGPoint)    Complex objects (e.g., ViewModel)
+5. What is Protocol-Oriented Programming (POP) in Swift?
+Answer:
+POP is a paradigm that uses protocols as the core building block (instead of classes/inheritance). It promotes code reusability, flexibility, and testability by defining contracts (protocols) that types can conform to. Key features: protocol extensions (add default implementations), protocol inheritance, and value-type compliance.
+6. Explain async/await in Swift Concurrency.
+Answer:
+async/await is a syntax for writing asynchronous code in a synchronous, linear style (replacing completion handlers). An async function marks a method that can suspend execution (without blocking the thread), and await pauses until the async operation completes. It eliminates "callback hell" and makes concurrent code easier to read/maintain.
+7. What is a Result type, and when would you use it?
+Answer:
+Result<Success, Failure> is an enum that encapsulates the outcome of an operation: either a success (with a value) or a failure (with an error conforming to Error). It’s used to handle asynchronous operations (e.g., network calls) to explicitly represent success/failure states, making error handling more structured than throwing errors directly.
+8. What is the difference between inout parameters and regular parameters?
+Answer:
+Regular parameters are passed as values (copied, immutable inside the function). inout parameters allow a function to modify the original value of a variable (passed by reference, not copy). The & symbol is used when calling the function (e.g., func swap(_ a: inout Int, _ b: inout Int)).
+9. Explain Swift’s access control modifiers (public, internal, private, fileprivate).
+Answer:
+private: Accessible only within the declaring type (e.g., a class/struct).
+fileprivate: Accessible within the same source file.
+internal (default): Accessible within the same module (e.g., an app/Framework).
+public: Accessible outside the module (but cannot be subclassed/overridden).
+open: Fully accessible and subclassable/overridable outside the module.
+10. What is a lazy property in Swift?
+Answer:
+A lazy property is initialized only when it’s first accessed (not at object creation). It’s useful for expensive computations or properties that depend on other values (e.g., lazy var formattedDate: String = { DateFormatter().string(from: self.date) }()). Note: lazy properties are not thread-safe by default.
+11. What is the difference between throw and fatalError?
+Answer:
+throw: Throws an error that can be caught and handled (using do/catch), allowing the app to recover.
+fatalError: Immediately terminates the app with a message (for unrecoverable errors, e.g., invalid state). Use fatalError only for developer errors, not runtime errors (e.g., network failures).
+12. Explain Codable in Swift.
+Answer:
+Codable is a protocol that combines Encodable (convert to JSON/Plist) and Decodable (convert from JSON/Plist). It enables automatic serialization/deserialization of custom types (structs/classes) without manual parsing. Use JSONEncoder/JSONDecoder to work with JSON data.
+13. What is a computed property vs. a stored property?
+Answer:
+Stored property: Holds a value in memory (e.g., var username: String = "").
+Computed property: Does not store a value; it calculates a value using a getter (and optional setter) (e.g., var fullName: String { "\(firstName) \(lastName)" }).
+14. What is Self in Swift?
+Answer:
+Self (uppercase) refers to the type of the current context (e.g., the class/struct/protocol itself). It’s used in protocols to refer to the conforming type (e.g., protocol Identifiable { var id: Self.ID { get } }) or in extensions to reference the type.
+15. Explain the difference between for-in loops and forEach in Swift.
+Answer:
+for-in: Supports break/continue to control flow, and works with any sequence (e.g., arrays, dictionaries).
+forEach: A method on Sequence that applies a closure to each element; does not support break/continue, and cannot exit early. Use for-in for flow control, forEach for simple, non-interruptible iteration.
+16. What is a type alias? When would you use it?
+Answer:
+A typealias creates a new name for an existing type (e.g., typealias UserID = String). It improves readability (e.g., func fetchUser(id: UserID) instead of String) and simplifies complex types (e.g., typealias NetworkCompletion = (Result<Data, Error>) -> Void).
+17. Explain guard let vs. if let for optional unwrapping.
+Answer:
+if let: Unwraps an optional and limits the unwrapped value to the if block (good for short logic).
+guard let: Unwraps an optional and exits the current scope (function/loop) if nil (using return/break); the unwrapped value is available outside the guard block (better for early exit and cleaner code).
+18. What is Swift’s #available check used for?
+Answer:
+#available checks if the current runtime environment (iOS/macOS version) supports a feature. It prevents crashes from using APIs that are only available in newer OS versions (e.g., if #available(iOS 17.0, *) { // Use @Observable } else { // Fallback }).
+19. What is a singleton in Swift? How do you implement it?
+Answer:
+A singleton is a design pattern that ensures a class has only one instance. Implementation:
+swift
+class APIManager {
+    static let shared = APIManager() // Single instance
+    private init() {} // Prevent external initialization
+}
+Use singletons for shared resources (e.g., network managers, data stores), but avoid overuse (can make testing hard).
+20. Explain enum with associated values in Swift.
+Answer:
+Enums with associated values attach additional data to each case (e.g., enum NetworkError { case invalidURL, requestFailed(Int) }). They are used to represent complex states with varying data (e.g., API errors with status codes, or user actions with parameters).
+二、Swift 新特性（15 题）
+21. What is @Observable (iOS 17+) and how does it replace @Published?
+Answer:
+@Observable is a macro that makes a class observable (part of the Observation framework). It automatically tracks property changes (no need for @Published or Combine) and works with withObservationTracking to update UI when properties change. Unlike @Published (which requires Combine), @Observable is lighter, more performant, and integrates natively with SwiftUI/UIKit.
+22. Explain Swift Macros (iOS 17+/Swift 5.9+).
+Answer:
+Swift Macros are compile-time code generators that extend Swift’s syntax (e.g., @Observable, @Model). They reduce boilerplate code by generating code automatically (e.g., @Observable adds observation logic to a class). Macros can be attached to declarations (e.g., @macro on a struct) or used as expressions (e.g., #stringify(x)).
+23. What is @Model (SwiftData, iOS 17+)?
+Answer:
+@Model is a macro for SwiftData (Apple’s replacement for Core Data) that marks a class as a persistent model. It automatically generates core data stack code (entity descriptions, managed object contexts) and enables CRUD operations with minimal code (e.g., let context = ModelContext(); context.insert(user)).
+24. Explain Actor in Swift Concurrency.
+Answer:
+An actor is a reference type that enforces thread safety by isolating its state to a single thread. All access to an actor’s properties/methods is serialized (no race conditions). Actors replace manual locks (e.g., NSLock) and are used for shared mutable state (e.g., actor DataStore { var items: [String] = [] }).
+25. What is the difference between Task and Task.detached?
+Answer:
+Task: Inherits the current actor context (e.g., if called from the main actor, the task runs on the main actor).
+Task.detached: Runs in a separate, non-isolated context (no actor inheritance). Use Task for actor-aware work, Task.detached for background work that doesn’t need actor isolation.
+26. What is @MainActor and when would you use it?
+Answer:
+@MainActor is an attribute that forces code to run on the main thread (UI thread). It’s used to ensure UI updates or state changes are thread-safe (e.g., @MainActor class ViewModel { var isLoading = false }). Methods marked with @MainActor can only be called from the main actor (or with await).
+27. Explain Swift Concurrency’s TaskGroup.
+Answer:
+A TaskGroup is a collection of child tasks that run concurrently and can be awaited together. It’s used to execute multiple async operations in parallel (e.g., fetching multiple API endpoints) and collect results. Example:
+swift
+await withTaskGroup(of: Data.self) { group in
+    group.addTask { await fetchData(from: url1) }
+    group.addTask { await fetchData(from: url2) }
+    for await result in group { /* Process results */ }
+}
+28. What is any and some in Swift (Existentials vs. Opaque Types)?
+Answer:
+some: An opaque type that hides the concrete type but guarantees it conforms to a protocol (e.g., func makeView() -> some View). It preserves type identity (compile-time safety).
+any: An existential type that erases the concrete type (e.g., func updateView(_ view: any View)). It’s flexible but has runtime overhead (dynamic dispatch).
+29. Explain @Environment in SwiftUI (iOS 17+ updates).
+Answer:
+@Environment is a property wrapper that accesses shared values (e.g., @Environment(\.colorScheme) var colorScheme). In iOS 17+, it integrates with @Observable (no need for EnvironmentObject) and supports custom environment values (via EnvironmentKey).
+30. What is Transferable (iOS 16+)?
+Answer:
+Transferable is a protocol for sharing data between apps/extensions (e.g., drag-and-drop, copy-paste, share sheets). It replaces UIDocumentInteractionController and UIActivityViewController for modern data transfer, supporting types like Data, URL, and custom models.
+31. Explain SwiftUI Previews improvements in iOS 18.
+Answer:
+iOS 18/SwiftUI 5 enhances previews with:
+Real-time previews (no need to rebuild for small changes).
+Multi-device previews (preview on iPhone/iPad/Mac in one window).
+Preview macros (e.g., #Preview { ContentView() } replaces struct ContentView_Previews: PreviewProvider).
+32. What is #Preview macro (SwiftUI)?
+Answer:
+#Preview is a macro (iOS 17+) that simplifies SwiftUI previews. It replaces the old PreviewProvider protocol with a concise syntax:
+swift
+#Preview {
+    ContentView()
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+}
+It supports multiple previews (e.g., #Preview("Dark Mode") { ContentView().preferredColorScheme(.dark) }).
+33. Explain Concurrency in SwiftUI (.task modifier).
+Answer:
+The .task modifier runs an async function when a view appears and cancels it when the view disappears (prevents memory leaks). It replaces onAppear + DispatchQueue for async work (e.g., ContentView().task { await viewModel.fetchData() }).
+34. What is @Dependency (Swift 5.10+)?
+Answer:
+@Dependency is a macro for dependency injection (DI) that simplifies injecting dependencies (e.g., network managers, data stores) into views/view models. It replaces manual DI (initializer parameters) and makes testing easier (mock dependencies).
+35. Explain SwiftUI Charts (iOS 16+).
+Answer:
+SwiftUI Charts is a framework for building interactive charts (line, bar, pie) with minimal code. It uses declarative syntax (e.g., Chart { BarMark(x: .value("Month", "Jan"), y: .value("Sales", 100)) }) and integrates with SwiftUI’s state management (auto-updates when data changes).
+三、UIKit & SwiftUI (20 题)
+36. What is the difference between SwiftUI and UIKit?
+Answer:
+Aspect    SwiftUI    UIKit
+Paradigm    Declarative (describe UI state)    Imperative (modify UI directly)
+Boilerplate    Minimal (no storyboards/nibs)    More (e.g., AutoLayout code)
+iOS Support    iOS 13+ (full features iOS 17+)    iOS 2+ (mature, all iOS versions)
+Integration    Can embed UIKit (via UIViewRepresentable)    Can embed SwiftUI (via UIHostingController)
+State Management    Built-in (@State, @Observable)    Manual (Combine/Delegation)
+37. Explain @State vs. @StateObject vs. @ObservedObject in SwiftUI.
+Answer:
+@State: For simple, value-type state owned by a view (e.g., @State var isTapped = false). Stored in the view’s memory.
+@StateObject: For reference-type state (e.g., ViewModel) owned by a view (created once, survives view re-renders).
+@ObservedObject: For reference-type state passed to a view (not owned by the view; parent must manage lifecycle).
+38. What is AutoLayout and how do you implement it programmatically?
+Answer:
+AutoLayout is a system for defining UI constraints (position/size) that adapt to different screen sizes/orientations. Programmatic implementation:
+swift
+let button = UIButton()
+button.translatesAutoresizingMaskIntoConstraints = false
+view.addSubview(button)
+NSLayoutConstraint.activate([
+    button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+    button.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+    button.widthAnchor.constraint(equalToConstant: 100)
+])
+39. Explain the iOS View Controller Lifecycle.
+Answer:
+Key methods (in order):
+init/init?(coder:): Initialization.
+loadView: Creates the view hierarchy (override only if not using storyboards).
+viewDidLoad: View is loaded (setup UI, bind data; called once).
+viewWillAppear: View is about to be shown (update UI state).
+viewDidAppear: View is visible (start animations, fetch data).
+viewWillDisappear: View is about to be hidden (stop animations, save state).
+viewDidDisappear: View is hidden (cleanup resources).
+deinit: Deallocation (release memory).
+40. What is a UIStackView and when would you use it?
+Answer:
+UIStackView is a container view that arranges subviews in a linear row/column (horizontal/vertical). It simplifies AutoLayout by automatically managing constraints for its subviews (e.g., spacing, alignment, distribution). Use it for dynamic UIs (e.g., lists of buttons, form fields) that need to adapt to content size.
+41. Explain Delegation pattern in UIKit with an example.
+Answer:
+Delegation is a design pattern where one object (delegate) acts on behalf of another (sender). It’s used for communication between objects (e.g., UITableViewDelegate for cell selection). Example:
+swift
+protocol LoginDelegate: AnyObject {
+    func didLoginSuccessfully()
+}
+
+class LoginViewController: UIViewController {
+    weak var delegate: LoginDelegate? // Weak to avoid retain cycles
+    func login() {
+        delegate?.didLoginSuccessfully()
+    }
+}
+42. What is a UINavigationController and how does it work?
+Answer:
+UINavigationController is a container view controller that manages a stack of view controllers (push/pop navigation). It provides a navigation bar (title, back button) and supports swipe-to-pop (iOS 13+). Use it for hierarchical navigation (e.g., list → detail).
+43. Explain @Binding in SwiftUI.
+Answer:
+@Binding is a property wrapper that creates a two-way connection between a view and its parent. It allows a child view to modify state owned by the parent (e.g., @Binding var isOn: Bool for a toggle). Example:
+swift
+// Parent
+ContentView(isTapped: $isTapped)
+// Child
+struct ToggleView: View {
+    @Binding var isOn: Bool
+    var body: some View { Toggle("On/Off", isOn: $isOn) }
+}
+44. What is a UIAlertController and how do you present it?
+Answer:
+UIAlertController replaces UIAlertView (deprecated) for showing alerts/action sheets. Example:
+swift
+let alert = UIAlertController(title: "Error", message: "Invalid credentials", preferredStyle: .alert)
+alert.addAction(UIAlertAction(title: "OK", style: .default))
+present(alert, animated: true)
+45. Explain Combine framework and its core components.
+Answer:
+Combine is a reactive framework for processing asynchronous events (replacing NotificationCenter, KVO, completion handlers). Core components:
+Publisher: Emits values/errors over time (e.g., Just(5), URLSession.DataTaskPublisher).
+Subscriber: Receives values from a publisher (e.g., sink, assign).
+Operator: Transforms values (e.g., map, filter, debounce).
+46. What is UICollectionViewCompositionalLayout (iOS 13+)?
+Answer:
+UICollectionViewCompositionalLayout is a flexible layout system for UICollectionView that combines items, groups, and sections to create complex layouts (grid, list, waterfall). It replaces UICollectionViewFlowLayout for dynamic, adaptive layouts (e.g., Instagram’s feed).
+47. Explain SwiftUI NavigationStack (iOS 16+).
+Answer:
+NavigationStack replaces NavigationView (deprecated) for SwiftUI navigation. It supports programmatic navigation (via NavigationPath) and hierarchical routing (e.g., NavigationStack(path: $path) { List { ... }.navigationDestination(for: Item.self) { item in DetailView(item: item) } }).
+48. What is Memory Leak in iOS? How do you detect/fix it?
+Answer:
+A memory leak occurs when an object is retained in memory but no longer needed (cannot be deallocated). Common causes:
+Retain cycles (e.g., strong reference between ViewController and its delegate).
+Uncancelled timers/network requests.
+Strong references in closures (use [weak self]).
+Detection: Use Xcode’s Instruments (Leaks tool) or Debug Memory Graph.
+Fix: Use weak/unowned references, cancel timers/requests in viewDidDisappear, and avoid retain cycles.
+49. Explain RunLoop in iOS.
+Answer:
+RunLoop is a loop that processes events (UI events, timers, network callbacks) for a thread. The main thread’s RunLoop (main runloop) keeps the app alive and handles UI updates. It runs in modes (e.g., default, tracking) and only processes events for the current mode.
+50. What is Core Animation and how does it work?
+Answer:
+Core Animation is a framework for rendering/animating UI elements (backed by CALayer). It offloads rendering to the GPU (improves performance) and uses a render tree (layers) separate from the UIKit view hierarchy. Key concepts: CALayer, CABasicAnimation, CATransaction, implicit/explicit animations.
+51. Explain UIKit to SwiftUI integration (UIViewRepresentable).
+Answer:
+UIViewRepresentable is a protocol that wraps a UIKit view for use in SwiftUI. Example (wrap UITextField):
+swift
+struct CustomTextField: UIViewRepresentable {
+    @Binding var text: String
+    func makeUIView(context: Context) -> UITextField {
+        let tf = UITextField()
+        tf.delegate = context.coordinator
+        return tf
+    }
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        uiView.text = text
+    }
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+    class Coordinator: NSObject, UITextFieldDelegate {
+        var parent: CustomTextField
+        init(_ parent: CustomTextField) { self.parent = parent }
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            parent.text = textField.text ?? ""
+        }
+    }
+}
+52. What is UserDefaults? When would you use it?
+Answer:
+UserDefaults is a lightweight storage system for small, non-sensitive data (e.g., user preferences, app settings). It stores key-value pairs (strings, numbers, booleans) in a plist file. Use it for simple data (not large datasets/secure data like passwords—use Keychain for that).
+53. Explain Core Data vs. Realm vs. SwiftData.
+Answer:
+Aspect    Core Data    Realm    SwiftData (iOS 17+)
+Ownership    Apple    MongoDB    Apple
+Syntax    Verbose (managed objects)    Object-oriented    Concise (macros)
+Performance    Good (with optimizations)    Faster (native C++)    Same as Core Data (under the hood)
+Use case    Apple ecosystem (legacy)    Cross-platform    Modern iOS apps
+54. What is URLSession and its task types?
+Answer:
+URLSession handles network requests (HTTP/HTTPS) in iOS. Task types:
+dataTask: Fetches data (JSON/XML) for short requests (e.g., API calls).
+downloadTask: Downloads files to disk (e.g., images/videos).
+uploadTask: Uploads data (e.g., form data, files).
+streamTask: For real-time communication (e.g., WebSockets).
+55. Explain SwiftUI View lifecycle.
+Answer:
+SwiftUI views are structs (value types) and re-render when their state changes. Key lifecycle events:
+init: Called when the view is created (avoid heavy work here).
+body: Computed property that returns the view hierarchy (called on state change).
+.onAppear: View is about to be shown (fetch data, start animations).
+.onDisappear: View is hidden (cleanup resources, cancel tasks).
+.task: Async work (cancelled when view disappears).
+四、架构设计 & 设计模式 (15 题)
+56. Explain MVVM architecture in iOS (with SwiftUI/UIKit).
+Answer:
+MVVM (Model-View-ViewModel) separates concerns:
+Model: Data layer (structs/classes for data, e.g., User).
+View: UI layer (SwiftUI View/UIViewController—displays data, handles user input).
+ViewModel: Mediator between View and Model (transforms data for the View, handles business logic, no UI references).
+SwiftUI Example:
+swift
+// Model
+struct User: Codable { let name: String }
+// ViewModel
+@Observable class UserViewModel {
+    var users: [User] = []
+    func fetchUsers() async {
+        let data = await APIManager.shared.fetchData()
+        users = try! JSONDecoder().decode([User].self, from: data)
+    }
+}
+// View
+struct UserView: View {
+    let viewModel = UserViewModel()
+    var body: some View {
+        List(viewModel.users) { user in Text(user.name) }
+            .task { await viewModel.fetchUsers() }
+    }
+}
+57. What is Clean Architecture (iOS)?
+Answer:
+Clean Architecture (by Robert Martin) divides the app into 4 layers (from inner to outer):
+Entities: Core business models (e.g., User, Order).
+Use Cases: Business logic (e.g., FetchUserUseCase).
+Interface Adapters: Converts data between layers (e.g., UserRepository).
+Frameworks & Drivers: External tools (UIKit, Core Data, API clients).
+Key principle: Dependency Inversion (inner layers depend on abstractions, not outer layers).
+58. Explain MVC vs. MVVM vs. VIPER.
+Answer:
+Aspect    MVC (UIKit default)    MVVM    VIPER
+Complexity    Simple (massive ViewController)    Moderate    Complex (5 layers)
+Separation of Concerns    Poor (ViewController bloat)    Good    Excellent
+Use case    Small apps    Medium/large apps    Enterprise apps
+Testability    Hard    Easy (ViewModel tests)    Very easy (layered tests)
+59. What is the Singleton pattern? Pros and cons.
+Answer:
+Pros:
+Single point of access to shared resources (e.g., network manager).
+Reduces memory usage (one instance).
+Cons:
+Tight coupling (hard to test—mock singleton dependencies).
+Risk of retain cycles.
+Global state (can lead to unpredictable behavior).
+60. Explain the Factory pattern in iOS.
+Answer:
+Factory pattern creates objects without exposing the instantiation logic (e.g., ViewFactory for creating UI components). Example:
+swift
+enum ViewFactory {
+    static func makeLoginView() -> some View {
+        LoginView(viewModel: LoginViewModel(apiManager: APIManager.shared))
+    }
+    static func makeHomeView() -> some View {
+        HomeView(viewModel: HomeViewModel(dataStore: DataStore.shared))
+    }
+}
+Use it to centralize object creation (reduce duplicate code, improve testability).
+61. What is the Observer pattern? How is it implemented in iOS?
+Answer:
+Observer pattern allows objects to subscribe to events and receive notifications when the event occurs. iOS implementations:
+NotificationCenter: System-wide events (e.g., UIApplication.didEnterBackgroundNotification).
+Combine: Publisher/Subscriber (reactive).
+@Observable (iOS 17+): Lightweight observation for custom types.
+62. Explain Dependency Injection (DI) in iOS.
+Answer:
+DI is a pattern where dependencies are injected into an object (instead of being created inside the object). It improves testability (mock dependencies) and flexibility. Example:
+swift
+// Bad (tight coupling)
+class LoginViewModel {
+    let apiManager = APIManager.shared // Hard to mock
+}
+
+// Good (DI via initializer)
+class LoginViewModel {
+    let apiManager: APIManagerProtocol
+    init(apiManager: APIManagerProtocol = APIManager.shared) {
+        self.apiManager = apiManager
+    }
+}
+// Test: inject mock APIManager
+let mockAPIManager = MockAPIManager()
+let viewModel = LoginViewModel(apiManager: mockAPIManager)
+63. What is the Coordinator pattern? When would you use it?
+Answer:
+Coordinator pattern decouples navigation logic from ViewControllers (solves "massive ViewController" problem). Coordinators manage navigation (push/pop/present) and pass data between ViewControllers. Example:
+swift
+protocol Coordinator: AnyObject {
+    func start()
+}
+
+class AppCoordinator: Coordinator {
+    let navigationController: UINavigationController
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+    }
+    func start() {
+        let loginVC = LoginViewController()
+        loginVC.delegate = self
+        navigationController.pushViewController(loginVC, animated: true)
+    }
+}
+
+extension AppCoordinator: LoginDelegate {
+    func didLoginSuccessfully() {
+        let homeVC = HomeViewController()
+        navigationController.pushViewController(homeVC, animated: true)
+    }
+}
+64. Explain the Repository pattern.
+Answer:
+Repository pattern abstracts data sources (API, Core Data, UserDefaults) into a single interface. It decouples the app from data sources (e.g., switch from REST API to GraphQL without changing business logic). Example:
+swift
+protocol UserRepositoryProtocol {
+    func fetchUsers() async throws -> [User]
+}
+
+class UserRepository: UserRepositoryProtocol {
+    let apiManager: APIManagerProtocol
+    let dataStore: DataStoreProtocol
+    init(apiManager: APIManagerProtocol, dataStore: DataStoreProtocol) {
+        self.apiManager = apiManager
+        self.dataStore = dataStore
+    }
+    func fetchUsers() async throws -> [User] {
+        // Check local cache first
+        if let cachedUsers = dataStore.getCachedUsers() {
+            return cachedUsers
+        }
+        // Fetch from API
+        let data = await apiManager.fetchUsers()
+        let users = try JSONDecoder().decode([User].self, from: data)
+        // Cache
+        dataStore.cacheUsers(users)
+        return users
+    }
+}
+65. What is the Strategy pattern?
+Answer:
+Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It allows switching algorithms at runtime (e.g., different payment methods, sorting logic). Example:
+swift
+protocol PaymentStrategy {
+    func pay(amount: Double)
+}
+
+class CreditCardPayment: PaymentStrategy {
+    func pay(amount: Double) { print("Paid $\(amount) with Credit Card") }
+}
+
+class PayPalPayment: PaymentStrategy {
+    func pay(amount: Double) { print("Paid $\(amount) with PayPal") }
+}
+
+class PaymentProcessor {
+    var strategy: PaymentStrategy
+    init(strategy: PaymentStrategy) { self.strategy = strategy }
+    func processPayment(amount: Double) { strategy.pay(amount: amount) }
+}
+
+// Usage
+let processor = PaymentProcessor(strategy: CreditCardPayment())
+processor.processPayment(amount: 100)
+processor.strategy = PayPalPayment()
+processor.processPayment(amount: 100)
+66. Explain the Decorator pattern.
+Answer:
+Decorator pattern adds behavior to an object dynamically (without subclassing). It wraps the original object and adds functionality (e.g., adding logging/caching to a network request). Example:
+swift
+protocol APIService {
+    func fetchData() async -> Data
+}
+
+class BasicAPIService: APIService {
+    func fetchData() async -> Data { /* Fetch data */ }
+}
+
+class LoggingAPIService: APIService {
+    let service: APIService
+    init(service: APIService) { self.service = service }
+    func fetchData() async -> Data {
+        print("Fetching data...")
+        let data = await service.fetchData()
+        print("Fetched \(data.count) bytes")
+        return data
+    }
+}
+
+// Usage
+let service = LoggingAPIService(service: BasicAPIService())
+let data = await service.fetchData()
+67. What is Test-Driven Development (TDD) in iOS?
+Answer:
+TDD is a development process where you write tests before writing the code:
+Write a failing test (defines the desired behavior).
+Write the minimal code to make the test pass.
+Refactor the code (improve readability/performance) while keeping tests passing.
+In iOS, use XCTest for unit tests (test ViewModels, use cases, repositories) and UI tests (test user interactions).
+68. Explain the Adapter pattern in iOS.
+Answer:
+Adapter pattern converts the interface of one class into another interface that clients expect. It’s used to integrate legacy code or third-party libraries (e.g., adapting a URLSession response to a custom APIResponse type). Example:
+swift
+// Legacy API
+class LegacyAPIClient {
+    func getUsers(completion: ([LegacyUser]) -> Void) { /* ... */ }
+}
+
+// New Model
+struct User { let id: String; let name: String }
+
+// Adapter
+class UserAdapter {
+    let legacyClient = LegacyAPIClient()
+    func getUsers(completion: ([User]) -> Void) {
+        legacyClient.getUsers { legacyUsers in
+            let users = legacyUsers.map { User(id: $0.legacyId, name: $0.legacyName) }
+            completion(users)
+        }
+    }
+}
+69. What is the difference between weak and unowned references?
+Answer:
+weak: Optional reference (can be nil) that does not retain the object. Use for parent-child relationships (e.g., delegate → ViewController).
+unowned: Non-optional reference (assumes the object never becomes nil) that does not retain the object. Use for relationships where the referenced object outlives the referencer (e.g., closure → self in a short-lived task).
+70. Explain the Command pattern.
+Answer:
+Command pattern encapsulates a request as an object (e.g., a button tap, API call). It decouples the sender (button) from the receiver (ViewModel) and supports undo/redo. Example:
+swift
+protocol Command {
+    func execute()
+    func undo()
+}
+
+class LoginCommand: Command {
+    let viewModel: LoginViewModel
+    init(viewModel: LoginViewModel) { self.viewModel = viewModel }
+    func execute() { viewModel.login() }
+    func undo() { viewModel.logout() }
+}
+
+// Usage
+let command = LoginCommand(viewModel: viewModel)
+command.execute() // Login
+command.undo() // Logout
+五、性能优化 & 调试 (15 题)
+71. How do you optimize table/collection view performance?
+Answer:
+Reuse cells: Use dequeueReusableCell(withIdentifier:) (avoid creating new cells).
+Lazy loading: Load images/data only when cells are visible (use UITableViewDataSourcePrefetching).
+Optimize AutoLayout: Minimize constraints (use UIStackView, avoid nested constraints).
+Reduce cell height calculations: Cache cell heights (e.g., estimatedRowHeight + automaticDimension).
+Offload work: Move heavy computations to background threads (e.g., image resizing).
+Avoid opaque views: Set opaque = true for views with solid backgrounds (reduces blending).
+72. What is Instruments and how do you use it for performance tuning?
+Answer:
+Instruments is Xcode’s profiling tool for analyzing app performance, memory, and energy usage. Key templates:
+Time Profiler: Identify slow code (CPU bottlenecks).
+Leaks: Detect memory leaks.
+Allocations: Track memory usage (identify large objects).
+Core Animation: Analyze UI rendering performance (fps, offscreen rendering).
+Energy Log: Optimize battery usage (reduce background activity).
+73. Explain offscreen rendering and how to avoid it.
+Answer:
+Offscreen rendering occurs when iOS renders a layer to an offscreen buffer (instead of directly to the screen). It’s slow (uses more memory/CPU). Causes:
+maskToBounds = true + cornerRadius (on non-opaque views).
+shadowPath not set for shadows.
+layer.shouldRasterize = true.
+Fix:
+Use UIGraphicsImageRenderer to pre-render rounded corners/shadows.
+Set shadowPath for shadows (e.g., layer.shadowPath = UIBezierPath(rect: layer.bounds).cgPath).
+Avoid shouldRasterize unless necessary.
+74. How do you optimize app launch time?
+Answer:
+Minimize startup code: Move non-critical work to background threads (e.g., DispatchQueue.global().async).
+Optimize storyboards/xibs: Use programmatic UI (storyboards are loaded at launch).
+Lazy load frameworks: Use dynamic framework instead of static framework (load only when needed).
+Reduce binary size: Remove unused code (use App Thinning), compress assets.
+Profile launch time: Use Xcode’s App Launch template in Instruments to identify bottlenecks.
+75. What is didReceiveMemoryWarning and how do you handle it?
+Answer:
+didReceiveMemoryWarning is called when the app is low on memory (iOS may terminate the app if not handled). Handle it by:
+Releasing non-critical memory (e.g., cached images, unused data).
+Cancelling background tasks/network requests.
+Unloading unused view controllers (e.g., viewDidUnload for older iOS versions).
+76. How do you optimize image loading in iOS?
+Answer:
+Use appropriate image formats: WebP (smaller than PNG/JPG) for remote images.
+Resize images: Downscale images to the display size (avoid loading full-resolution images).
+Cache images: Use URLCache or third-party libraries (Kingfisher/SDWebImage) to cache images.
+Async loading: Load images on background threads (avoid blocking the main thread).
+Lazy loading: Load images only when they enter the viewport (table/collection view).
+77. Explain Main Thread Checker and how to use it.
+Answer:
+Main Thread Checker is an Xcode tool that detects UI updates on background threads (a common cause of crashes/lag). It’s enabled by default in debug builds and shows a warning in the console when UI code runs off the main thread. Fix: Wrap UI updates in DispatchQueue.main.async.
+78. How do you debug a crash in iOS?
+Answer:
+Crash Logs: Analyze crash logs (Xcode → Organizer → Crashes) for stack trace, exception type, and thread info.
+Breakpoints: Use Xcode breakpoints (exception breakpoints for unhandled errors).
+LLDB: Use LLDB commands (e.g., po to print objects, bt to show stack trace) to inspect state.
+Crashlytics/Firebase: Integrate third-party tools to collect crash logs from production.
+79. What is App Thinning and how does it reduce app size?
+Answer:
+App Thinning (iOS 9+) optimizes app distribution by:
+Slicing: Delivers only the resources (images, binaries) needed for the user’s device (e.g., arm64 for iPhone, not x86 for simulator).
+On-Demand Resources: Downloads non-critical resources (e.g., game levels) after app install.
+Bitcode: Recompiles the app on Apple’s servers to optimize for the user’s device (reduces binary size).
+80. How do you optimize Core Data performance?
+Answer:
+Use NSFetchRequest optimizations: fetchBatchSize (load data in batches), predicates (filter data early).
+Background contexts: Use privateQueueContext for heavy operations (avoid blocking main thread).
+Indexing: Add indexes to frequently queried attributes (e.g., userID).
+Avoid faulting: Use NSFetchRequestResultType.dictionaryResultType for read-only data (avoids loading full objects).
+Batch operations: Use NSBatchUpdateRequest/NSBatchDeleteRequest for bulk changes (instead of looping).
+81. Explain Thread Sanitizer and when to use it.
+Answer:
+Thread Sanitizer is an Xcode tool that detects race conditions (multiple threads accessing shared mutable state). It’s enabled in Xcode’s scheme settings and flags race conditions in real-time. Use it to debug concurrency issues (crashes, unpredictable behavior) in multi-threaded code.
+82. How do you reduce app binary size?
+Answer:
+Remove unused code: Use Xcode’s Dead Code Stripping (build settings) and App Code to find unused code.
+Compress assets: Use compressed image formats (WebP), remove unused images.
+Optimize frameworks: Use dynamic frameworks (only load needed frameworks) or remove unused third-party libraries.
+Bitcode: Enable bitcode (Apple recompiles the app to reduce size).
+String localization: Remove unused localized strings.
+83. What is Core Graphics performance best practices?
+Answer:
+Reuse contexts: Avoid creating new CGContext instances (reuse existing ones).
+Offload to background: Render complex graphics on background threads (use UIGraphicsImageRenderer).
+Avoid overdraw: Minimize overlapping layers (use opaque = true).
+Use vector graphics: Use PDF/SVG (vector) instead of raster images (scales without quality loss).
+84. How do you debug network requests in iOS?
+Answer:
+Xcode Network Inspector: View network requests (method, URL, headers, response) in Xcode’s debug navigator.
+Proxies: Use Charles/Fiddler to intercept/modify network traffic (debug API responses).
+Logging: Log request/response data (e.g., print(request), print(response)).
+URLSessionDelegate: Implement URLSessionTaskDelegate to track task progress/errors.
+85. Explain Energy Impact and how to optimize it.
+Answer:
+Energy Impact measures how much battery the app uses (Xcode → Debug → Energy Impact). Optimizations:
+Reduce background activity: Minimize background fetch/refresh (use BGTaskScheduler sparingly).
+Optimize location services: Use kCLLocationAccuracyReduced (low accuracy) unless needed.
+Reduce network activity: Batch network requests (avoid frequent small requests).
+Optimize animations: Reduce frame rate (60fps → 30fps) for non-critical animations.
+六、工程化 & 面试反问 (15 题)
+86. Explain Fastlane and its key features for iOS development.
+Answer:
+Fastlane is an open-source tool for automating iOS/macOS app development workflows. Key features:
+gym: Builds and packages the app (IPA file).
+match: Manages code signing certificates/provisioning profiles (avoids manual signing).
+upload_to_testflight: Uploads IPA to TestFlight.
+upload_to_app_store: Submits the app to the App Store.
+snapshot: Automates screenshot capture for the App Store.
+87. What is CI/CD for iOS? Explain a typical CI/CD pipeline (GitHub Actions/GitLab CI).
+Answer:
+CI/CD (Continuous Integration/Continuous Delivery) automates building, testing, and deploying apps:
+CI: On code commit, the pipeline:
+Checks out code.
+Installs dependencies (CocoaPods).
+Builds the app.
+Runs unit/UI tests.
+CD: On successful CI, the pipeline:
+Uses Fastlane to build the IPA.
+Uploads to TestFlight (beta) or App Store (production).
+GitHub Actions Example:
+yaml
+name: iOS CI/CD
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install CocoaPods
+        run: pod install
+      - name: Build and Test
+        run: xcodebuild test -workspace MyApp.xcworkspace -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15'
+      - name: Deploy to TestFlight
+        run: fastlane beta
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+88. What is CocoaPods vs. Swift Package Manager (SPM) vs. Carthage?
+Answer:
+Aspect    CocoaPods    SPM (Apple)    Carthage
+Integration    Centralized (Podfile)    Native (Xcode)    Decentralized (Cartfile)
+Dependency Type    Static/Dynamic    Static/Dynamic    Dynamic only
+iOS Support    iOS 8+    iOS 11+    iOS 8+
+Use case    Legacy projects    Modern iOS projects    Minimal setup
+89. Explain code signing in iOS (certificates, provisioning profiles).
+Answer:
+Code signing ensures the app is from a trusted developer and hasn’t been tampered with:
+Certificate: A digital signature from Apple (iOS Development/iOS Distribution) tied to your developer account.
+Provisioning Profile: A file that links the certificate to your app (Bundle ID) and devices (development) or App Store (distribution).
+Best Practice: Use Fastlane Match to automate certificate/profile management (avoid manual downloads).
+90. What is TestFlight and how do you use it for beta testing?
+Answer:
+TestFlight is Apple’s beta testing platform (integrated with App Store Connect). Steps to use:
+Build the app with a distribution certificate (App Store/Ad Hoc).
+Upload the IPA to App Store Connect (via Fastlane/Xcode).
+Invite testers (internal: team members; external: up to 10,000 testers).
+Testers install the TestFlight app and accept the invitation to download the beta.
+91. Explain App Store Review Guidelines (key points).
+Answer:
+Key guidelines to avoid rejection:
+Privacy: Disclose all data collection (NSUserTrackingUsageDescription for tracking).
+Functionality: No broken features, no misleading app descriptions.
+Content: No offensive/illegal content, no spam.
+Performance: No crashes, no excessive battery usage.
+Intellectual Property: No trademark/copyright infringement.
+92. What is Unit Testing vs. UI Testing in iOS?
+Answer:
+Aspect    Unit Testing    UI Testing
+Scope    Test individual components (ViewModel, Use Case)    Test user interactions (tap, scroll, input)
+Tools    XCTest (XCTestCase)    XCUITest (XCUIApplication)
+Speed    Fast (milliseconds)    Slow (seconds/minutes)
+Use case    Validate business logic    Validate UI flow/behavior
+93. What is App Store Connect API and how do you use it?
+Answer:
+App Store Connect API automates App Store Connect tasks (e.g., creating builds, managing testers). It’s used with Fastlane (e.g., upload_to_app_store) or custom scripts (REST API). Use cases:
+Automate build uploads.
+Manage TestFlight testers.
+Retrieve app analytics.
+94. Explain Crashlytics (Firebase) integration and usage.
+Answer:
+Crashlytics is a tool for collecting/analyzing crash logs from production apps. Integration steps:
+Add Firebase to the project (CocoaPods: pod 'Firebase/Crashlytics').
+Initialize Firebase in AppDelegate/SceneDelegate.
+Upload dSYM files (debug symbols) to decode crash logs (use Fastlane to automate).
+View crash reports in the Firebase console (stack trace, device info, frequency).
+95. What is Bitrise/Jenkins for iOS CI/CD?
+Answer:
+Bitrise: Cloud-based CI/CD platform optimized for mobile apps (iOS/Android). It has pre-built steps for Fastlane, CocoaPods, and TestFlight uploads (no server setup).
+Jenkins: Self-hosted CI/CD server (requires macOS machine). It’s flexible but requires more setup (plugins for Xcode/Fastlane).
+96. How do you handle app localization in iOS?
+Answer:
+Use Localizable.strings files for text (e.g., Localizable.strings (en), Localizable.strings (es)).
+Use NSLocalizedString to load localized text (e.g., NSLocalizedString("login_button", comment: "Login button")).
+Localize assets (images, storyboards) with .lproj folders.
+Use tools like genstrings to extract strings from code.
+97. What is Keychain and how do you use it for secure storage?
+Answer:
+Keychain is a secure storage system for sensitive data (passwords, tokens, biometric data). It’s encrypted and persists across app reinstalls. Use Security framework or third-party libraries (e.g., KeychainSwift) to access it:
+swift
+import KeychainSwift
+let keychain = KeychainSwift()
+keychain.set("secret_token", forKey: "user_token")
+let token = keychain.get("user_token")
+98. Explain Deep Linking in iOS (Universal Links/App Links).
+Answer:
+Deep linking opens a specific screen in the app from a URL (e.g., https://yourapp.com/profile → Profile screen). Types:
+Universal Links (iOS 9+): HTTPS URLs that link directly to the app (no Safari redirect).
+Custom URL Schemes: Non-HTTPS URLs (e.g., yourapp://profile) (less secure).
+Implementation:
+Configure apple-app-site-association file (Universal Links).
+Handle URLs in AppDelegate/SceneDelegate (application(_:open:options:)).
+99. What questions do you have for us? (Interview Reverse Questions)
+Answer (choose 2-3):
+What does the iOS team’s development workflow look like (e.g., CI/CD, code review, sprint cycle)?
+What are the biggest technical challenges the iOS team is currently facing?
+How do you prioritize new Swift/SwiftUI features vs. maintaining legacy code?
+What opportunities are there for growth (e.g., mentoring, cross-team projects, leadership)?
+How do you measure success for an iOS engineer on your team?
+100. Why should we hire you? (Closing Question)
+Answer:
+"I bring 8 years of native iOS development experience with deep expertise in Swift, SwiftUI, and UIKit—including modern features like @Observable and Swift Concurrency. I’ve built production apps with MVVM/Clean Architecture, optimized performance for large user bases, and automated CI/CD pipelines with Fastlane. My technical skills align with your team’s focus on high-quality, scalable iOS apps, and my ability to communicate technical concepts in English (and continuously improve) ensures I’ll integrate seamlessly into your team. I’m passionate about building user-centric apps and solving complex technical problems—this role aligns perfectly with my career goals, and I’m eager to contribute to your team’s success."
