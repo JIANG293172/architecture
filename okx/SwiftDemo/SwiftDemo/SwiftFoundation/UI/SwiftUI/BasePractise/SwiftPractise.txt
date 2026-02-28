@@ -1,0 +1,2709 @@
+I've organized 100 practical SwiftUI examples from basic to advanced, tailored for learning mastery and interview preparation. Each example includes full English code + detailed explanations (focused on interview-relevant concepts).
+
+Part 1: Core Fundamentals (1-20)
+1. Basic Text View (Fundamental UI Element)
+swift
+import SwiftUI
+
+struct Example1_TextView: View {
+    var body: some View {
+        Text("Hello, SwiftUI!")
+            .font(.title)          // Set font size/style
+            .foregroundColor(.blue) // Text color
+            .bold()                // Bold text
+            .padding()             // Add spacing around text
+    }
+}
+
+// Preview
+struct Example1_Previews: PreviewProvider {
+    static var previews: some View {
+        Example1_TextView()
+    }
+}
+Explanation:
+The Text view is the most basic SwiftUI component for displaying static text. Key modifiers (.font, .foregroundColor, .padding) are essential for styling—interviewers often ask about modifier chaining (modifiers apply in order and return new views).
+
+2. Image View with Resizing
+swift
+import SwiftUI
+
+struct Example2_ImageView: View {
+    var body: some View {
+        Image("profile") // Replace with your asset name
+            .resizable() // Enable resizing (critical—default is fixed size)
+            .scaledToFit() // Maintain aspect ratio
+            .frame(width: 200, height: 200) // Set fixed dimensions
+            .cornerRadius(100) // Make circular (half of frame size)
+            .shadow(radius: 10) // Add drop shadow
+    }
+}
+Explanation:
+Image requires .resizable() to adjust size (a common interview gotcha). .scaledToFit() vs .scaledToFill(): the former preserves aspect ratio without clipping, while the latter fills the frame (use with .clipped() to avoid overflow).
+
+
+3. Button with Action
+swift
+import SwiftUI
+
+struct Example3_ButtonView: View {
+    @State private var isTapped = false
+    
+    var body: some View {
+        Button(action: {
+            isTapped.toggle() // Modify state on tap
+            print("Button tapped!")
+        }) {
+            Text(isTapped ? "Tapped!" : "Tap Me")
+                .padding()
+                .background(isTapped ? Color.green : Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+        }
+    }
+}
+Explanation:
+@State is a property wrapper for local view state (interview question: "What’s the difference between @State and @Binding?"). Buttons use a trailing closure for actions and a label view for UI—critical for interactive UIs.
+
+
+4. TextField (User Input)
+swift
+import SwiftUI
+
+struct Example4_TextFieldView: View {
+    @State private var username = ""
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            TextField("Enter username", text: $username)
+                .padding()
+                .border(Color.gray, width: 1) // Add border for visibility
+                .cornerRadius(8)
+                .padding(.horizontal) // Horizontal spacing
+            
+            Text("You entered: \(username)")
+                .font(.subheadline)
+        }
+    }
+}
+Explanation:
+TextField binds to a @State variable using $ (two-way binding). Interviewers ask about input validation—this example shows basic binding; advanced versions add .onChange(of:) for validation.
+
+
+5. Toggle Switch
+swift
+import SwiftUI
+
+struct Example5_ToggleView: View {
+    @State private var isDarkMode = false
+    
+    var body: some View {
+        Toggle(isOn: $isDarkMode) {
+            Text("Dark Mode")
+                .font(.headline)
+        }
+        .padding()
+        .background(isDarkMode ? Color.black : Color.white)
+        .foregroundColor(isDarkMode ? Color.white : Color.black)
+        .cornerRadius(8)
+        .padding(.horizontal)
+    }
+}
+Explanation:
+Toggle is a binary switch bound to a Bool state. Common interview use case: theme switching (light/dark mode) with view styling based on state.
+
+
+6. Slider Control
+swift
+import SwiftUI
+
+struct Example6_SliderView: View {
+    @State private var volume = 0.0
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Slider(value: $volume, in: 0...100, step: 1) {
+                Text("Volume")
+            } minimumValueLabel: {
+                Text("0")
+            } maximumValueLabel: {
+                Text("100")
+            }
+            
+            Text("Current Volume: \(Int(volume))%")
+        }
+        .padding()
+    }
+}
+Explanation:
+Slider supports range constraints (in:) and step values—key for numeric input. Interviewers may ask about customizing slider appearance (e.g., color with .tint()).
+
+
+7. Stepper Control
+swift
+import SwiftUI
+
+struct Example7_StepperView: View {
+    @State private var quantity = 1
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Stepper("Quantity: \(quantity)", value: $quantity, in: 1...10)
+            
+            Text("You selected \(quantity) items")
+        }
+        .padding()
+    }
+}
+Explanation:
+Stepper is for incremental/decremental numeric adjustments. The in: parameter enforces bounds—critical for form validation (interview: "How do you restrict user input in SwiftUI?").
+
+
+8. Picker (Dropdown/Selector)
+
+
+swift
+import SwiftUI
+
+struct Example8_PickerView: View {
+    @State private var selectedFruit = "Apple"
+    let fruits = ["Apple", "Banana", "Orange", "Mango"]
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Picker("Select a fruit", selection: $selectedFruit) {
+                ForEach(fruits, id: \.self) {
+                    Text($0)
+                }
+            }
+            .pickerStyle(.menu) // Dropdown style (other styles: .wheel, .segmented)
+            .padding()
+            
+            Text("Favorite Fruit: \(selectedFruit)")
+        }
+    }
+}
+Explanation:
+Picker works with ForEach for dynamic options. .pickerStyle() changes UI presentation—interviewers test knowledge of different picker styles and data binding.
+
+
+9. List (Basic Scrollable List)
+swift
+import SwiftUI
+
+struct Example9_ListView: View {
+    let items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
+    
+    var body: some View {
+        List(items, id: \.self) { item in
+            Text(item)
+                .padding()
+        }
+        .listStyle(.plain) // Remove extra styling
+        .navigationTitle("Basic List")
+    }
+}
+Explanation:
+List is SwiftUI’s primary scrollable list component (replaces UIKit’s UITableView). id: \.self uses the string itself as a unique identifier—interview question: "When to use .self vs identifiable protocol?".
+
+10. List with Custom Rows
+swift
+import SwiftUI
+
+// Model (Identifiable for easy list integration)
+struct Task: Identifiable {
+    let id = UUID()
+    let title: String
+    let isCompleted: Bool
+}
+
+struct Example10_CustomRowList: View {
+    let tasks = [
+        Task(title: "Learn SwiftUI", isCompleted: true),
+        Task(title: "Build App", isCompleted: false),
+        Task(title: "Prepare for Interview", isCompleted: false)
+    ]
+    
+    var body: some View {
+        List(tasks) { task in
+            HStack {
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(task.isCompleted ? .green : .gray)
+                Text(task.title)
+                    .strikethrough(task.isCompleted)
+            }
+        }
+        .navigationTitle("Task List")
+    }
+}
+Explanation:
+Using Identifiable protocol eliminates the need for id: \.self (best practice). Custom list rows with HStack are common in interviews—demonstrates view composition.
+
+
+11. NavigationStack (Navigation)
+swift
+import SwiftUI
+
+struct Example11_NavigationStack: View {
+    var body: some View {
+        NavigationStack {
+            List(1...5, id: \.self) { number in
+                NavigationLink("Go to Detail \(number)") {
+                    DetailView(number: number)
+                }
+            }
+            .navigationTitle("Navigation Example")
+        }
+    }
+}
+
+// Detail View
+struct DetailView: View {
+    let number: Int
+    var body: some View {
+        Text("Detail Screen \(number)")
+            .navigationTitle("Detail \(number)")
+    }
+}
+Explanation:
+NavigationStack (iOS 16+) replaces the old NavigationView. NavigationLink triggers navigation to a detail view—interviewers ask about navigation data passing (here: via initializer).
+
+
+12. TabView (Tab Bar)
+swift
+import SwiftUI
+
+struct Example12_TabView: View {
+    var body: some View {
+        TabView {
+            // First Tab
+            Text("Home Screen")
+                .tabItem {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+                .tag(0)
+            
+            // Second Tab
+            Text("Profile Screen")
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Profile")
+                }
+                .tag(1)
+            
+            // Third Tab
+            Text("Settings Screen")
+                .tabItem {
+                    Image(systemName: "gear")
+                    Text("Settings")
+                }
+                .tag(2)
+        }
+        .tint(.blue) // Customize tab bar color
+    }
+}
+Explanation:
+TabView creates a bottom tab bar (core for app navigation). .tabItem defines the icon/text for each tab—interview question: "How to customize TabView appearance?".
+
+13. VStack/HStack/ZStack (Layout Containers)
+swift
+import SwiftUI
+
+struct Example13_Stacks: View {
+    var body: some View {
+        ZStack { // Overlay views
+            Color.blue.opacity(0.2) // Background color
+                .ignoresSafeArea() // Extend to screen edges
+            
+            VStack(spacing: 20) { // Vertical stack
+                Text("Main Title")
+                    .font(.largeTitle)
+                
+                HStack(spacing: 10) { // Horizontal stack
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                    Text("Rating: 5/5")
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+        }
+    }
+}
+Explanation:
+VStack: Arranges views vertically (default spacing: 8)
+HStack: Arranges views horizontally
+ZStack: Overlays views (back to front)
+Interviewers test layout understanding—know when to use each stack and how spacing/padding works.
+
+
+14. Spacer (Flexible Spacing)
+swift
+import SwiftUI
+
+struct Example14_Spacer: View {
+    var body: some View {
+        HStack {
+            Text("Left Aligned")
+            Spacer() // Pushes text to left (takes remaining space)
+            
+            Text("Right Aligned")
+        }
+        .padding()
+        .background(Color.gray.opacity(0.1))
+    }
+}
+Explanation:
+Spacer is a flexible view that takes up available space—critical for aligning views (e.g., left/right alignment in HStack). Interview question: "How to align a button to the right in a toolbar?".
+
+
+15. Padding and Frame Modifiers
+swift
+import SwiftUI
+
+struct Example15_PaddingFrame: View {
+    var body: some View {
+        Text("Custom Frame")
+            .font(.title)
+            .foregroundColor(.white)
+            .padding(.vertical, 10) // Vertical padding only
+            .padding(.horizontal, 20) // Horizontal padding only
+            .frame(width: 250, height: 80) // Fixed size
+            .background(Color.purple)
+            .cornerRadius(10)
+            .frame(maxWidth: .infinity) // Expand to full width
+    }
+}
+Explanation:
+.padding(): Adds space inside the view’s frame
+.frame(): Sets the view’s size/position
+Order matters: padding → frame → background (interview: "Why does modifier order affect the result?").
+
+
+16. Color and Gradient Backgrounds
+swift
+import SwiftUI
+
+struct Example16_Gradients: View {
+    var body: some View {
+        VStack {
+            // Solid Color
+            Text("Solid Color")
+                .frame(height: 80)
+                .frame(maxWidth: .infinity)
+                .background(Color.red)
+                .foregroundColor(.white)
+            
+            // Linear Gradient
+            Text("Linear Gradient")
+                .frame(height: 80)
+                .frame(maxWidth: .infinity)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [.blue, .purple]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .foregroundColor(.white)
+            
+            // Radial Gradient
+            Text("Radial Gradient")
+                .frame(height: 80)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RadialGradient(
+                        gradient: Gradient(colors: [.yellow, .orange]),
+                        center: .center,
+                        startRadius: 10,
+                        endRadius: 100
+                    )
+                )
+                .foregroundColor(.white)
+        }
+    }
+}
+Explanation:
+SwiftUI supports solid colors and gradients (linear/radial/angular). Gradients are used as background views—interviewers ask about customizing UI with gradients for branding.
+
+17. Divider (Separator Line)
+swift
+import SwiftUI
+
+struct Example17_Divider: View {
+    var body: some View {
+        VStack {
+            Text("Section 1")
+                .padding()
+            Divider() // Horizontal separator
+                .background(Color.gray)
+                .padding(.horizontal)
+            Text("Section 2")
+                .padding()
+        }
+    }
+}
+Explanation:
+Divider is a lightweight separator (horizontal by default). Used to group content in lists/forms—common in interview UI design questions.
+
+
+18. Spacing and Alignment in Stacks
+swift
+import SwiftUI
+
+struct Example18_StackAlignment: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 15) { // Left alignment
+            Text("Title")
+                .font(.title)
+            Text("Subtitle")
+                .font(.subheadline)
+            HStack(alignment: .top) { // Top alignment
+                Image(systemName: "bell")
+                Text("Notification message with multiple lines")
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading) // Align entire VStack left
+    }
+}
+Explanation:
+Stacks support alignment parameters (e.g., .leading, .center, .trailing). This is critical for precise UI layout—interviewers test alignment understanding for responsive designs.
+
+
+19. System Images (SF Symbols)
+swift
+import SwiftUI
+
+struct Example19_SFSymbols: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "heart.fill")
+                .font(.largeTitle)
+                .foregroundColor(.red)
+            
+            Image(systemName: "arrow.right.circle")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50, height: 50)
+                .foregroundColor(.blue)
+            
+            Image(systemName: "person.circle")
+                .symbolVariant(.fill) // Change symbol style
+                .font(.system(size: 60))
+                .foregroundColor(.green)
+        }
+    }
+}
+Explanation:
+SF Symbols are Apple’s built-in icon library. .symbolVariant() modifies icon style (fill/outline)—interviewers ask about SF Symbols best practices (scaling, accessibility).
+
+
+20. Group (View Grouping)
+swift
+import SwiftUI
+
+struct Example20_Group: View {
+    var body: some View {
+        VStack {
+            Group { // Group views to avoid VStack/HStack item limits
+                Text("Line 1")
+                Text("Line 2")
+                Text("Line 3")
+            }
+            .font(.subheadline)
+            .foregroundColor(.gray)
+            
+            Group {
+                Text("Line 4")
+                Text("Line 5")
+                Text("Line 6")
+            }
+            .font(.subheadline)
+            .foregroundColor(.blue)
+        }
+    }
+}
+Explanation:
+Group groups views without affecting layout (unlike stacks). It solves the "10-view limit" in SwiftUI containers—interview question: "What’s the purpose of Group in SwiftUI?".
+
+
+Part 2: State Management (21-40)
+21. @State (Local State)
+swift
+import SwiftUI
+
+struct Example21_State: View {
+    @State private var count = 0 // Private local state
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Count: \(count)")
+                .font(.title)
+            
+            Button("Increment") {
+                count += 1 // Modify state (triggers view redraw)
+            }
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+        }
+    }
+}
+Explanation:
+@State is for simple, local view state (value types: Int, String, Bool). It’s a source of truth for the view—interview key points:
+Marked private (best practice)
+Only used for the view that owns it
+Triggers view redraw when modified
+
+
+22. @Binding (Two-Way Binding)
+swift
+import SwiftUI
+
+// Parent View
+struct Example22_Binding_Parent: View {
+    @State private var isOn = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Parent State: \(isOn ? "On" : "Off")")
+            ChildView(isOn: $isOn) // Pass binding to child
+        }
+    }
+}
+
+// Child View
+struct ChildView: View {
+    @Binding var isOn: Bool // Binding (no source of truth)
+    
+    var body: some View {
+        Toggle("Child Toggle", isOn: $isOn)
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(8)
+    }
+}
+Explanation:
+@Binding creates a two-way connection to state owned by another view. Interview question: "Difference between @State and @Binding?"
+@State: Owns state (source of truth)
+@Binding: References state (no ownership)
+
+
+
+23. @StateObject (Observable Object Owner)
+swift
+import SwiftUI
+import Combine
+
+// Observable Model
+class CounterModel: ObservableObject {
+    @Published var count = 0 // Published triggers view updates
+    
+    func increment() {
+        count += 1
+    }
+    
+    func decrement() {
+        count -= 1
+    }
+}
+
+struct Example23_StateObject: View {
+    @StateObject private var counter = CounterModel() // Owns the object
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Count: \(counter.count)")
+                .font(.title)
+            
+            HStack(spacing: 20) {
+                Button("-", action: counter.decrement)
+                    .font(.title)
+                    .frame(width: 50, height: 50)
+                
+                Button("+", action: counter.increment)
+                    .font(.title)
+                    .frame(width: 50, height: 50)
+            }
+        }
+    }
+}
+Explanation:
+@StateObject is used to own an ObservableObject (reference type) for the lifetime of the view. @Published properties trigger view updates—interview key: Use @StateObject for the owner of the observable object.
+
+
+24. @ObservedObject (Observable Object Observer)
+swift
+import SwiftUI
+
+// Reuse CounterModel from Example 23
+
+struct Example24_ObservedObject_Parent: View {
+    @StateObject private var counter = CounterModel() // Owner
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Parent Count: \(counter.count)")
+            ChildObserverView(counter: counter) // Pass to child
+        }
+    }
+}
+
+struct ChildObserverView: View {
+    @ObservedObject var counter: CounterModel // Observer (not owner)
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            Text("Child Count: \(counter.count)")
+            Button("Increment from Child", action: counter.increment)
+                .padding()
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+        }
+    }
+}
+Explanation:
+@ObservedObject observes an ObservableObject owned by another view. Interview rule: Use @ObservedObject for child views that need to react to changes in the object.
+
+
+25. @EnvironmentObject (Global State)
+swift
+import SwiftUI
+
+// Reuse CounterModel from Example 23
+
+struct Example25_EnvironmentObject: View {
+    var body: some View {
+        // Inject environment object at the root
+        ParentView()
+            .environmentObject(CounterModel())
+    }
+}
+
+struct ParentView: View {
+    var body: some View {
+        VStack {
+            Text("Parent View")
+            ChildView()
+        }
+    }
+}
+
+struct ChildView: View {
+    @EnvironmentObject var counter: CounterModel // Access global state
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            Text("Count: \(counter.count)")
+            Button("Increment", action: counter.increment)
+                .padding()
+                .background(Color.purple)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+        }
+    }
+}
+Explanation:
+@EnvironmentObject accesses an ObservableObject injected into the environment (no need to pass through every view). Interview use case: App-wide state (user session, theme).
+
+
+26. @Environment (System Environment)
+swift
+import SwiftUI
+
+struct Example26_Environment: View {
+    // Access system environment values
+    @Environment(\.colorScheme) var colorScheme // Light/dark mode
+    @Environment(\.horizontalSizeClass) var sizeClass // Compact/regular
+    @Environment(\.dismiss) var dismiss // Dismiss view
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Color Scheme: \(colorScheme == .dark ? "Dark" : "Light")")
+            Text("Size Class: \(sizeClass == .compact ? "Compact" : "Regular")")
+            
+            Button("Dismiss (Simulate)", action: dismiss)
+                .padding()
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+        }
+    }
+}
+Explanation:
+@Environment accesses system-level values (color scheme, size class, dismiss action). Interview questions:
+How to adapt UI for light/dark mode?
+How to handle different device sizes (compact/regular)?
+
+
+27. onAppear/onDisappear (View Lifecycle)
+swift
+import SwiftUI
+
+struct Example27_Lifecycle: View {
+    @State private var data = ""
+    
+    var body: some View {
+        Text(data)
+            .font(.title)
+            .onAppear { // Trigger when view appears
+                print("View appeared")
+                loadData() // Simulate data loading
+            }
+            .onDisappear { // Trigger when view disappears
+                print("View disappeared")
+                cleanUp() // Simulate cleanup
+            }
+    }
+    
+    private func loadData() {
+        // Simulate async data load
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            data = "Data loaded!"
+        }
+    }
+    
+    private func cleanUp() {
+        data = ""
+    }
+}
+Explanation:
+.onAppear/.onDisappear handle view lifecycle events. Interview use case: Load data when a screen appears (replace with network calls) and clean up resources when it disappears.
+
+
+28. onChange (State Change Listener)
+swift
+import SwiftUI
+
+struct Example28_OnChange: View {
+    @State private var username = ""
+    @State private var isValid = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            TextField("Enter username (min 5 chars)", text: $username)
+                .padding()
+                .border(isValid ? Color.green : Color.red)
+            
+            Text(isValid ? "Valid username!" : "Username too short")
+                .foregroundColor(isValid ? .green : .red)
+        }
+        .onChange(of: username) { newValue in
+            // Validate when username changes
+            isValid = newValue.count >= 5
+        }
+    }
+}
+Explanation:
+.onChange(of:) listens for changes to a value (state/binding). Interview use case: Real-time form validation (e.g., username length, email format).
+
+
+29. @AppStorage (Persistent State)
+swift
+import SwiftUI
+
+struct Example29_AppStorage: View {
+    // Persist to UserDefaults (key: "username")
+    @AppStorage("username") private var username = ""
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            TextField("Save username", text: $username)
+                .padding()
+                .border(Color.gray)
+            
+            Toggle("Dark Mode (Persistent)", isOn: $isDarkMode)
+            
+            Text("Saved Username: \(username.isEmpty ? "None" : username)")
+        }
+        .padding()
+        .background(isDarkMode ? Color.black : Color.white)
+        .foregroundColor(isDarkMode ? Color.white : Color.black)
+    }
+}
+Explanation:
+@AppStorage is a wrapper for UserDefaults (persists data between app launches). Interview question: "How to persist simple state in SwiftUI?" (answer: @AppStorage for simple values, Core Data for complex data).
+
+
+30. Combine with SwiftUI (Basic)
+swift
+
+import SwiftUI
+import Combine
+
+class SearchViewModel: ObservableObject {
+    @Published var searchText = ""
+    @Published var debouncedText = ""
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        $searchText
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] value in
+                self?.debouncedText = value
+                // 在这里执行模拟的 API 调用
+                print("Searching for: \(value)")
+            }
+            .store(in: &cancellables)
+    }
+}
+
+struct Example30_Combine: View {
+    @StateObject private var viewModel = SearchViewModel()
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            TextField("Search (debounced)", text: $viewModel.searchText)
+                .padding()
+                .border(Color.gray)
+            
+            Text("Debounced Text: \(viewModel.debouncedText)")
+        }
+    }
+}
+
+
+Explanation:
+Combine framework integrates with SwiftUI via .onReceive(). Debouncing search text is a common interview question (prevents excessive API calls).
+
+
+31. Custom Binding
+swift
+import SwiftUI
+
+struct Example31_CustomBinding: View {
+    @State private var rawValue = ""
+    
+    // Custom binding with validation
+    var filteredBinding: Binding<String> {
+        Binding(
+            get: { rawValue },
+            set: { newValue in
+                // Only allow numeric input
+                rawValue = newValue.filter { $0.isNumber }
+            }
+        )
+    }
+    
+    var body: some View {
+        TextField("Enter numbers only", text: filteredBinding)
+            .padding()
+            .border(Color.gray)
+            .keyboardType(.numberPad)
+    }
+}
+Explanation:
+Custom bindings add logic to get/set operations. Interview use case: Restrict text input (numeric only, max length).
+
+
+32. ObservableObject with Multiple Published Properties
+swift
+import SwiftUI
+import Combine
+
+class FormModel: ObservableObject {
+    @Published var email = ""
+    @Published var password = ""
+    @Published var isFormValid = false
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        // Validate form when email/password change
+        Publishers.CombineLatest($email, $password)
+            .map { email, password in
+                email.contains("@") && password.count >= 8
+            }
+            .assign(to: \.isFormValid, on: self)
+            .store(in: &cancellables)
+    }
+}
+
+struct Example32_MultiplePublished: View {
+    @StateObject private var formModel = FormModel()
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            TextField("Email", text: $formModel.email)
+                .padding()
+                .border(Color.gray)
+            
+            SecureField("Password", text: $formModel.password)
+                .padding()
+                .border(Color.gray)
+            
+            Button("Submit") {
+                print("Form submitted")
+            }
+            .padding()
+            .background(formModel.isFormValid ? Color.blue : Color.gray)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            .disabled(!formModel.isFormValid)
+        }
+    }
+}
+Explanation:
+Combine’s CombineLatest combines multiple @Published properties for form validation. Interview key: Disable submit button until form is valid (UX best practice).
+33. @FocusState (Keyboard Focus)
+swift
+import SwiftUI
+
+struct Example33_FocusState: View {
+    @State private var email = ""
+    @State private var password = ""
+    // Track which field has focus
+    @FocusState private var focusedField: Field?
+    
+    enum Field {
+        case email, password
+    }
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            TextField("Email", text: $email)
+                .padding()
+                .border(Color.gray)
+                .focused($focusedField, equals: .email)
+                .submitLabel(.next) // "Next" button on keyboard
+                .onSubmit {
+                    focusedField = .password // Move focus to password
+                }
+            
+            SecureField("Password", text: $password)
+                .padding()
+                .border(Color.gray)
+                .focused($focusedField, equals: .password)
+                .submitLabel(.done)
+                .onSubmit {
+                    focusedField = nil // Dismiss keyboard
+                }
+            
+            Button("Dismiss Keyboard") {
+                focusedField = nil
+            }
+        }
+    }
+}
+Explanation:
+@FocusState manages keyboard focus (iOS 15+). Interview use case: Improve form UX with focus navigation (next/done buttons).
+34. Task Modifier (Async/Await)
+swift
+import SwiftUI
+
+struct Example34_TaskModifier: View {
+    @State private var data = "Loading..."
+    @State private var error: String?
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            if let error = error {
+                Text(error)
+                    .foregroundColor(.red)
+            } else {
+                Text(data)
+            }
+        }
+        .task { // Async task (cancels when view disappears)
+            do {
+                let result = try await fetchData()
+                data = result
+            } catch {
+                self.error = "Failed to load data: \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    // Simulate async API call
+    private func fetchData() async throws -> String {
+        try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+        return "Data fetched successfully!"
+    }
+}
+Explanation:
+.task modifier runs async code (Swift 5.5+). It automatically cancels when the view disappears—interview question: "How to handle async operations in SwiftUI?" (answer: .task for view-scoped async work).
+35. Refreshable Modifier (Pull to Refresh)
+swift
+import SwiftUI
+
+struct Example35_Refreshable: View {
+    @State private var items = ["Item 1", "Item 2", "Item 3"]
+    
+    var body: some View {
+        List(items, id: \.self) { item in
+            Text(item)
+        }
+        .refreshable { // Pull to refresh
+            await loadNewData()
+        }
+        .navigationTitle("Pull to Refresh")
+    }
+    
+    private func loadNewData() async {
+        // Simulate async refresh
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        items = ["Refreshed Item 1", "Refreshed Item 2", "Refreshed Item 3", "New Item 4"]
+    }
+}
+Explanation:
+.refreshable adds pull-to-refresh to scrollable views (List/ScrollView). Interview use case: Refresh data in a feed/screen.
+36. Alert (Basic)
+swift
+import SwiftUI
+
+struct Example36_Alert: View {
+    @State private var showAlert = false
+    
+    var body: some View {
+        Button("Show Alert") {
+            showAlert = true
+        }
+        .alert("Alert Title", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                print("Item deleted")
+            }
+        } message: {
+            Text("This is an alert message with destructive action.")
+        }
+    }
+}
+Explanation:
+.alert presents system alerts. Roles (cancel, destructive) affect button styling—interview question: "How to present alerts in SwiftUI?"
+37. Sheet (Modal View)
+swift
+import SwiftUI
+
+struct Example37_Sheet: View {
+    @State private var showSheet = false
+    
+    var body: some View {
+        Button("Show Sheet") {
+            showSheet = true
+        }
+        .sheet(isPresented: $showSheet) {
+            // Sheet content
+            VStack(spacing: 20) {
+                Text("Modal Sheet")
+                    .font(.title)
+                Button("Dismiss") {
+                    showSheet = false
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+            }
+            .padding()
+            .presentationDetents([.medium, .large]) // Custom sheet size (iOS 16+)
+        }
+    }
+}
+Explanation:
+.sheet presents modal views. .presentationDetents customizes sheet size (medium/large)—interview use case: Present forms/settings modally.
+38. ConfirmationDialog
+swift
+import SwiftUI
+
+struct Example38_ConfirmationDialog: View {
+    @State private var showDialog = false
+    
+    var body: some View {
+        Button("Delete Item") {
+            showDialog = true
+        }
+        .confirmationDialog("Are you sure?", isPresented: $showDialog) {
+            Button("Delete", role: .destructive) {
+                print("Item deleted")
+            }
+            Button("Cancel", role: .cancel) { }
+            Button("Archive") {
+                print("Item archived")
+            }
+        } message: {
+            Text("This action cannot be undone.")
+        }
+    }
+}
+Explanation:
+confirmationDialog presents action sheets (iOS 15+). Used for destructive actions (delete)—interview: "When to use Alert vs ConfirmationDialog?"
+39. Dynamic List with Identifiable
+swift
+import SwiftUI
+
+struct User: Identifiable {
+    let id = UUID()
+    let name: String
+    let age: Int
+}
+
+struct Example39_DynamicList: View {
+    let users = [
+        User(name: "Alice", age: 25),
+        User(name: "Bob", age: 30),
+        User(name: "Charlie", age: 35)
+    ]
+    
+    var body: some View {
+        List(users) { user in // No need for id: \.self (Identifiable)
+            HStack {
+                Text(user.name)
+                    .font(.headline)
+                Spacer()
+                Text("\(user.age)")
+                    .foregroundColor(.gray)
+            }
+        }
+        .navigationTitle("User List")
+    }
+}
+Explanation:
+Identifiable protocol is the best practice for dynamic lists (no hardcoding id: \.self). Interview question: "What’s the benefit of Identifiable over using .self?" (answer: Avoids duplicate IDs, better type safety).
+40. ForEach (Dynamic Views)
+swift
+import SwiftUI
+
+struct Example40_ForEach: View {
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(1...12, id: \.self) { number in
+                    Text("\(number)")
+                        .frame(height: 100)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+            }
+            .padding()
+        }
+    }
+}
+Explanation:
+ForEach creates dynamic views from a collection (unlike List, it doesn’t add scrolling by default). Used with LazyVGrid for grid layouts—interview: "Difference between List and ForEach?"
+Part 3: Advanced UI Components (41-60)
+41. LazyVStack/LazyHStack (Lazy Loading)
+swift
+import SwiftUI
+
+struct Example41_LazyStacks: View {
+    var body: some View {
+        ScrollView {
+            // LazyVStack loads views only when they enter the screen
+            LazyVStack(spacing: 10) {
+                ForEach(1...1000, id: \.self) { number in
+                    Text("Item \(number)")
+                        .frame(height: 50)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("LazyVStack (1000 Items)")
+    }
+}
+Explanation:
+LazyVStack/LazyHStack load views on demand (performance optimization for large datasets). Interview question: "When to use LazyVStack vs VStack?" (answer: Lazy stacks for large lists to improve performance).
+42. LazyVGrid/LazyHGrid (Grid Layout)
+swift
+import SwiftUI
+
+struct Example42_LazyGrid: View {
+    // Define grid columns (responsive)
+    let columns = [
+        GridItem(.flexible(minimum: 80)),
+        GridItem(.flexible(minimum: 80)),
+        GridItem(.flexible(minimum: 80))
+    ]
+    
+    // Sample data (SF Symbols)
+    let icons = [
+        "heart.fill", "star.fill", "bell.fill",
+        "person.fill", "house.fill", "car.fill",
+        "phone.fill", "email.fill", "settings.fill"
+    ]
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(icons, id: \.self) { icon in
+                    Image(systemName: icon)
+                        .font(.largeTitle)
+                        .frame(height: 100)
+                        .background(Color.blue.opacity(0.2))
+                        .cornerRadius(10)
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("Grid Layout")
+    }
+}
+Explanation:
+LazyVGrid creates responsive grid layouts. GridItem defines column size (.flexible, .fixed, .adaptive). Interview use case: Photo galleries, icon grids.
+43. ScrollView with Custom Content
+swift
+import SwiftUI
+
+struct Example43_ScrollView: View {
+    var body: some View {
+        // Vertical scroll view (default)
+        ScrollView(.vertical, showsIndicators: false) { // Hide scroll indicators
+            VStack(spacing: 20) {
+                ForEach(1...20, id: \.self) { number in
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.purple.opacity(0.5))
+                        .frame(height: 100)
+                        .overlay(Text("Card \(number)").font(.title))
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("Custom ScrollView")
+    }
+}
+Explanation:
+ScrollView supports vertical/horizontal scrolling. showsIndicators hides scroll bars (UX choice). Interview: "How to create a horizontal scroll view?" (use .horizontal).
+44. ScrollViewReader (Scroll to Position)
+swift
+import SwiftUI
+
+struct Example44_ScrollViewReader: View {
+    @State private var scrollToIndex = 0
+    
+    var body: some View {
+        VStack {
+            Button("Scroll to Item 50") {
+                scrollToIndex = 50
+            }
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            
+            ScrollView {
+                ScrollViewReader { proxy in
+                    LazyVStack {
+                        ForEach(0...100, id: \.self) { index in
+                            Text("Item \(index)")
+                                .frame(height: 50)
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(8)
+                                .id(index) // Unique ID for scrolling
+                        }
+                    }
+                    .onChange(of: scrollToIndex) { index in
+                        // Scroll to the item (animated)
+                        withAnimation {
+                            proxy.scrollTo(index, anchor: .top)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+Explanation:
+ScrollViewReader enables programmatic scrolling to a specific view (via id). Interview use case: Scroll to top/bottom of a list, scroll to a selected item.
+45. Menu (Context Menu)
+swift
+import SwiftUI
+
+struct Example45_Menu: View {
+    @State private var selectedOption = "None"
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Selected Option: \(selectedOption)")
+                .font(.title)
+            
+            // Basic Menu
+            Menu("Actions") {
+                Button("Option 1") {
+                    selectedOption = "Option 1"
+                }
+                Button("Option 2") {
+                    selectedOption = "Option 2"
+                }
+                Divider()
+                Button("Delete", role: .destructive) {
+                    selectedOption = "Deleted"
+                }
+            }
+            .font(.headline)
+            
+            // Context Menu (long press)
+            Text("Long Press Me")
+                .padding()
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(8)
+                .contextMenu {
+                    Button("Copy") { selectedOption = "Copied" }
+                    Button("Share") { selectedOption = "Shared" }
+                }
+        }
+    }
+}
+Explanation:
+Menu creates dropdown menus; contextMenu adds long-press actions. Interview use case: Action menus for list items, context-specific actions.
+46. ProgressView (Loading Indicator)
+swift
+import SwiftUI
+
+struct Example46_ProgressView: View {
+    @State private var progress = 0.0
+    @State private var isLoading = false
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            // Indeterminate progress (spinner)
+            ProgressView()
+                .progressViewStyle(.circular)
+                .scaleEffect(2)
+                .opacity(isLoading ? 1 : 0)
+            
+            // Determinate progress bar
+            ProgressView(value: progress, total: 100)
+                .progressViewStyle(.linear)
+                .frame(height: 20)
+            
+            HStack(spacing: 20) {
+                Button("Start Loading") {
+                    isLoading = true
+                    // Simulate progress
+                    Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+                        progress += 1
+                        if progress >= 100 {
+                            timer.invalidate()
+                            isLoading = false
+                        }
+                    }
+                }
+                
+                Button("Reset") {
+                    progress = 0
+                    isLoading = false
+                }
+            }
+        }
+        .padding()
+    }
+}
+Explanation:
+ProgressView supports indeterminate (spinner) and determinate (progress bar) styles. Interview use case: Show loading state for async operations (API calls, file downloads).
+47. DatePicker
+swift
+import SwiftUI
+
+struct Example47_DatePicker: View {
+    @State private var selectedDate = Date()
+    let dateRange: ClosedRange<Date> = {
+        let calendar = Calendar.current
+        let startDate = calendar.date(byAdding: .year, value: -1, to: Date())!
+        let endDate = calendar.date(byAdding: .year, value: 1, to: Date())!
+        return startDate...endDate
+    }()
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            DatePicker(
+                "Select Date",
+                selection: $selectedDate,
+                in: dateRange,
+                displayedComponents: .date
+            )
+            .datePickerStyle(.graphical) // Other styles: .compact, .wheel
+            .padding()
+            
+            Text("Selected Date: \(selectedDate.formatted())")
+                .font(.subheadline)
+        }
+    }
+}
+Explanation:
+DatePicker selects dates/times with range constraints. .datePickerStyle() changes UI presentation—interview use case: Date selection in forms, booking apps.
+48. TextField with Form Validation
+swift
+import SwiftUI
+
+struct Example48_TextFieldValidation: View {
+    @State private var email = ""
+    @State private var password = ""
+    @State private var emailError = ""
+    @State private var passwordError = ""
+    
+    var body: some View {
+        Form {
+            Section("Email") {
+                TextField("Enter email", text: $email)
+                    .autocapitalization(.none)
+                    .keyboardType(.emailAddress)
+                    .onChange(of: email) { validateEmail($0) }
+                
+                if !emailError.isEmpty {
+                    Text(emailError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+            }
+            
+            Section("Password") {
+                SecureField("Enter password", text: $password)
+                    .onChange(of: password) { validatePassword($0) }
+                
+                if !passwordError.isEmpty {
+                    Text(passwordError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+            }
+            
+            Section {
+                Button("Submit") {
+                    validateForm()
+                }
+                .disabled(!isFormValid)
+            }
+        }
+    }
+    
+    private func validateEmail(_ email: String) {
+        if email.isEmpty {
+            emailError = ""
+        } else if !email.contains("@") || !email.contains(".") {
+            emailError = "Please enter a valid email"
+        } else {
+            emailError = ""
+        }
+    }
+    
+    private func validatePassword(_ password: String) {
+        if password.isEmpty {
+            passwordError = ""
+        } else if password.count < 8 {
+            passwordError = "Password must be at least 8 characters"
+        } else {
+            passwordError = ""
+        }
+    }
+    
+    private var isFormValid: Bool {
+        emailError.isEmpty && passwordError.isEmpty && !email.isEmpty && !password.isEmpty
+    }
+    
+    private func validateForm() {
+        validateEmail(email)
+        validatePassword(password)
+        if isFormValid {
+            print("Form submitted successfully!")
+        }
+    }
+}
+Explanation:
+Advanced form validation with real-time error messages. Interview key points:
+Input validation (email format, password length)
+Disabled submit button until valid
+User-friendly error messages
+49. Form (Structured Input)
+swift
+import SwiftUI
+
+struct Example49_Form: View {
+    @State private var name = ""
+    @State private var age = ""
+    @State private var isSubscribed = false
+    @State private var favoriteColor = "Red"
+    let colors = ["Red", "Blue", "Green", "Yellow"]
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Personal Info") {
+                    TextField("Full Name", text: $name)
+                    TextField("Age", text: $age)
+                        .keyboardType(.numberPad)
+                }
+                
+                Section("Preferences") {
+                    Toggle("Subscribe to Newsletter", isOn: $isSubscribed)
+                    
+                    Picker("Favorite Color", selection: $favoriteColor) {
+                        ForEach(colors, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
+                Section {
+                    Button("Save") {
+                        print("Name: \(name), Age: \(age), Subscribed: \(isSubscribed), Color: \(favoriteColor)")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                }
+            }
+            .navigationTitle("Profile Form")
+        }
+    }
+}
+Explanation:
+Form organizes input fields into sections (iOS-style forms). Interview use case: User profile/edit forms with different input types (text, toggle, picker).
+50. DisclosureGroup (Expandable Content)
+swift
+import SwiftUI
+
+struct Example50_DisclosureGroup: View {
+    @State private var showDetails = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            DisclosureGroup("Show Details", isExpanded: $showDetails) {
+                VStack(spacing: 10) {
+                    Text("Detail 1: Lorem ipsum dolor sit amet")
+                    Text("Detail 2: Consectetur adipiscing elit")
+                    Text("Detail 3: Sed do eiusmod tempor incididunt")
+                }
+                .padding()
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(8)
+            }
+            .font(.headline)
+            
+            // Nested DisclosureGroup
+            DisclosureGroup("Nested Group") {
+                DisclosureGroup("Sub Group 1") {
+                    Text("Nested content 1")
+                }
+                DisclosureGroup("Sub Group 2") {
+                    Text("Nested content 2")
+                }
+            }
+        }
+        .padding()
+    }
+}
+Explanation:
+DisclosureGroup creates expandable/collapsible sections. Interview use case: FAQ screens, settings with advanced options, expandable list items.
+51. Toolbar (Navigation Bar Buttons)
+swift
+import SwiftUI
+
+struct Example51_Toolbar: View {
+    @State private var isEditing = false
+    
+    var body: some View {
+        NavigationStack {
+            Text("Main Content")
+                .navigationTitle("Toolbar Example")
+                .toolbar {
+                    // Leading toolbar items (left side)
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Edit") {
+                            isEditing.toggle()
+                        }
+                        .foregroundColor(isEditing ? .red : .blue)
+                    }
+                    
+                    // Trailing toolbar items (right side)
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu("Actions") {
+                            Button("Share") { print("Shared") }
+                            Button("Delete", role: .destructive) { print("Deleted") }
+                        }
+                    }
+                    
+                    // Bottom toolbar (iOS 16+)
+                    ToolbarItem(placement: .bottomBar) {
+                        HStack {
+                            Spacer()
+                            Button("Save") { print("Saved") }
+                            Spacer()
+                            Button("Cancel") { print("Cancelled") }
+                            Spacer()
+                        }
+                    }
+                }
+        }
+    }
+}
+Explanation:
+Toolbar adds buttons to navigation bars/bottom bars. ToolbarItem placement controls where items appear—interview question: "How to add custom buttons to the navigation bar?"
+52. Searchable (Search Bar)
+swift
+import SwiftUI
+
+struct Example52_Searchable: View {
+    let fruits = ["Apple", "Banana", "Orange", "Mango", "Pineapple", "Grapes", "Strawberry"]
+    @State private var searchText = ""
+    
+    // Filtered results
+    var filteredFruits: [String] {
+        if searchText.isEmpty {
+            return fruits
+        } else {
+            return fruits.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+    
+    var body: some View {
+        NavigationStack {
+            List(filteredFruits, id: \.self) { fruit in
+                Text(fruit)
+            }
+            .navigationTitle("Fruits")
+            .searchable(text: $searchText) {
+                // Search suggestions
+                ForEach(["Apple", "Banana", "Orange"].filter { $0.localizedCaseInsensitiveContains(searchText) }, id: \.self) { suggestion in
+                    Text("Search for \(suggestion)")
+                        .searchCompletion(suggestion)
+                }
+            }
+            .autocorrectionDisabled()
+        }
+    }
+}
+Explanation:
+.searchable adds a search bar to scrollable views. Search suggestions improve UX—interview use case: Searchable lists (contacts, products).
+53. MatchedGeometryEffect (Shared Element Transition)
+swift
+import SwiftUI
+
+struct Example53_MatchedGeometryEffect: View {
+    @State private var showDetail = false
+    @Namespace private var animationNamespace
+    
+    var body: some View {
+        ZStack {
+            if !showDetail {
+                VStack {
+                    Image(systemName: "star.fill")
+                        .matchedGeometryEffect(id: "star", in: animationNamespace)
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.yellow)
+                    
+                    Button("Show Detail") {
+                        withAnimation {
+                            showDetail = true
+                        }
+                    }
+                }
+            } else {
+                VStack {
+                    Image(systemName: "star.fill")
+                        .matchedGeometryEffect(id: "star", in: animationNamespace)
+                        .frame(width: 200, height: 200)
+                        .foregroundColor(.yellow)
+                    
+                    Button("Hide Detail") {
+                        withAnimation {
+                            showDetail = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+Explanation:
+matchedGeometryEffect creates smooth transitions between shared elements (interview: "How to create hero animations in SwiftUI?"). Uses a namespace to identify shared elements.
+54. Animation (Basic)
+swift
+import SwiftUI
+
+struct Example54_Animation: View {
+    @State private var scale = 1.0
+    @State private var rotation = 0.0
+    @State private var opacity = 1.0
+    
+    var body: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "heart.fill")
+                .font(.largeTitle)
+                .foregroundColor(.red)
+                .scaleEffect(scale)
+                .rotationEffect(.degrees(rotation))
+                .opacity(opacity)
+                .animation(.easeInOut(duration: 0.5), value: scale)
+            
+            HStack(spacing: 20) {
+                Button("Scale") {
+                    scale = scale == 1.0 ? 1.5 : 1.0
+                }
+                
+                Button("Rotate") {
+                    rotation += 90
+                }
+                
+                Button("Fade") {
+                    opacity = opacity == 1.0 ? 0.5 : 1.0
+                }
+            }
+        }
+    }
+}
+Explanation:
+SwiftUI animations are declarative (specify end state, SwiftUI handles the animation). .animation() applies to state changes—interview question: "How to animate view changes in SwiftUI?"
+55. Custom Animation
+swift
+import SwiftUI
+
+struct Example55_CustomAnimation: View {
+    @State private var isAnimating = false
+    
+    var body: some View {
+        Circle()
+            .fill(Color.blue)
+            .frame(width: 100, height: 100)
+            .scaleEffect(isAnimating ? 1.5 : 1.0)
+            .opacity(isAnimating ? 0.5 : 1.0)
+            .animation(
+                // Custom animation: repeat forever, autoreverse
+                Animation.easeInOut(duration: 1)
+                    .repeatForever(autoreverses: true)
+            )
+            .onAppear {
+                isAnimating = true
+            }
+    }
+}
+Explanation:
+Custom animations with repeatForever (infinite loop) and autoreverses (back-and-forth). Interview use case: Loading animations, attention-grabbing UI elements.
+56. Transition (View Insertion/Removal)
+swift
+import SwiftUI
+
+struct Example56_Transition: View {
+    @State private var showView = false
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Button(showView ? "Hide View" : "Show View") {
+                withAnimation {
+                    showView.toggle()
+                }
+            }
+            
+            if showView {
+                Text("Animated View")
+                    .font(.title)
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .trailing),
+                        removal: .opacity
+                    ))
+            }
+        }
+    }
+}
+Explanation:
+transition animates view insertion/removal. .asymmetric uses different animations for insertion/removal—interview: "How to animate adding/removing views?"
+57. Shape (Custom Shapes)
+swift
+import SwiftUI
+
+// Custom Triangle Shape
+struct Triangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
+}
+
+struct Example57_CustomShape: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            // Built-in shape
+            Circle()
+                .fill(Color.blue.opacity(0.5))
+                .frame(width: 100, height: 100)
+            
+            // Custom shape
+            Triangle()
+                .fill(Color.red.opacity(0.5))
+                .frame(width: 100, height: 100)
+            
+            // Shape with stroke
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.green, lineWidth: 5)
+                .frame(width: 100, height: 100)
+        }
+    }
+}
+Explanation:
+Custom Shape conforms to the Shape protocol (implements path(in:)). Interview use case: Custom UI elements (badges, icons, progress indicators).
+58. Path (Custom Drawing)
+swift
+import SwiftUI
+
+struct Example58_Path: View {
+    var body: some View {
+        Path { path in
+            // Draw a heart shape
+            path.move(to: CGPoint(x: 100, y: 100))
+            path.addCurve(
+                to: CGPoint(x: 100, y: 150),
+                control1: CGPoint(x: 50, y: 50),
+                control2: CGPoint(x: 50, y: 150)
+            )
+            path.addCurve(
+                to: CGPoint(x: 100, y: 100),
+                control1: CGPoint(x: 150, y: 150),
+                control2: CGPoint(x: 150, y: 50)
+            )
+        }
+        .fill(Color.red)
+        .frame(width: 200, height: 200)
+    }
+}
+Explanation:
+Path creates custom 2D drawings (lines, curves, shapes). Interview question: "How to draw custom graphics in SwiftUI?" (answer: Path for simple drawings, Shape for reusable shapes).
+59. Canvas (Advanced Drawing)
+swift
+import SwiftUI
+
+struct Example59_Canvas: View {
+    var body: some View {
+        Canvas { context, size in
+            // Draw a rectangle
+            var rectPath = Path(rect: CGRect(x: 20, y: 20, width: size.width - 40, height: size.height - 40))
+            context.stroke(rectPath, with: .color(.blue), lineWidth: 5)
+            
+            // Draw text
+            context.draw(
+                Text("Canvas Drawing")
+                    .font(.title)
+                    .foregroundColor(.red),
+                at: CGPoint(x: size.midX, y: size.midY)
+            )
+            
+            // Draw a circle
+            var circlePath = Path(ellipseIn: CGRect(x: size.midX - 25, y: size.midY + 40, width: 50, height: 50))
+            context.fill(circlePath, with: .color(.green))
+        }
+        .frame(width: 300, height: 300)
+        .background(Color.gray.opacity(0.1))
+    }
+}
+Explanation:
+Canvas (iOS 15+) is for high-performance custom drawing (replaces Core Graphics in many cases). Interview use case: Complex graphics, data visualizations (charts).
+60. Chart (iOS 16+)
+swift
+import SwiftUI
+import Charts
+
+// Data model
+struct SalesData: Identifiable {
+    let id = UUID()
+    let month: String
+    let amount: Double
+}
+
+struct Example60_Chart: View {
+    let salesData = [
+        SalesData(month: "Jan", amount: 1000),
+        SalesData(month: "Feb", amount: 1500),
+        SalesData(month: "Mar", amount: 800),
+        SalesData(month: "Apr", amount: 2000),
+        SalesData(month: "May", amount: 1800)
+    ]
+    
+    var body: some View {
+        VStack {
+            Text("Monthly Sales")
+                .font(.title)
+            
+            Chart(salesData) { data in
+                BarMark(
+                    x: .value("Month", data.month),
+                    y: .value("Sales", data.amount)
+                )
+                .foregroundStyle(by: .value("Month", data.month))
+                
+                LineMark(
+                    x: .value("Month", data.month),
+                    y: .value("Sales", data.amount)
+                )
+                .foregroundStyle(.red)
+                .lineStyle(StrokeStyle(lineWidth: 2))
+            }
+            .chartXAxis {
+                AxisMarks(position: .bottom) { _ in
+                    AxisGridLine()
+                    AxisTick()
+                    AxisLabel()
+                }
+            }
+            .frame(height: 300)
+            .padding()
+        }
+    }
+}
+Explanation:
+SwiftUI Chart (iOS 16+) creates interactive charts (bar, line, pie). Interview use case: Data visualization in business apps, fitness trackers.
+Part 4: Advanced Concepts (61-80)
+61. Custom View Modifier
+swift
+import SwiftUI
+
+// Custom view modifier for button styling
+struct PrimaryButtonModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            .shadow(radius: 5)
+    }
+}
+
+// Extension for easy use
+extension View {
+    func primaryButtonStyle() -> some View {
+        self.modifier(PrimaryButtonModifier())
+    }
+}
+
+struct Example61_CustomModifier: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            Button("Primary Button 1", action: {})
+                .primaryButtonStyle()
+            
+            Button("Primary Button 2", action: {})
+                .primaryButtonStyle()
+        }
+    }
+}
+Explanation:
+Custom view modifiers encapsulate reusable styling (DRY principle). Extending View makes modifiers easy to use—interview question: "How to create reusable view styles in SwiftUI?"
+62. Custom View (Reusable Component)
+swift
+import SwiftUI
+
+// Reusable Card View
+struct CardView: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    
+    // Custom initializer (optional, for clarity)
+    init(title: String, subtitle: String, icon: String) {
+        self.title = title
+        self.subtitle = subtitle
+        self.icon = icon
+    }
+    
+    var body: some View {
+        HStack(spacing: 20) {
+            Image(systemName: icon)
+                .font(.title)
+                .foregroundColor(.blue)
+            
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.headline)
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 2)
+    }
+}
+
+struct Example62_CustomView: View {
+    var body: some View {
+        VStack(spacing: 10) {
+            CardView(title: "Notification", subtitle: "New message received", icon: "bell.fill")
+            CardView(title: "Profile", subtitle: "Edit your profile", icon: "person.fill")
+            CardView(title: "Settings", subtitle: "Adjust app settings", icon: "gear.fill")
+        }
+        .padding()
+        .background
+接着继续生成
+Here’s the continuation of 100 SwiftUI Examples (from where you stopped: Example 63 to 100), all in English + code + short explanation, interview-ready, clean structure.
+SwiftUI 100 Examples — Continued (63–100)
+63. ViewComposition with Multiple Custom Views
+swift
+struct Example63_ViewComposition: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            CardHeader(title: "Home Dashboard")
+            CardRow(icon: "house", text: "Home")
+            CardRow(icon: "gear", text: "Settings")
+        }
+        .padding()
+    }
+}
+
+struct CardHeader: View {
+    let title: String
+    var body: some View {
+        Text(title)
+            .font(.largeTitle.bold())
+    }
+}
+
+struct CardRow: View {
+    let icon: String
+    let text: String
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+            Text(text)
+            Spacer()
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+        .cornerRadius(12)
+    }
+}
+Explanation: Breaks UI into small reusable components. Interviewers love clean view composition and separation of UI parts.
+64. @Binding with Custom Child View
+swift
+struct Example64_BindingCustom: View {
+    @State private var isOn = false
+
+    var body: some View {
+        VStack {
+            Text(isOn ? "Enabled" : "Disabled")
+            CustomToggle(isOn: $isOn)
+        }
+    }
+}
+
+struct CustomToggle: View {
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle("Switch", isOn: $isOn)
+    }
+}
+Explanation: Classic interview question: @State vs @Binding. Parent owns state, child receives binding.
+65. @ObservableObject vs @StateObject
+swift
+class DataModel: ObservableObject {
+    @Published var count = 0
+}
+
+struct Example65_ObservableObject: View {
+    @StateObject var model = DataModel()
+
+    var body: some View {
+        VStack {
+            Text("Count: \(model.count)")
+            ChildObservedView(model: model)
+        }
+    }
+}
+
+struct ChildObservedView: View {
+    @ObservedObject var model: DataModel
+
+    var body: some View {
+        Button("Increase") {
+            model.count += 1
+        }
+    }
+}
+Explanation:
+@StateObject: owns the object
+@ObservedObject: observes it
+Must know for SwiftUI state interviews.
+66. @EnvironmentObject Global State
+swift
+struct Example66_EnvironmentObject: View {
+    var body: some View {
+        ChildLevel1()
+            .environmentObject(UserSession())
+    }
+}
+
+class UserSession: ObservableObject {
+    @Published var username = "SwiftUI Dev"
+}
+
+struct ChildLevel1: View {
+    var body: some View {
+        ChildLevel2()
+    }
+}
+
+struct ChildLevel2: View {
+    @EnvironmentObject var session: UserSession
+
+    var body: some View {
+        Text(session.username)
+    }
+}
+Explanation: Pass state through the environment without drilling props. Used for app-wide state.
+67. @AppStorage Persistence
+swift
+struct Example67_AppStorage: View {
+    @AppStorage("user_name") var userName = ""
+
+    var body: some View {
+        VStack {
+            TextField("Name", text: $userName)
+                .textFieldStyle(.roundedBorder)
+            Text("Saved: \(userName)")
+        }
+        .padding()
+    }
+}
+Explanation: Persists simple data in UserDefaults. Lightweight persistence for settings.
+68. @SceneStorage for Multi-Scene
+swift
+struct Example68_SceneStorage: View {
+    @SceneStorage("selected_tab") var selectedTab = 0
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            Text("Tab 1").tag(0)
+            Text("Tab 2").tag(1)
+        }
+    }
+}
+Explanation: Persists state per scene (iPad multi-window). Good for tab/navigation state.
+69. onChange Modifier
+swift
+struct Example69_OnChange: View {
+    @State var text = ""
+
+    var body: some View {
+        TextField("Type...", text: $text)
+            .onChange(of: text) { newValue in
+                print(newValue)
+            }
+    }
+}
+Explanation: Listen to value changes. Used for validation, search, formatting.
+70. onReceive Combine Publisher
+swift
+import Combine
+
+struct Example70_OnReceive: View {
+    @State var currentTime = Date()
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        Text("\(currentTime)")
+            .onReceive(timer) { time in
+                currentTime = time
+            }
+    }
+}
+Explanation: Reacts to Combine publishers (timers, API, notifications).
+71. Task Modifier Async/Await
+swift
+struct Example71_TaskModifier: View {
+    @State var message = "Loading..."
+
+    var body: some View {
+        Text(message)
+            .task {
+                message = await fetchData()
+            }
+    }
+
+    private func fetchData() async -> String {
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        return "Data loaded"
+    }
+}
+Explanation: Modern async/await in SwiftUI. Automatically cancelled when view disappears.
+72. Refreshable Pull to Refresh
+swift
+struct Example72_Refreshable: View {
+    @State var items = [1,2,3]
+
+    var body: some View {
+        List(items, id: \.self) { item in
+            Text("Item \(item)")
+        }
+        .refreshable {
+            items = [1,2,3,4,5]
+        }
+    }
+}
+Explanation: Native pull-to-refresh for List/ScrollView.
+73. Alert
+swift
+struct Example73_Alert: View {
+    @State var showAlert = false
+
+    var body: some View {
+        Button("Show Alert") {
+            showAlert = true
+        }
+        .alert("Warning", isPresented: $showAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This is an alert message.")
+        }
+    }
+}
+74. ConfirmationDialog (ActionSheet)
+swift
+struct Example74_ConfirmationDialog: View {
+    @State var showDialog = false
+
+    var body: some View {
+        Button("Options") {
+            showDialog = true
+        }
+        .confirmationDialog("Choose", isPresented: $showDialog) {
+            Button("Delete", role: .destructive) {}
+            Button("Cancel", role: .cancel) {}
+        }
+    }
+}
+75. Sheet Modal
+swift
+struct Example75_Sheet: View {
+    @State var showSheet = false
+
+    var body: some View {
+        Button("Open Sheet") {
+            showSheet = true
+        }
+        .sheet(isPresented: $showSheet) {
+            SheetContentView()
+        }
+    }
+}
+
+struct SheetContentView: View {
+    var body: some View {
+        Text("Sheet Content")
+    }
+}
+76. FullScreenCover
+swift
+struct Example76_FullScreenCover: View {
+    @State var showFull = false
+
+    var body: some View {
+        Button("Full Screen") {
+            showFull = true
+        }
+        .fullScreenCover(isPresented: $showFull) {
+            Text("Full Screen View")
+        }
+    }
+}
+77. Popover
+swift
+struct Example77_Popover: View {
+    @State var showPopover = false
+
+    var body: some View {
+        Button("Popover") {
+            showPopover = true
+        }
+        .popover(isPresented: $showPopover) {
+            Text("Popover Content")
+                .padding()
+        }
+    }
+}
+78. Toolbar & ToolbarItem
+swift
+struct Example78_Toolbar: View {
+    var body: some View {
+        NavigationStack {
+            Text("Content")
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Save") {}
+                    }
+                }
+        }
+    }
+}
+79. Searchable
+swift
+struct Example79_Searchable: View {
+    @State var search = ""
+    let list = ["Apple", "Banana", "Orange"]
+
+    var body: some View {
+        NavigationStack {
+            List(list.filter { search.isEmpty || $0.contains(search) }, id: \.self) {
+                Text($0)
+            }
+            .searchable(text: $search)
+        }
+    }
+}
+80. FocusState for TextField
+swift
+struct Example80_FocusState: View {
+    @State var text = ""
+    @FocusState var isFocused: Bool
+
+    var body: some View {
+        TextField("Text", text: $text)
+            .focused($isFocused)
+            .onSubmit {
+                isFocused = false
+            }
+    }
+}
+81. LazyVStack & LazyHStack
+swift
+struct Example81_LazyStack: View {
+    var body: some View {
+        ScrollView {
+            LazyVStack {
+                ForEach(0..<100) { i in
+                    Text("Row \(i)")
+                }
+            }
+        }
+    }
+}
+Explanation: Lazy loading = only render when appearing. Performance for long lists.
+82. LazyVGrid
+swift
+struct Example82_Grid: View {
+    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                ForEach(0..<20) { i in
+                    Color.blue.frame(height: 100)
+                }
+            }
+        }
+    }
+}
+83. ScrollViewReader ScrollTo
+swift
+struct Example83_ScrollReader: View {
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                Button("Go to 50") {
+                    proxy.scrollTo(50, anchor: .top)
+                }
+                ForEach(0..<100, id: \.self) { i in
+                    Text("Row \(i)").id(i)
+                }
+            }
+        }
+    }
+}
+84. List Swipe Actions
+swift
+struct Example84_SwipeActions: View {
+    var body: some View {
+        List {
+            Text("Swipe Me")
+                .swipeActions {
+                    Button("Delete", role: .destructive) {}
+                }
+        }
+    }
+}
+85. List Section & Header
+swift
+struct Example85_ListSection: View {
+    var body: some View {
+        List {
+            Section("Section 1") {
+                Text("A")
+                Text("B")
+            }
+            Section("Section 2") {
+                Text("C")
+            }
+        }
+    }
+}
+86. Context Menu
+swift
+struct Example86_ContextMenu: View {
+    var body: some View {
+        Text("Long Press")
+            .contextMenu {
+                Button("Copy") {}
+                Button("Share") {}
+            }
+    }
+}
+87. ProgressView
+swift
+struct Example87_Progress: View {
+    var body: some View {
+        VStack {
+            ProgressView()
+            ProgressView(value: 0.7)
+        }
+    }
+}
+88. Animation Basic
+swift
+struct Example88_Animation: View {
+    @State var scale = 1.0
+
+    var body: some View {
+        Circle()
+            .scaleEffect(scale)
+            .onTapGesture {
+                scale += 0.2
+            }
+            .animation(.spring(), value: scale)
+    }
+}
+89. Transition
+swift
+struct Example89_Transition: View {
+    @State var show = false
+
+    var body: some View {
+        VStack {
+            if show {
+                Text("Hello")
+                    .transition(.slide.combined(with: .opacity))
+            }
+            Button("Toggle") {
+                withAnimation {
+                    show.toggle()
+                }
+            }
+        }
+    }
+}
+90. MatchedGeometryEffect
+swift
+struct Example90_MatchedGeometry: View {
+    @Namespace var ns
+    @State var expand = false
+
+    var body: some View {
+        if expand {
+            Color.red.frame(width: 200, height: 200)
+                .matchedGeometryEffect(id: "shape", in: ns)
+                .onTapGesture { withAnimation { expand = false } }
+        } else {
+            Color.red.frame(width: 50, height: 50)
+                .matchedGeometryEffect(id: "shape", in: ns)
+                .onTapGesture { withAnimation { expand = true } }
+        }
+    }
+}
+Explanation: Hero animation. Very impressive in interviews.
+91. Custom Shape
+swift
+struct Diamond: Shape {
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        p.move(to: CGPoint(x: rect.midX, y: 0))
+        p.addLine(to: CGPoint(x: 0, y: rect.midY))
+        p.addLine(to: CGPoint(x: rect.midX, y: rect.height))
+        p.addLine(to: CGPoint(x: rect.width, y: rect.midY))
+        p.closeSubpath()
+        return p
+    }
+}
+
+struct Example91_CustomShape: View {
+    var body: some View {
+        Diamond().fill(.blue)
+    }
+}
+92. Custom ViewModifier
+swift
+struct TitleStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.title.bold())
+            .foregroundColor(.indigo)
+    }
+}
+
+extension View {
+    func titleStyle() -> some View {
+        modifier(TitleStyle())
+    }
+}
+
+struct Example92_Modifier: View {
+    var body: some View {
+        Text("Hello").titleStyle()
+    }
+}
+93. Gesture: Tap
+swift
+struct Example93_TapGesture: View {
+    @State var color = Color.blue
+
+    var body: some View {
+        color.frame(width: 100, height: 100)
+            .onTapGesture {
+                color = .red
+            }
+    }
+}
+94. Gesture: Drag
+swift
+struct Example94_DragGesture: View {
+    @State var offset = CGSize.zero
+
+    var body: some View {
+        Circle()
+            .offset(offset)
+            .gesture(
+                DragGesture()
+                    .onChanged { val in
+                        offset = val.translation
+                    }
+            )
+    }
+}
+95. Gesture: Magnification
+swift
+struct Example95_ZoomGesture: View {
+    @State var scale = 1.0
+
+    var body: some View {
+        Circle()
+            .scaleEffect(scale)
+            .gesture(MagnificationGesture()
+                .onChanged { val in scale = val }
+            )
+    }
+}
+96. NavigationStack with Path
+swift
+struct Example96_NavPath: View {
+    @State var navPath = NavigationPath()
+
+    var body: some View {
+        NavigationStack(path: $navPath) {
+            NavigationLink("Go to Detail", value: "Detail")
+                .navigationDestination(for: String.self) { val in
+                    Text(val)
+                }
+        }
+    }
+}
+97. TabView
+swift
+struct Example97_TabView: View {
+    var body: some View {
+        TabView {
+            Text("Home")
+                .tabItem { Label("Home", systemImage: "house") }
+            Text("Profile")
+                .tabItem { Label("Profile", systemImage: "person") }
+        }
+    }
+}
+98. Dark Mode Detection
+swift
+struct Example98_ColorScheme: View {
+    @Environment(\.colorScheme) var scheme
+
+    var body: some View {
+        Text(scheme == .dark ? "Dark Mode" : "Light Mode")
+    }
+}
+99. Safe Area Ignoring
+swift
+struct Example99_IgnoreSafeArea: View {
+    var body: some View {
+        Color.red
+            .ignoresSafeArea()
+    }
+}
+100. Complete SwiftUI Interview Demo
+swift
+struct User: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
+struct Example100_FinalDemo: View {
+    @StateObject var vm = UserViewModel()
+    @State var showSheet = false
+
+    var body: some View {
+        NavigationStack {
+            List(vm.users) { user in
+                Text(user.name)
+            }
+            .navigationTitle("Users")
+            .toolbar {
+                Button("Add") { showSheet = true }
+            }
+            .sheet(isPresented: $showSheet) {
+                Button("Refresh") {
+                    vm.fetchUsers()
+                }
+            }
+            .task {
+                vm.fetchUsers()
+            }
+        }
+    }
+}
+
+class UserViewModel: ObservableObject {
+    @Published var users = [User]()
+
+    func fetchUsers() {
+        users = [
+            User(name: "iOS Dev"),
+            User(name: "Swift Engineer")
+        ]
+    }
+}
+Explanation: Full interview demo: MVVM, List, Navigation, Sheet, task, @StateObject, Identifiable.
+If you want, I can also:
+Make a PDF/cheat sheet version
+Create interview questions & answers based on these 100 examples
+Explain MVVM + SwiftUI + API full project structure
+Just let me know!
+
+
+
+
+
+
+
+Can you provide more complex examples that involve data binding and state management?
+How can I optimize the performance of my SwiftUI app?
+Are there any best practices for organizing and structuring large SwiftUI projects?

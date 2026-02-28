@@ -21,6 +21,7 @@ class SwiftFoundationViewController: UIViewController, UITableViewDelegate, UITa
         ["title": "UI", "vcClassName": "SwiftUIViewController"],
         ["title": "Lifecycle", "vcClassName": "LifecycleStepViewController"],
         ["title": "Lifecycle CompleteVC", "vcClassName": "CompleteVC"],
+        ["title": "Advanced SwiftUI Examples", "vcClassName": "SwiftUIExamplesListViewController"],
         ["title": "UIKitObservable", "vcClassName": "UIKitObservableDemoViewController"],
         ["title": "UIKitLoginObservable", "vcClassName": "UIKitLoginObservableDemoViewController"],
     ]

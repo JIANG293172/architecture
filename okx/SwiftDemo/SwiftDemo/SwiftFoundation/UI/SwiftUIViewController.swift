@@ -15,6 +15,7 @@ class SwiftUIViewController: UIViewController, UITableViewDelegate, UITableViewD
     private let tableView = UITableView()
     private let demoList: [[String: String]] = [
         ["title": "Metal", "vcClassName": "MetalViewController"],
+        ["title": "SwiftUI Demos (From Image)", "vcClassName": "SwiftUIDemosEntryViewController"],
     ]
     
     override func viewDidLoad() {
