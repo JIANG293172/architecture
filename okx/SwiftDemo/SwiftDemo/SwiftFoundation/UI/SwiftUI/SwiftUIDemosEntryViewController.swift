@@ -5,7 +5,7 @@ class SwiftUIDemosEntryViewController: UITableViewController {
     
     private let demos: [(title: String, views: [(String, AnyView)])] = [
         ("BasePractise", [
-            ("Example4_TextFieldView", AnyView(Example26_Enviroment())),
+            ("Example4_TextFieldView", AnyView(Example31_CustomBinding())),
         ]),
         
 //        ("Login Demo", [

@@ -775,6 +775,8 @@ struct Example27_Lifecycle: View {
 }
 Explanation:
 .onAppear/.onDisappear handle view lifecycle events. Interview use case: Load data when a screen appears (replace with network calls) and clean up resources when it disappears.
+
+
 28. onChange (State Change Listener)
 swift
 import SwiftUI
@@ -800,6 +802,8 @@ struct Example28_OnChange: View {
 }
 Explanation:
 .onChange(of:) listens for changes to a value (state/binding). Interview use case: Real-time form validation (e.g., username length, email format).
+
+
 29. @AppStorage (Persistent State)
 swift
 import SwiftUI
@@ -826,38 +830,52 @@ struct Example29_AppStorage: View {
 }
 Explanation:
 @AppStorage is a wrapper for UserDefaults (persists data between app launches). Interview question: "How to persist simple state in SwiftUI?" (answer: @AppStorage for simple values, Core Data for complex data).
+
+
 30. Combine with SwiftUI (Basic)
 swift
+
 import SwiftUI
 import Combine
 
-struct Example30_Combine: View {
-    @State private var searchText = ""
-    @State private var debouncedText = ""
+class SearchViewModel: ObservableObject {
+    @Published var searchText = ""
+    @Published var debouncedText = ""
+    
     private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        $searchText
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] value in
+                self?.debouncedText = value
+                // 在这里执行模拟的 API 调用
+                print("Searching for: \(value)")
+            }
+            .store(in: &cancellables)
+    }
+}
+
+struct Example30_Combine: View {
+    @StateObject private var viewModel = SearchViewModel()
     
     var body: some View {
         VStack(spacing: 20) {
-            TextField("Search (debounced)", text: $searchText)
+            TextField("Search (debounced)", text: $viewModel.searchText)
                 .padding()
                 .border(Color.gray)
             
-            Text("Debounced Text: \(debouncedText)")
-        }
-        .onReceive(
-            // Debounce search text (wait 0.5s after last keystroke)
-            $searchText
-                .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
-                .removeDuplicates()
-        ) { value in
-            debouncedText = value
-            // Simulate API call with debounced text
-            print("Searching for: \(value)")
+            Text("Debounced Text: \(viewModel.debouncedText)")
         }
     }
 }
+
+
 Explanation:
 Combine framework integrates with SwiftUI via .onReceive(). Debouncing search text is a common interview question (prevents excessive API calls).
+
+
 31. Custom Binding
 swift
 import SwiftUI
@@ -885,6 +903,8 @@ struct Example31_CustomBinding: View {
 }
 Explanation:
 Custom bindings add logic to get/set operations. Interview use case: Restrict text input (numeric only, max length).
+
+
 32. ObservableObject with Multiple Published Properties
 swift
 import SwiftUI
