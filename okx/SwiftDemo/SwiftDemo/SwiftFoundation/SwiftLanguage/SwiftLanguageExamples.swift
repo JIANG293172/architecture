@@ -346,6 +346,78 @@ class SwiftLanguageExamples {
          
          */
         
+        /*
+         编译期延迟决议（直到协议被遵循时）
+         // 1. 定义带关联类型的协议（泛型协议）
+         protocol RequestProtocol {
+             // 关联类型 = 协议的泛型占位符，抽象声明“返回数据类型”
+             associatedtype ResponseType // 决议时机：延迟到遵循协议时
+             
+             // 协议方法：使用关联类型
+             func execute() -> ResponseType?
+         }
+
+         // 2. 遵循协议时，决议关联类型（编译期确定具体类型）
+         // 场景1：用户列表请求（ResponseType = [User]）
+         struct UserListRequest: RequestProtocol {
+             // 决议：将抽象的 ResponseType 绑定为具体类型 [User]
+             typealias ResponseType = [User]
+             
+             func execute() -> [User]? {
+                 return [User(name: "张三"), User(name: "李四")]
+             }
+         }
+         
+         
+         
+         编译期静态决议（扩展定义时确定约束）
+         // 基于上面的 RequestProtocol 扩展
+         extension RequestProtocol {
+             // 扩展泛型约束：仅当 ResponseType 是 [Decodable] 数组时，生效此方法
+             func parseArrayData<T: Decodable>(_ data: Data) -> [T]? where ResponseType == [T] {
+                 return try? JSONDecoder().decode([T].self, from: data)
+             }
+         }
+
+         // 使用：UserListRequest 的 ResponseType = [User]（符合 [Decodable]），可调用扩展方法
+         let userRequest = UserListRequest()
+         let data = Data()
+         let users = userRequest.parseArrayData(data) // 编译期决议 T = User，静态确定
+         
+         
+         Both lazy resolution (for protocol associated types) and static resolution (for protocol extension generics) happen at compile time (no runtime overhead—this is a key advantage of Swift generics). The critical difference is when and how the compiler binds concrete types to generic placeholders during compilation:
+         1. Compile-time Lazy Resolution (for associatedtype in protocols)
+         Definition: Lazy resolution means the compiler defers binding concrete types to associatedtype (protocol generics) until a type conforms to the protocol (not when the protocol itself is defined).
+         Why "lazy": When you define a protocol with associatedtype, the compiler only records the "abstract placeholder" (e.g., ResponseType), but has no idea what concrete type it will be. It waits until it encounters a conforming type (e.g., a struct/class that adopts the protocol) to resolve the associatedtype to a specific type (e.g., [User] or Product).
+         
+         // Protocol definition (only abstract placeholder, no resolution yet)
+         protocol RequestProtocol {
+             associatedtype ResponseType // Lazy resolution: no concrete type bound here
+             func execute() -> ResponseType?
+         }
+
+         // Conforming type (resolution happens HERE at compile time)
+         struct UserRequest: RequestProtocol {
+             // Compiler resolves ResponseType = [User] ONLY when processing this conforming type
+             func execute() -> [User]? { return [User()] }
+         }
+         
+         
+         Compile-time Static Resolution (for protocol extension generics)
+         Definition: Static resolution means the compiler locks in generic constraints when the protocol extension is defined (not when it’s called). When you invoke an extension method, the compiler immediately checks if the conforming type meets the pre-defined constraints (no deferral).
+         Why "static": The extension’s generic rules (e.g., where ResponseType: Decodable) are fixed at extension definition time. At call time, the compiler only validates if the conforming type matches these rules—resolution happens instantly (no waiting).
+
+         // Extension definition (static constraints locked in HERE)
+         extension RequestProtocol where ResponseType: Decodable {
+             func decode() -> ResponseType? { /* ... */ }
+         }
+
+         // Call time (static resolution: immediate matching)
+         let userReq = UserRequest()
+         userReq.decode() // Compiler instantly checks: [User] conforms to Decodable → resolution succeeds
+
+         */
+        
         // --- 4. Protocols & Generics ---
         examples.append(SwiftExample(title: "17. Protocol Extensions", explanation: "Provide default implementations for protocols.") {
             PersonGreetable().greet()
