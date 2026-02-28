@@ -4,26 +4,30 @@ import SwiftUI
 class SwiftUIDemosEntryViewController: UITableViewController {
     
     private let demos: [(title: String, views: [(String, AnyView)])] = [
-        ("Login Demo", [
-            ("Combine Login", AnyView(SwiftUILoginDemoView()))
+        ("BasePractise", [
+            ("Example4_TextFieldView", AnyView(Example26_Enviroment())),
         ]),
-        ("Navigation Demo", [
-            ("Standard Navigation", AnyView(SwiftUINavigationDemoView()))
-        ]),
-        ("UIKit Integration", [
-            ("UIKit <-> SwiftUI", AnyView(SwiftUIUIKitIntegrationDemoView()))
-        ]),
-        ("Advanced Demos", [
-            ("User Input", AnyView(UserInputDemoView())),
-            ("Animations", AnyView(AnimationDemoView())),
-            ("ViewBuilder", AnyView(ViewBuilderDemoView())),
-            ("AppStorage", AnyView(AppStorageDemoView()))
-        ]),
-        ("Core SwiftUI Demos", [
-            ("@State Demo", AnyView(StateDemoView())),
-            ("@Binding Demo", AnyView(BindingDemoView())),
-            ("@StateObject vs @ObservedObject", AnyView(ObjectDemoView()))
-        ])
+        
+//        ("Login Demo", [
+//            ("Combine Login", AnyView(SwiftUILoginDemoView()))
+//        ]),
+//        ("Navigation Demo", [
+//            ("Standard Navigation", AnyView(SwiftUINavigationDemoView()))
+//        ]),
+//        ("UIKit Integration", [
+//            ("UIKit <-> SwiftUI", AnyView(SwiftUIUIKitIntegrationDemoView()))
+//        ]),
+//        ("Advanced Demos", [
+//            ("User Input", AnyView(UserInputDemoView())),
+//            ("Animations", AnyView(AnimationDemoView())),
+//            ("ViewBuilder", AnyView(ViewBuilderDemoView())),
+//            ("AppStorage", AnyView(AppStorageDemoView()))
+//        ]),
+//        ("Core SwiftUI Demos", [
+//            ("@State Demo", AnyView(StateDemoView())),
+//            ("@Binding Demo", AnyView(BindingDemoView())),
+//            ("@StateObject vs @ObservedObject", AnyView(ObjectDemoView()))
+//        ]),
     ]
     
     override func viewDidLoad() {

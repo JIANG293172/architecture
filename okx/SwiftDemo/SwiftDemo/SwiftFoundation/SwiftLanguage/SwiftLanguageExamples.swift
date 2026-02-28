@@ -1220,10 +1220,13 @@ class SwiftLanguageExamples {
         
         
         /*
-         An opaque type (marked with the some keyword) is a Swift feature that lets you return a specific, concrete type from a function/method while hiding its exact identity (e.g., some Collection instead of Array<Int>). It preserves the type’s "identity" (e.g., its associated types, methods) but hides the concrete implementation—balancing abstraction and type safety.
+         An opaque type (marked with the some keyword) is a Swift feature that lets you return a specific, concrete type from a function/method while hiding its exact identity (e.g., some Collection instead of Array<Int>).
+         
+         It preserves the type’s "identity" (e.g., its associated types, methods) but hides the concrete implementation—balancing abstraction and type safety.
          In short:
          Concrete type: The function returns one specific type (e.g., Array<Int>), not multiple types.
          Opaque abstraction: Callers only see the protocol/type constraint (e.g., some Collection), not the concrete type.
+         
          2. Why Opaque Types Exist (Core Value)
          Opaque types solve a critical limitation of protocol return types:
          A protocol return type (e.g., func f() -> Collection) allows returning any conforming type (e.g., Array<Int> or Set<Int>) but loses type identity (callers cannot use type-specific features like Array’s random access).
@@ -1250,6 +1253,13 @@ class SwiftLanguageExamples {
                 var mutableArr = arr
                 mutableArr.append(5) // Valid (cast reveals concrete type)
                 print(mutableArr) // [1,2,3,4,5]
+            }
+            
+            
+            // 隐藏具体是 Array 还是 Set，只暴露“遵循 Collection 协议”
+            func getCollection() -> some Collection {
+                return [1, 2, 3] // 可以返回 Array<Int>
+                // 也可以返回 Set([1,2,3])，但同一函数只能返回一种
             }
             
         })
