@@ -772,7 +772,7 @@ class ConcurrencyDemo {
 }
 
 // MARK: - 计算属性和存储属性示例
-class Circle {
+class ExampleCircle {
     // 存储属性
     var radius: Double
     
