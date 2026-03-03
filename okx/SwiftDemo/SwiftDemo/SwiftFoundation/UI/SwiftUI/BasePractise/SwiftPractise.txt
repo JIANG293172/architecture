@@ -2281,6 +2281,8 @@ struct Example71_TaskModifier: View {
     }
 }
 Explanation: Modern async/await in SwiftUI. Automatically cancelled when view disappears.
+
+
 72. Refreshable Pull to Refresh
 swift
 struct Example72_Refreshable: View {
@@ -2296,6 +2298,8 @@ struct Example72_Refreshable: View {
     }
 }
 Explanation: Native pull-to-refresh for List/ScrollView.
+
+
 73. Alert
 swift
 struct Example73_Alert: View {
@@ -2312,6 +2316,8 @@ struct Example73_Alert: View {
         }
     }
 }
+
+
 74. ConfirmationDialog (ActionSheet)
 swift
 struct Example74_ConfirmationDialog: View {
@@ -2327,6 +2333,8 @@ struct Example74_ConfirmationDialog: View {
         }
     }
 }
+
+
 75. Sheet Modal
 swift
 struct Example75_Sheet: View {
@@ -2347,6 +2355,8 @@ struct SheetContentView: View {
         Text("Sheet Content")
     }
 }
+
+
 76. FullScreenCover
 swift
 struct Example76_FullScreenCover: View {
@@ -2361,6 +2371,7 @@ struct Example76_FullScreenCover: View {
         }
     }
 }
+
 77. Popover
 swift
 struct Example77_Popover: View {
@@ -2376,6 +2387,7 @@ struct Example77_Popover: View {
         }
     }
 }
+
 78. Toolbar & ToolbarItem
 swift
 struct Example78_Toolbar: View {
@@ -2390,6 +2402,7 @@ struct Example78_Toolbar: View {
         }
     }
 }
+
 79. Searchable
 swift
 struct Example79_Searchable: View {
@@ -2405,6 +2418,7 @@ struct Example79_Searchable: View {
         }
     }
 }
+
 80. FocusState for TextField
 swift
 struct Example80_FocusState: View {
@@ -2419,6 +2433,7 @@ struct Example80_FocusState: View {
             }
     }
 }
+
 81. LazyVStack & LazyHStack
 swift
 struct Example81_LazyStack: View {
