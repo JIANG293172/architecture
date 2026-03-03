@@ -1321,6 +1321,8 @@ struct Example44_ScrollViewReader: View {
 }
 Explanation:
 ScrollViewReader enables programmatic scrolling to a specific view (via id). Interview use case: Scroll to top/bottom of a list, scroll to a selected item.
+
+
 45. Menu (Context Menu)
 swift
 import SwiftUI
@@ -1362,6 +1364,8 @@ struct Example45_Menu: View {
 }
 Explanation:
 Menu creates dropdown menus; contextMenu adds long-press actions. Interview use case: Action menus for list items, context-specific actions.
+
+
 46. ProgressView (Loading Indicator)
 swift
 import SwiftUI
@@ -1407,6 +1411,8 @@ struct Example46_ProgressView: View {
 }
 Explanation:
 ProgressView supports indeterminate (spinner) and determinate (progress bar) styles. Interview use case: Show loading state for async operations (API calls, file downloads).
+
+
 47. DatePicker
 swift
 import SwiftUI
@@ -1438,6 +1444,8 @@ struct Example47_DatePicker: View {
 }
 Explanation:
 DatePicker selects dates/times with range constraints. .datePickerStyle() changes UI presentation—interview use case: Date selection in forms, booking apps.
+
+
 48. TextField with Form Validation
 swift
 import SwiftUI
@@ -1520,6 +1528,8 @@ Advanced form validation with real-time error messages. Interview key points:
 Input validation (email format, password length)
 Disabled submit button until valid
 User-friendly error messages
+
+
 49. Form (Structured Input)
 swift
 import SwiftUI
@@ -1565,6 +1575,9 @@ struct Example49_Form: View {
 }
 Explanation:
 Form organizes input fields into sections (iOS-style forms). Interview use case: User profile/edit forms with different input types (text, toggle, picker).
+
+
+
 50. DisclosureGroup (Expandable Content)
 swift
 import SwiftUI
@@ -1601,6 +1614,8 @@ struct Example50_DisclosureGroup: View {
 }
 Explanation:
 DisclosureGroup creates expandable/collapsible sections. Interview use case: FAQ screens, settings with advanced options, expandable list items.
+
+
 51. Toolbar (Navigation Bar Buttons)
 swift
 import SwiftUI
@@ -1645,6 +1660,7 @@ struct Example51_Toolbar: View {
 }
 Explanation:
 Toolbar adds buttons to navigation bars/bottom bars. ToolbarItem placement controls where items appear—interview question: "How to add custom buttons to the navigation bar?"
+
 52. Searchable (Search Bar)
 swift
 import SwiftUI

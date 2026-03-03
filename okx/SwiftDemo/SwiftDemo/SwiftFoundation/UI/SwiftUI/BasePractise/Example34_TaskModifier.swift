@@ -23,7 +23,7 @@ struct Example34_TaskModifier: View {
         }
         .task {
             do {
-                let result = try aw·ait fetchData()
+                let result = try await fetchData()
                 data = result
             } catch {
                 self.error = "fail to load data :\(error.localizedDescription)"
