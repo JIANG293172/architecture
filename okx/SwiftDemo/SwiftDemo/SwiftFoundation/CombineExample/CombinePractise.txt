@@ -1,0 +1,1221 @@
+一、基础入门（1-10）：Publisher & Subscriber 核心概念
+示例 1：最简单的 Publisher + Subscriber
+swift
+import Combine
+
+
+
+// 1. 创建最简单的发布者（Just发布单个值后完成）
+let justPublisher = Just("Hello Combine!")
+
+// 2. 订阅发布者（sink是最基础的订阅器）
+let cancellable = justPublisher
+    .sink(
+        receiveCompletion: { completion in
+            print("完成状态：\(completion)")
+        },
+        receiveValue: { value in
+            print("收到值：\(value)")
+        }
+    )
+
+// 输出：
+// 收到值：Hello Combine!
+// 完成状态：finished
+核心说明：Just是最简单的 Publisher，仅发布一个值；sink是最基础的 Subscriber，接收值和完成事件；AnyCancellable用于管理订阅生命周期（防止订阅被提前释放）。
+
+
+示例 2：使用 CurrentValueSubject（有初始值的可变发布者）
+swift
+import Combine
+
+// CurrentValueSubject有初始值，修改value会发送新值
+let counter = CurrentValueSubject<Int, Never>(0)
+
+let cancellable = counter
+    .sink { value in
+        print("当前计数：\(value)")
+    }
+
+// 修改值触发发布
+counter.send(1)
+counter.send(2)
+counter.value = 3 // 等价于send(3)
+
+// 输出：
+// 当前计数：0
+// 当前计数：1
+// 当前计数：2
+// 当前计数：3
+示例 3：使用 PassthroughSubject（无初始值的可变发布者）
+swift
+import Combine
+
+// PassthroughSubject无初始值，仅通过send发送值
+let messageSubject = PassthroughSubject<String, Never>()
+
+let cancellable = messageSubject
+    .sink(
+        receiveCompletion: { _ in print("消息发送完成") },
+        receiveValue: { print("收到消息：\($0)") }
+    )
+
+messageSubject.send("Hello")
+messageSubject.send("World")
+messageSubject.send(completion: .finished)
+
+// 输出：
+// 收到消息：Hello
+// 收到消息：World
+// 消息发送完成
+示例 4：处理错误（Failure 类型）
+swift
+import Combine
+
+// 定义自定义错误类型
+enum NetworkError: Error {
+    case invalidURL
+    case requestFailed
+}
+
+// PassthroughSubject指定Failure类型为NetworkError
+let networkSubject = PassthroughSubject<Data, NetworkError>()
+
+let cancellable = networkSubject
+    .sink(
+        receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                print("请求完成")
+            case .failure(let error):
+                print("请求失败：\(error)")
+            }
+        },
+        receiveValue: { data in
+            print("收到数据：\(data.count)字节")
+        }
+    )
+
+networkSubject.send(Data([1,2,3]))
+networkSubject.send(completion: .failure(.requestFailed))
+
+// 输出：
+// 收到数据：3字节
+// 请求失败：requestFailed
+示例 5：AnyCancellable 管理订阅（防止内存泄漏）
+swift
+import Combine
+
+class ViewModel {
+    // 用Set存储所有订阅，自动管理生命周期
+    private var cancellables = Set<AnyCancellable>()
+    
+    func setupPublisher() {
+        let publisher = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect() // 自动连接Timer
+        
+        publisher
+            .sink { [weak self] time in
+                print("当前时间：\(time)")
+                // 模拟订阅3秒后取消
+                if self?.cancellables.count ?? 0 > 0, time.timeIntervalSince1970 > (Date().timeIntervalSince1970 + 3) {
+                    self?.cancellables.removeAll()
+                }
+            }
+            .store(in: &cancellables) // 将订阅存入Set
+    }
+}
+
+let vm = ViewModel()
+vm.setupPublisher()
+// 输出：每秒打印当前时间，3秒后停止
+示例 6：Empty 发布者（空发布者，仅发送完成 / 失败）
+swift
+import Combine
+
+// 仅发送finished
+let emptyFinished = Empty<Int, Never>()
+emptyFinished.sink(receiveCompletion: { print("Empty完成：\($0)") }, receiveValue: { _ in }).store(in: &cancellables)
+
+// 仅发送failure
+let emptyFailure = Empty<Int, NetworkError>(completeImmediately: true, failure: .invalidURL)
+emptyFailure.sink(receiveCompletion: { completion in
+    if case .failure(let error) = completion {
+        print("Empty失败：\(error)")
+    }
+}, receiveValue: { _ in }).store(in: &cancellables)
+
+// 输出：
+// Empty完成：finished
+// Empty失败：invalidURL
+示例 7：Future 发布者（异步单次操作）
+swift
+import Combine
+
+// Future用于封装异步操作（如网络请求、异步计算）
+func fetchData() -> Future<String, NetworkError> {
+    return Future { promise in
+        // 模拟异步操作
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+            // 成功：promise(.success("数据内容"))
+            // 失败：promise(.failure(.requestFailed))
+            promise(.success("异步获取的数据"))
+        }
+    }
+}
+
+fetchData()
+    .sink(
+        receiveCompletion: { print("请求完成：\($0)") },
+        receiveValue: { print("获取到数据：\($0)") }
+    )
+    .store(in: &cancellables)
+
+// 输出（1秒后）：
+// 获取到数据：异步获取的数据
+// 请求完成：finished
+示例 8：Deferred 发布者（延迟创建发布者）
+swift
+import Combine
+
+// Deferred直到订阅时才创建内部发布者
+let deferredPublisher = Deferred {
+    print("发布者被创建")
+    return Just("Deferred Value")
+}
+
+print("准备订阅")
+deferredPublisher
+    .sink { print("收到值：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 准备订阅
+// 发布者被创建
+// 收到值：Deferred Value
+示例 9：Sequence 发布者（遍历集合）
+swift
+import Combine
+
+// 将数组转换为发布者，逐个发送元素
+let numbers = [1, 2, 3, 4, 5]
+let sequencePublisher = numbers.publisher
+
+sequencePublisher
+    .sink(
+        receiveCompletion: { print("遍历完成：\($0)") },
+        receiveValue: { print("当前数字：\($0)") }
+    )
+    .store(in: &cancellables)
+
+// 输出：
+// 当前数字：1
+// 当前数字：2
+// 当前数字：3
+// 当前数字：4
+// 当前数字：5
+// 遍历完成：finished
+示例 10：Timer 发布者（定时发送）
+swift
+import Combine
+
+// 创建每秒发送一次的Timer发布者
+let timerPublisher = Timer.publish(
+    every: 1,
+    on: .main,        // 运行在主线程
+    in: .common       // 运行在common runloop
+)
+.autoconnect()       // 自动连接（否则需要手动调用connect()）
+
+timerPublisher
+    .prefix(3)       // 只取前3个值
+    .sink { time in
+        print("Timer触发：\(time)")
+    }
+    .store(in: &cancellables)
+
+// 输出：
+// Timer触发：2026-03-04 00:00:00 +0000
+// Timer触发：2026-03-04 00:00:01 +0000
+// Timer触发：2026-03-04 00:00:02 +0000
+二、核心操作符（11-30）：变换、过滤、组合
+示例 11：map（值变换）
+swift
+import Combine
+
+// 将Int转换为String（乘以10后）
+[1,2,3,4].publisher
+    .map { $0 * 10 }
+    .map { "转换后：\($0)" }
+    .sink { print($0) }
+    .store(in: &cancellables)
+
+// 输出：
+// 转换后：10
+// 转换后：20
+// 转换后：30
+// 转换后：40
+示例 12：compactMap（过滤 nil 值并变换）
+swift
+import Combine
+
+// 过滤掉nil，只处理非nil值
+let values: [String?] = ["10", "20", nil, "30", "abc"]
+values.publisher
+    .compactMap { $0.flatMap { Int($0) } } // 先解包，再转换为Int
+    .sink { print("有效数字：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 有效数字：10
+// 有效数字：20
+// 有效数字：30
+示例 13：flatMap（展平发布者）
+swift
+import Combine
+
+// 模拟：每个ID对应一个异步请求发布者
+func fetchUser(id: Int) -> Future<String, Never> {
+    Future { promise in
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+            promise(.success("用户\(id)的信息"))
+        }
+    }
+}
+
+// flatMap将每个Int转换为Future发布者，并展平为单个发布者
+[1,2,3].publisher
+    .flatMap { fetchUser(id: $0) }
+    .sink { print($0) }
+    .store(in: &cancellables)
+
+// 输出（0.5秒后）：
+// 用户1的信息
+// 用户2的信息
+// 用户3的信息
+示例 14：filter（过滤值）
+swift
+import Combine
+
+// 过滤出偶数
+(1...10).publisher
+    .filter { $0 % 2 == 0 }
+    .sink { print("偶数：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 偶数：2
+// 偶数：4
+// 偶数：6
+// 偶数：8
+// 偶数：10
+示例 15：prefix（取前 N 个值）
+swift
+import Combine
+
+// 只取前3个值
+(1...10).publisher
+    .prefix(3)
+    .sink(
+        receiveCompletion: { print("完成：\($0)") },
+        receiveValue: { print("值：\($0)") }
+    )
+    .store(in: &cancellables)
+
+// 输出：
+// 值：1
+// 值：2
+// 值：3
+// 完成：finished
+示例 16：suffix（取后 N 个值）
+swift
+import Combine
+
+// 只取后3个值
+(1...10).publisher
+    .suffix(3)
+    .sink { print("值：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 值：8
+// 值：9
+// 值：10
+示例 17：dropFirst（跳过前 N 个值）
+swift
+import Combine
+
+// 跳过前5个值
+(1...10).publisher
+    .dropFirst(5)
+    .sink { print("跳过前5个后：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 跳过前5个后：6
+// 跳过前5个后：7
+// ... 直到10
+示例 18：dropWhile（条件跳过）
+swift
+import Combine
+
+// 跳过小于5的值，直到第一个≥5的值出现后停止跳过
+(1...10).publisher
+    .dropWhile { $0 < 5 }
+    .sink { print("停止跳过后：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 停止跳过后：5
+// 停止跳过后：6
+// ... 直到10
+示例 19：first/last（取第一个 / 最后一个值）
+swift
+import Combine
+
+// first：取第一个值
+(1...10).publisher
+    .first()
+    .sink { print("第一个值：\($0)") }
+    .store(in: &cancellables)
+
+// last：取最后一个值
+(1...10).publisher
+    .last()
+    .sink { print("最后一个值：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 第一个值：1
+// 最后一个值：10
+示例 20：replaceNil（替换 nil 值）
+swift
+import Combine
+
+// 将nil替换为默认值
+let values: [String?] = ["A", nil, "B", nil, "C"]
+values.publisher
+    .replaceNil(with: "默认值")
+    .sink { print("替换后：\($0!)") } // 解包（已无nil）
+    .store(in: &cancellables)
+
+// 输出：
+// 替换后：A
+// 替换后：默认值
+// 替换后：B
+// 替换后：默认值
+// 替换后：C
+示例 21：replaceEmpty（替换空发布者）
+swift
+import Combine
+
+// 空发布者替换为默认值
+Empty<Int, Never>()
+    .replaceEmpty(with: 0)
+    .sink { print("空发布者替换后：\($0)") }
+    .store(in: &cancellables)
+
+// 非空发布者不受影响
+[1,2,3].publisher
+    .replaceEmpty(with: 0)
+    .sink { print("非空发布者：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 空发布者替换后：0
+// 非空发布者：1
+// 非空发布者：2
+// 非空发布者：3
+示例 22：merge（合并多个发布者）
+swift
+import Combine
+
+let pub1 = PassthroughSubject<Int, Never>()
+let pub2 = PassthroughSubject<Int, Never>()
+
+// 合并两个发布者（按发送顺序输出）
+Publishers.Merge(pub1, pub2)
+    .sink { print("合并后：\($0)") }
+    .store(in: &cancellables)
+
+pub1.send(1)
+pub2.send(2)
+pub1.send(3)
+pub2.send(4)
+
+// 输出：
+// 合并后：1
+// 合并后：2
+// 合并后：3
+// 合并后：4
+示例 23：zip（拉链合并，按位置配对）
+swift
+import Combine
+
+let pub1 = ["A", "B", "C"].publisher
+let pub2 = [1, 2, 3, 4].publisher // 多余的4会被忽略
+
+// 拉链合并：按顺序一一配对，直到其中一个发布者完成
+pub1.zip(pub2)
+    .sink { print("拉链合并：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 拉链合并：("A", 1)
+// 拉链合并：("B", 2)
+// 拉链合并：("C", 3)
+示例 24：combineLatest（合并最新值）
+swift
+import Combine
+
+let username = PassthroughSubject<String, Never>()
+let password = PassthroughSubject<String, Never>()
+
+// 合并两个发布者的最新值（任一发布者发送新值，就触发）
+username.combineLatest(password)
+    .sink { print("用户名：\($0)，密码：\($1)") }
+    .store(in: &cancellables)
+
+username.send("user1")
+password.send("123456")
+username.send("user2") // 触发最新的user2和123456
+password.send("654321") // 触发最新的user2和654321
+
+// 输出：
+// 用户名：user1，密码：123456
+// 用户名：user2，密码：123456
+// 用户名：user2，密码：654321
+示例 25：debounce（防抖，延迟触发）
+swift
+import Combine
+
+// 防抖：常用于搜索框输入（停止输入N秒后才触发）
+let searchText = PassthroughSubject<String, Never>()
+
+searchText
+    .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+    .sink { print("搜索：\($0)") }
+    .store(in: &cancellables)
+
+// 模拟快速输入
+searchText.send("S")
+searchText.send("Sw")
+searchText.send("Swi")
+searchText.send("Swift") // 1秒内无新输入，触发此值
+
+// 输出（1秒后）：
+// 搜索：Swift
+示例 26：throttle（节流，限制触发频率）
+swift
+import Combine
+
+// 节流：指定时间内只触发一次（常用于按钮防重复点击）
+let buttonTap = PassthroughSubject<Void, Never>()
+
+buttonTap
+    .throttle(for: .seconds(2), scheduler: DispatchQueue.main, latest: true)
+    .sink { print("按钮点击生效") }
+    .store(in: &cancellables)
+
+// 模拟1秒内连续点击3次
+buttonTap.send()
+buttonTap.send()
+buttonTap.send()
+
+// 输出：
+// 按钮点击生效（仅一次，2秒内再次点击不会触发）
+示例 27：removeDuplicates（移除重复值）
+swift
+import Combine
+
+// 移除连续重复的值
+[1,1,2,2,2,3,1,1].publisher
+    .removeDuplicates()
+    .sink { print("去重后：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 去重后：1
+// 去重后：2
+// 去重后：3
+// 去重后：1
+示例 28：scan（累积计算）
+swift
+import Combine
+
+// 累积计算：类似reduce，但每一步都输出结果
+(1...5).publisher
+    .scan(0) { total, current in
+        total + current // 累加
+    }
+    .sink { print("累加结果：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 累加结果：0（初始值）
+// 累加结果：1
+// 累加结果：3
+// 累加结果：6
+// 累加结果：10
+// 累加结果：15
+示例 29：reduce（最终累积结果）
+swift
+import Combine
+
+// 最终累积结果（仅在发布者完成后输出一次）
+(1...5).publisher
+    .reduce(0, +) // 等价于 { $0 + $1 }
+    .sink { print("最终累加结果：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 最终累加结果：15
+示例 30：tryMap（可抛出错误的 map）
+swift
+import Combine
+
+// 可抛出错误的变换
+enum ValidationError: Error {
+    case emptyString
+    case tooShort
+}
+
+func validateString(_ str: String) throws -> String {
+    if str.isEmpty {
+        throw ValidationError.emptyString
+    }
+    if str.count < 5 {
+        throw ValidationError.tooShort
+    }
+    return str.uppercased()
+}
+
+["", "abc", "Hello", "Combine"].publisher
+    .tryMap { try validateString($0) }
+    .sink(
+        receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+                print("验证失败：\(error)")
+            } else {
+                print("验证完成")
+            }
+        },
+        receiveValue: { print("验证通过：\($0)") }
+    )
+    .store(in: &cancellables)
+
+// 输出：
+// 验证失败：emptyString
+三、高级应用（31-40）：调度、共享、重试、取消
+示例 31：receive (on:)- 指定接收值的线程
+swift
+import Combine
+
+// 模拟后台线程发布值，主线程接收
+let publisher = PassthroughSubject<Int, Never>()
+
+publisher
+    .subscribe(on: DispatchQueue.global()) // 发布者运行在后台
+    .receive(on: DispatchQueue.main)       // 订阅者在主线程接收
+    .sink {
+        print("收到值：\($0)，线程：\(Thread.current)")
+    }
+    .store(in: &cancellables)
+
+// 后台发送值
+DispatchQueue.global().async {
+    publisher.send(1)
+}
+
+// 输出：
+// 收到值：1，线程：<NSThread: 0x60000380c000>{number = 1, name = main}
+示例 32：subscribe (on:)- 指定发布者运行线程
+swift
+import Combine
+
+// 确保发布者的创建和运行在指定线程
+func heavyComputation() -> AnyPublisher<Int, Never> {
+    return Future<Int, Never> { promise in
+        print("计算线程：\(Thread.current)")
+        promise(.success(100))
+    }
+    .subscribe(on: DispatchQueue.global(qos: .background))
+    .eraseToAnyPublisher()
+}
+
+heavyComputation()
+    .receive(on: DispatchQueue.main)
+    .sink {
+        print("结果：\($0)，接收线程：\(Thread.current)")
+    }
+    .store(in: &cancellables)
+
+// 输出：
+// 计算线程：<NSThread: 0x600003810000>{number = 3, name = (null)}
+// 结果：100，接收线程：<NSThread: 0x60000380c000>{number = 1, name = main}
+示例 33：share（共享发布者，避免重复执行）
+swift
+import Combine
+
+// 不使用share：每个订阅者都会触发一次Future
+let future = Future<Int, Never> { promise in
+    print("执行异步操作")
+    promise(.success(10))
+}
+
+// 第一个订阅
+future.sink { print("订阅1：\($0)") }.store(in: &cancellables)
+// 第二个订阅
+future.sink { print("订阅2：\($0)") }.store(in: &cancellables)
+
+// 使用share：多个订阅者共享同一个发布者
+let sharedFuture = future.share()
+sharedFuture.sink { print("共享订阅1：\($0)") }.store(in: &cancellables)
+sharedFuture.sink { print("共享订阅2：\($0)") }.store(in: &cancellables)
+
+// 输出：
+// 执行异步操作
+// 订阅1：10
+// 执行异步操作
+// 订阅2：10
+// 执行异步操作
+// 共享订阅1：10
+// 共享订阅2：10
+示例 34：multicast（多播发布者，手动控制发送）
+swift
+import Combine
+
+// multicast：通过Subject多播，需手动connect
+let subject = PassthroughSubject<Int, Never>()
+let publisher = (1...3).publisher
+    .multicast(subject: subject)
+
+// 先订阅，再连接
+publisher.sink { print("多播订阅1：\($0)") }.store(in: &cancellables)
+publisher.sink { print("多播订阅2：\($0)") }.store(in: &cancellables)
+
+// 手动连接，触发发布
+publisher.connect().store(in: &cancellables)
+
+// 输出：
+// 多播订阅1：1
+// 多播订阅2：1
+// 多播订阅1：2
+// 多播订阅2：2
+// 多播订阅1：3
+// 多播订阅2：3
+示例 35：retry（失败重试）
+swift
+import Combine
+
+var attempt = 0
+// 模拟失败后重试
+let retryPublisher = Future<Int, NetworkError> { promise in
+    attempt += 1
+    print("尝试次数：\(attempt)")
+    if attempt < 3 {
+        promise(.failure(.requestFailed))
+    } else {
+        promise(.success(100))
+    }
+}
+.retry(2) // 失败后重试2次（总共尝试3次）
+
+retryPublisher
+    .sink(
+        receiveCompletion: { print("完成：\($0)") },
+        receiveValue: { print("成功：\($0)") }
+    )
+    .store(in: &cancellables)
+
+// 输出：
+// 尝试次数：1
+// 尝试次数：2
+// 尝试次数：3
+// 成功：100
+// 完成：finished
+示例 36：timeout（超时处理）
+swift
+import Combine
+
+// 超时：指定时间内未收到值则触发错误
+let slowPublisher = Future<Int, Never> { promise in
+    // 模拟超时操作（延迟3秒）
+    DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+        promise(.success(10))
+    }
+}
+.timeout(.seconds(2), scheduler: DispatchQueue.main, customError: {
+    return NetworkError.requestFailed
+})
+
+slowPublisher
+    .sink(
+        receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+                print("超时错误：\(error)")
+            }
+        },
+        receiveValue: { print("收到值：\($0)") }
+    )
+    .store(in: &cancellables)
+
+// 输出（2秒后）：
+// 超时错误：requestFailed
+示例 37：catch（捕获错误并替换发布者）
+swift
+import Combine
+
+// 捕获错误，替换为备用发布者
+let failingPublisher = PassthroughSubject<Int, NetworkError>()
+let fallbackPublisher = Just(0)
+
+failingPublisher
+    .catch { error in
+        print("捕获错误：\(error)，使用备用值")
+        return fallbackPublisher
+    }
+    .sink { print("最终值：\($0)") }
+    .store(in: &cancellables)
+
+failingPublisher.send(completion: .failure(.requestFailed))
+
+// 输出：
+// 捕获错误：requestFailed，使用备用值
+// 最终值：0
+示例 38：assertNoFailure（断言无错误，调试用）
+swift
+import Combine
+
+// 断言无错误：如果发布者发送错误，会触发断言崩溃（仅Debug模式）
+let publisher = PassthroughSubject<Int, NetworkError>()
+
+publisher
+    .assertNoFailure("发布者不应该发送错误！")
+    .sink { print("值：\($0)") }
+    .store(in: &cancellables)
+
+publisher.send(1)
+// publisher.send(completion: .failure(.requestFailed)) // Debug模式下崩溃
+
+// 输出：
+// 值：1
+示例 39：breakpoint（调试断点）
+swift
+import Combine
+
+// 调试断点：满足条件时触发断点
+(1...10).publisher
+    .breakpoint(
+        receiveSubscription: { _ in false },
+        receiveOutput: { $0 == 5 }, // 值为5时触发断点
+        receiveCompletion: { _ in false }
+    )
+    .sink { print("值：\($0)") }
+    .store(in: &cancellables)
+
+// 输出到5时触发断点，继续后输出：
+// 值：1
+// 值：2
+// 值：3
+// 值：4
+// 值：5
+// ... 直到10
+示例 40：handleEvents（监听生命周期事件）
+swift
+import Combine
+
+// 监听发布者的所有生命周期事件
+Just(10)
+    .handleEvents(
+        receiveSubscription: { subscription in
+            print("收到订阅：\(subscription)")
+        },
+        receiveOutput: { value in
+            print("准备发送值：\(value)")
+        },
+        receiveCompletion: { completion in
+            print("准备完成：\(completion)")
+        },
+        receiveCancel: {
+            print("订阅被取消")
+        },
+        receiveRequest: { demand in
+            print("收到请求：\(demand)")
+        }
+    )
+    .sink { print("最终值：\($0)") }
+    .store(in: &cancellables)
+
+// 输出：
+// 收到订阅：Combine.Just<Swift.Int>.Subscription
+// 收到请求：unlimited
+// 准备发送值：10
+// 最终值：10
+// 准备完成：finished
+四、实战场景（41-50）：结合 iOS/macOS 开发
+示例 41：UIKit 绑定（TextField 输入监听）
+swift
+import Combine
+import UIKit
+
+// 监听UITextField输入
+class ViewController: UIViewController {
+    private var cancellables = Set<AnyCancellable>()
+    let textField = UITextField()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // 监听textField的text变化
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: textField)
+            .compactMap { ($0.object as? UITextField)?.text }
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .sink { text in
+                print("输入内容：\(text ?? "")")
+            }
+            .store(in: &cancellables)
+    }
+}
+示例 42：SwiftUI 绑定（@Published 属性）
+swift
+import Combine
+import SwiftUI
+
+// SwiftUI中使用@Published（Combine与SwiftUI原生集成）
+class UserViewModel: ObservableObject {
+    // @Published自动生成发布者
+    @Published var username: String = ""
+    @Published var password: String = ""
+    
+    // 派生发布者：验证表单是否有效
+    var isFormValid: AnyPublisher<Bool, Never> {
+        $username.combineLatest($password)
+            .map { username, password in
+                !username.isEmpty && !password.isEmpty && password.count >= 6
+            }
+            .eraseToAnyPublisher()
+    }
+}
+
+// SwiftUI视图
+struct LoginView: View {
+    @StateObject var vm = UserViewModel()
+    
+    var body: some View {
+        VStack {
+            TextField("用户名", text: $vm.username)
+            SecureField("密码", text: $vm.password)
+            Button("登录") { }
+                .disabled(!vm.isFormValid)
+        }
+    }
+}
+示例 43：网络请求封装（URLSession + Combine）
+swift
+import Combine
+import Foundation
+
+// 封装网络请求（Combine版）
+class NetworkManager {
+    static let shared = NetworkManager()
+    private var cancellables = Set<AnyCancellable>()
+    
+    func fetch<T: Decodable>(url: URL, type: T.Type) -> AnyPublisher<T, NetworkError> {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .mapError { error -> NetworkError in
+                switch error {
+                case .badURL: return .invalidURL
+                default: return .requestFailed
+                }
+            }
+            .tryMap { data, response in
+                guard let httpResponse = response as? HTTPURLResponse,
+                      200..<300 ~= httpResponse.statusCode else {
+                    throw NetworkError.requestFailed
+                }
+                return data
+            }
+            .decode(type: T.self, decoder: JSONDecoder())
+            .mapError { _ in .requestFailed }
+            .eraseToAnyPublisher()
+    }
+}
+
+// 使用示例
+struct User: Decodable {
+    let id: Int
+    let name: String
+}
+
+// NetworkManager.shared.fetch(url: URL(string: "https://api.example.com/users/1")!, type: User.self)
+//     .sink { completion in
+//         if case .failure(let error) = completion {
+//             print("请求失败：\(error)")
+//         }
+//     } receiveValue: { user in
+//         print("用户：\(user.name)")
+//     }
+//     .store(in: &cancellables)
+示例 44：文件读写（异步操作封装）
+swift
+import Combine
+import Foundation
+
+// Combine封装文件写入
+func writeToFile(data: Data, path: String) -> AnyPublisher<Bool, Error> {
+    Future<Bool, Error> { promise in
+        DispatchQueue.global().async {
+            do {
+                try data.write(to: URL(fileURLWithPath: path))
+                promise(.success(true))
+            } catch {
+                promise(.failure(error))
+            }
+        }
+    }
+    .eraseToAnyPublisher()
+}
+
+// 使用示例
+// let testData = "Hello Combine".data(using: .utf8)!
+// writeToFile(data: testData, path: "/tmp/test.txt")
+//     .sink { completion in
+//         if case .failure(let error) = completion {
+//             print("写入失败：\(error)")
+//         }
+//     } receiveValue: { success in
+//         print("写入成功：\(success)")
+//     }
+//     .store(in: &cancellables)
+示例 45：CoreData 结合 Combine
+swift
+import Combine
+import CoreData
+
+// CoreData查询结果发布者
+class CoreDataManager {
+    let persistentContainer: NSPersistentContainer
+    
+    init() {
+        persistentContainer = NSPersistentContainer(name: "Model")
+        persistentContainer.loadPersistentStores { _, error in
+            if let error = error {
+                print("CoreData加载失败：\(error)")
+            }
+        }
+    }
+    
+    // 监听CoreData数据变化
+    func fetchUsers() -> AnyPublisher<[UserEntity], Error> {
+        let request: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
+        return persistentContainer.viewContext.publisher(for: request)
+            .mapError { $0 as Error }
+            .eraseToAnyPublisher()
+    }
+}
+
+// 假设CoreData实体UserEntity已创建
+// let manager = CoreDataManager()
+// manager.fetchUsers()
+//     .sink { completion in
+//         if case .failure(let error) = completion {
+//             print("查询失败：\(error)")
+//         }
+//     } receiveValue: { users in
+//         print("用户数量：\(users.count)")
+//     }
+//     .store(in: &cancellables)
+示例 46：通知中心监听（Combine 版）
+swift
+import Combine
+import UIKit
+
+// Combine封装通知监听
+class NotificationObserver {
+    private var cancellables = Set<AnyCancellable>()
+    
+    func observeKeyboard() {
+        // 监听键盘弹出
+        NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+            .sink { notification in
+                let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+                print("键盘高度：\(frame?.height ?? 0)")
+            }
+            .store(in: &cancellables)
+        
+        // 监听键盘收起
+        NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+            .sink { _ in
+                print("键盘收起")
+            }
+            .store(in: &cancellables)
+    }
+}
+示例 47：图片缓存（结合 Combine）
+swift
+import Combine
+import UIKit
+
+// 简单的图片缓存
+class ImageCache {
+    private var cache = NSCache<NSString, UIImage>()
+    private var cancellables = Set<AnyCancellable>()
+    
+    // 下载图片并缓存
+    func loadImage(url: URL) -> AnyPublisher<UIImage, Error> {
+        // 先查缓存
+        if let cachedImage = cache.object(forKey: url.absoluteString as NSString) {
+            return Just(cachedImage)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        
+        // 缓存未命中，下载
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map { UIImage(data: $0.data)! }
+            .receive(on: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] image in
+                self?.cache.setObject(image, forKey: url.absoluteString as NSString)
+            })
+            .eraseToAnyPublisher()
+    }
+}
+
+// 使用示例
+// let cache = ImageCache()
+// cache.loadImage(url: URL(string: "https://example.com/image.jpg")!)
+//     .sink { completion in
+//         if case .failure(let error) = completion {
+//             print("图片加载失败：\(error)")
+//         }
+//     } receiveValue: { image in
+//         print("图片加载完成：\(image.size)")
+//     }
+//     .store(in: &cancellables)
+示例 48：状态管理（Redux-like）
+swift
+import Combine
+
+// 简易Redux状态管理
+struct AppState {
+    var count: Int = 0
+}
+
+enum AppAction {
+    case increment
+    case decrement
+}
+
+// Reducer：根据Action更新State
+func reducer(state: inout AppState, action: AppAction) {
+    switch action {
+    case .increment:
+        state.count += 1
+    case .decrement:
+        state.count -= 1
+    }
+}
+
+// Store：管理状态和动作
+class Store: ObservableObject {
+    @Published private(set) var state: AppState
+    private let actionSubject = PassthroughSubject<AppAction, Never>()
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(initialState: AppState) {
+        self.state = initialState
+        
+        // 监听Action，更新State
+        actionSubject
+            .scan(initialState) { currentState, action in
+                var newState = currentState
+                reducer(state: &newState, action: action)
+                return newState
+            }
+            .assign(to: \.state, on: self)
+            .store(in: &cancellables)
+    }
+    
+    // 发送Action
+    func dispatch(action: AppAction) {
+        actionSubject.send(action)
+    }
+}
+
+// 使用示例
+let store = Store(initialState: AppState())
+store.$state
+    .map { "当前计数：\($0.count)" }
+    .sink { print($0) }
+    .store(in: &cancellables)
+
+store.dispatch(action: .increment)
+store.dispatch(action: .increment)
+store.dispatch(action: .decrement)
+
+// 输出：
+// 当前计数：0
+// 当前计数：1
+// 当前计数：2
+// 当前计数：1
+示例 49：合并多个网络请求（并行）
+swift
+import Combine
+import Foundation
+
+// 并行请求多个接口，合并结果
+func fetchAllData() -> AnyPublisher<(User, [Post]), Error> {
+    let userPublisher = NetworkManager.shared.fetch(url: URL(string: "https://api.example.com/user/1")!, type: User.self)
+    let postsPublisher = NetworkManager.shared.fetch(url: URL(string: "https://api.example.com/user/1/posts")!, type: [Post].self)
+    
+    return userPublisher
+        .zip(postsPublisher)
+        .eraseToAnyPublisher()
+}
+
+// 使用示例
+// fetchAllData()
+//     .sink { completion in
+//         if case .failure(let error) = completion {
+//             print("请求失败：\(error)")
+//         }
+//     } receiveValue: { user, posts in
+//         print("用户：\(user.name)，帖子数：\(posts.count)")
+//     }
+//     .store(in: &cancellables)
+示例 50：取消订阅（手动管理生命周期）
+swift
+import Combine
+
+// 手动取消订阅
+class DataLoader {
+    private var cancellable: AnyCancellable?
+    
+    func startLoading() {
+        // 取消之前的订阅（防止重复请求）
+        cancellable?.cancel()
+        
+        cancellable = URLSession.shared.dataTaskPublisher(for: URL(string: "https://example.com")!)
+            .sink(
+                receiveCompletion: { completion in
+                    print("加载完成：\(completion)")
+                    self.cancellable = nil // 完成后清空
+                },
+                receiveValue: { data, response in
+                    print("加载到数据：\(data.count)字节")
+                }
+            )
+    }
+    
+    func cancelLoading() {
+        cancellable?.cancel()
+        print("加载已取消")
+    }
+}
+
+// 使用示例
+// let loader = DataLoader()
+// loader.startLoading()
+// loader.cancelLoading() // 手动取消
+总结
