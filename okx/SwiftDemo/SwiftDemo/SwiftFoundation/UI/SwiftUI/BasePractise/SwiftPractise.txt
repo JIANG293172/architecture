@@ -2454,6 +2454,8 @@ struct Example81_LazyStack: View {
     }
 }
 Explanation: Lazy loading = only render when appearing. Performance for long lists.
+
+
 82. LazyVGrid
 swift
 struct Example82_Grid: View {
@@ -2469,6 +2471,7 @@ struct Example82_Grid: View {
         }
     }
 }
+
 83. ScrollViewReader ScrollTo
 swift
 struct Example83_ScrollReader: View {
@@ -2485,6 +2488,8 @@ struct Example83_ScrollReader: View {
         }
     }
 }
+
+
 84. List Swipe Actions
 swift
 struct Example84_SwipeActions: View {
@@ -2497,6 +2502,8 @@ struct Example84_SwipeActions: View {
         }
     }
 }
+
+
 85. List Section & Header
 swift
 struct Example85_ListSection: View {
@@ -2512,6 +2519,8 @@ struct Example85_ListSection: View {
         }
     }
 }
+
+
 86. Context Menu
 swift
 struct Example86_ContextMenu: View {
@@ -2523,6 +2532,8 @@ struct Example86_ContextMenu: View {
             }
     }
 }
+
+
 87. ProgressView
 swift
 struct Example87_Progress: View {
@@ -2533,6 +2544,7 @@ struct Example87_Progress: View {
         }
     }
 }
+
 88. Animation Basic
 swift
 struct Example88_Animation: View {
@@ -2547,6 +2559,8 @@ struct Example88_Animation: View {
             .animation(.spring(), value: scale)
     }
 }
+
+
 89. Transition
 swift
 struct Example89_Transition: View {
@@ -2566,6 +2580,7 @@ struct Example89_Transition: View {
         }
     }
 }
+
 90. MatchedGeometryEffect
 swift
 struct Example90_MatchedGeometry: View {
@@ -2585,6 +2600,8 @@ struct Example90_MatchedGeometry: View {
     }
 }
 Explanation: Hero animation. Very impressive in interviews.
+
+
 91. Custom Shape
 swift
 struct Diamond: Shape {
@@ -2604,6 +2621,8 @@ struct Example91_CustomShape: View {
         Diamond().fill(.blue)
     }
 }
+
+
 92. Custom ViewModifier
 swift
 struct TitleStyle: ViewModifier {
@@ -2625,6 +2644,8 @@ struct Example92_Modifier: View {
         Text("Hello").titleStyle()
     }
 }
+
+
 93. Gesture: Tap
 swift
 struct Example93_TapGesture: View {
@@ -2637,6 +2658,8 @@ struct Example93_TapGesture: View {
             }
     }
 }
+
+
 94. Gesture: Drag
 swift
 struct Example94_DragGesture: View {
@@ -2653,6 +2676,7 @@ struct Example94_DragGesture: View {
             )
     }
 }
+
 95. Gesture: Magnification
 swift
 struct Example95_ZoomGesture: View {
@@ -2666,6 +2690,7 @@ struct Example95_ZoomGesture: View {
             )
     }
 }
+
 96. NavigationStack with Path
 swift
 struct Example96_NavPath: View {
