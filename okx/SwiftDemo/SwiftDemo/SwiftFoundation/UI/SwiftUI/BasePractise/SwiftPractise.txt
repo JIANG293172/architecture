@@ -2705,6 +2705,8 @@ struct Example96_NavPath: View {
         }
     }
 }
+
+
 97. TabView
 swift
 struct Example97_TabView: View {
@@ -2717,6 +2719,7 @@ struct Example97_TabView: View {
         }
     }
 }
+
 98. Dark Mode Detection
 swift
 struct Example98_ColorScheme: View {
@@ -2726,6 +2729,7 @@ struct Example98_ColorScheme: View {
         Text(scheme == .dark ? "Dark Mode" : "Light Mode")
     }
 }
+
 99. Safe Area Ignoring
 swift
 struct Example99_IgnoreSafeArea: View {
@@ -2734,6 +2738,8 @@ struct Example99_IgnoreSafeArea: View {
             .ignoresSafeArea()
     }
 }
+
+
 100. Complete SwiftUI Interview Demo
 swift
 struct User: Identifiable {
@@ -2776,6 +2782,8 @@ class UserViewModel: ObservableObject {
         ]
     }
 }
+
+
 Explanation: Full interview demo: MVVM, List, Navigation, Sheet, task, @StateObject, Identifiable.
 If you want, I can also:
 Make a PDF/cheat sheet version
