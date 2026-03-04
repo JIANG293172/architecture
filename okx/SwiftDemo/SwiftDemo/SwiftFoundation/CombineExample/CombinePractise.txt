@@ -142,6 +142,8 @@ swift
 import Combine
 
 // 仅发送finished
+
+
 let emptyFinished = Empty<Int, Never>()
 emptyFinished.sink(receiveCompletion: { print("Empty完成：\($0)") }, receiveValue: { _ in }).store(in: &cancellables)
 
@@ -156,6 +158,9 @@ emptyFailure.sink(receiveCompletion: { completion in
 // 输出：
 // Empty完成：finished
 // Empty失败：invalidURL
+
+
+
 示例 7：Future 发布者（异步单次操作）
 swift
 import Combine
@@ -182,6 +187,8 @@ fetchData()
 // 输出（1秒后）：
 // 获取到数据：异步获取的数据
 // 请求完成：finished
+
+
 示例 8：Deferred 发布者（延迟创建发布者）
 swift
 import Combine
@@ -201,6 +208,9 @@ deferredPublisher
 // 准备订阅
 // 发布者被创建
 // 收到值：Deferred Value
+
+
+
 示例 9：Sequence 发布者（遍历集合）
 swift
 import Combine

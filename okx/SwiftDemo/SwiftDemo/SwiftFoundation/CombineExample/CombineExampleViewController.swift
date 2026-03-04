@@ -9,13 +9,19 @@ import Foundation
 import UIKit
 import Combine
 
+enum ExampleNetworkError: Error {
+    case invalidURL
+    case requestFailed
+}
+
 class CombineExampleViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        example4()
+        let example = Example8_Combine()
+        example.test()
     }
     
     func example1() {
@@ -54,14 +60,13 @@ class CombineExampleViewController : UIViewController {
             }
     }
     
+
+    
     func example4() {
         
-        enum NetworkError: Error {
-            case invalidURL
-            case requestFailed
-        }
+
         
-        let networkSubject = PassthroughSubject<Data, NetworkError>()
+        let networkSubject = PassthroughSubject<Data, ExampleNetworkError>()
         let cancellable = networkSubject
             .sink { completion in
                 switch completion {
@@ -81,8 +86,9 @@ class CombineExampleViewController : UIViewController {
         
     }
     
+
+    
     func example5() {
-        
         class ViewModel {
             private var cancellables = Set<AnyCancellable>()
             
@@ -102,6 +108,77 @@ class CombineExampleViewController : UIViewController {
             }
         }
         
+        let vm = ViewModel()
+        vm.setupPublisher()
         
+        RunLoop.main.run(until: Date().addingTimeInterval(5)) // 运行5秒后退出
+    }
+    private var cancellables = Set<AnyCancellable>()
+
+    
+    func example6() {
+        let emptyFinished = Empty<Int, Never>()
+        emptyFinished.sink { completion in
+            print("")
+        } receiveValue: { value in
+            print("\(value)")
+        }.store(in: &cancellables)
+        
+        
+        let emptyFailure = Empty<Int, ExampleNetworkError>(completeImmediately: true)
+        
+        emptyFailure.sink { completion in
+            print("")
+        } receiveValue: { value in
+            print("")
+        }.store(in: &cancellables)
+   
+    }
+}
+
+
+class Example7_Combine {
+    private var cancellables = Set<AnyCancellable>()
+
+    func fetchData() -> Future<String, ExampleNetworkError> {
+        return Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+                
+                promise(.success("异步获取数据"))
+            }
+        }
+    }
+    
+    func test() {
+        
+        fetchData().sink { completion in
+            print("请求完成")
+        } receiveValue: { value in
+            print("收到数据\(value)")
+        }.store(in: &cancellables)
+
+    }
+    
+}
+
+
+class Example8_Combine {
+    private var cancellables = Set<AnyCancellable>()
+
+ 
+    func test() {
+        
+        let deferredPubliser = Deferred {
+            print("发布者被创建")
+            return Just("deferred value")
+        }
+        
+        print("准备订阅")
+        
+        deferredPubliser
+            .sink { value in
+                print("收到 \(value)")
+            }
+            .store(in: &cancellables)
     }
 }
