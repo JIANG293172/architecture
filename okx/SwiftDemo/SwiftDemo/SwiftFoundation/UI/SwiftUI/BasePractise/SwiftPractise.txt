@@ -1807,6 +1807,7 @@ struct Example55_CustomAnimation: View {
 }
 Explanation:
 Custom animations with repeatForever (infinite loop) and autoreverses (back-and-forth). Interview use case: Loading animations, attention-grabbing UI elements.
+
 56. Transition (View Insertion/Removal)
 swift
 import SwiftUI
@@ -1839,6 +1840,7 @@ struct Example56_Transition: View {
 }
 Explanation:
 transition animates view insertion/removal. .asymmetric uses different animations for insertion/removal—interview: "How to animate adding/removing views?"
+
 57. Shape (Custom Shapes)
 swift
 import SwiftUI
@@ -1877,6 +1879,7 @@ struct Example57_CustomShape: View {
 }
 Explanation:
 Custom Shape conforms to the Shape protocol (implements path(in:)). Interview use case: Custom UI elements (badges, icons, progress indicators).
+
 58. Path (Custom Drawing)
 swift
 import SwiftUI
@@ -1932,6 +1935,7 @@ struct Example59_Canvas: View {
 }
 Explanation:
 Canvas (iOS 15+) is for high-performance custom drawing (replaces Core Graphics in many cases). Interview use case: Complex graphics, data visualizations (charts).
+
 60. Chart (iOS 16+)
 swift
 import SwiftUI
@@ -1986,6 +1990,7 @@ struct Example60_Chart: View {
 }
 Explanation:
 SwiftUI Chart (iOS 16+) creates interactive charts (bar, line, pie). Interview use case: Data visualization in business apps, fitness trackers.
+
 Part 4: Advanced Concepts (61-80)
 61. Custom View Modifier
 swift
@@ -2023,6 +2028,8 @@ struct Example61_CustomModifier: View {
 }
 Explanation:
 Custom view modifiers encapsulate reusable styling (DRY principle). Extending View makes modifiers easy to use—interview question: "How to create reusable view styles in SwiftUI?"
+
+
 62. Custom View (Reusable Component)
 swift
 import SwiftUI
@@ -2074,6 +2081,8 @@ struct Example62_CustomView: View {
         .background
 接着继续生成
 Here’s the continuation of 100 SwiftUI Examples (from where you stopped: Example 63 to 100), all in English + code + short explanation, interview-ready, clean structure.
+
+
 SwiftUI 100 Examples — Continued (63–100)
 63. ViewComposition with Multiple Custom Views
 swift
@@ -2111,6 +2120,8 @@ struct CardRow: View {
     }
 }
 Explanation: Breaks UI into small reusable components. Interviewers love clean view composition and separation of UI parts.
+
+
 64. @Binding with Custom Child View
 swift
 struct Example64_BindingCustom: View {
@@ -2132,6 +2143,8 @@ struct CustomToggle: View {
     }
 }
 Explanation: Classic interview question: @State vs @Binding. Parent owns state, child receives binding.
+
+
 65. @ObservableObject vs @StateObject
 swift
 class DataModel: ObservableObject {
@@ -2162,6 +2175,8 @@ Explanation:
 @StateObject: owns the object
 @ObservedObject: observes it
 Must know for SwiftUI state interviews.
+
+
 66. @EnvironmentObject Global State
 swift
 struct Example66_EnvironmentObject: View {
@@ -2189,6 +2204,7 @@ struct ChildLevel2: View {
     }
 }
 Explanation: Pass state through the environment without drilling props. Used for app-wide state.
+
 67. @AppStorage Persistence
 swift
 struct Example67_AppStorage: View {
@@ -2204,6 +2220,7 @@ struct Example67_AppStorage: View {
     }
 }
 Explanation: Persists simple data in UserDefaults. Lightweight persistence for settings.
+
 68. @SceneStorage for Multi-Scene
 swift
 struct Example68_SceneStorage: View {
@@ -2217,6 +2234,8 @@ struct Example68_SceneStorage: View {
     }
 }
 Explanation: Persists state per scene (iPad multi-window). Good for tab/navigation state.
+
+
 69. onChange Modifier
 swift
 struct Example69_OnChange: View {
@@ -2230,6 +2249,8 @@ struct Example69_OnChange: View {
     }
 }
 Explanation: Listen to value changes. Used for validation, search, formatting.
+
+
 70. onReceive Combine Publisher
 swift
 import Combine
@@ -2246,6 +2267,8 @@ struct Example70_OnReceive: View {
     }
 }
 Explanation: Reacts to Combine publishers (timers, API, notifications).
+
+
 71. Task Modifier Async/Await
 swift
 struct Example71_TaskModifier: View {
@@ -2264,6 +2287,8 @@ struct Example71_TaskModifier: View {
     }
 }
 Explanation: Modern async/await in SwiftUI. Automatically cancelled when view disappears.
+
+
 72. Refreshable Pull to Refresh
 swift
 struct Example72_Refreshable: View {
@@ -2279,6 +2304,8 @@ struct Example72_Refreshable: View {
     }
 }
 Explanation: Native pull-to-refresh for List/ScrollView.
+
+
 73. Alert
 swift
 struct Example73_Alert: View {
@@ -2295,6 +2322,8 @@ struct Example73_Alert: View {
         }
     }
 }
+
+
 74. ConfirmationDialog (ActionSheet)
 swift
 struct Example74_ConfirmationDialog: View {
@@ -2310,6 +2339,8 @@ struct Example74_ConfirmationDialog: View {
         }
     }
 }
+
+
 75. Sheet Modal
 swift
 struct Example75_Sheet: View {
@@ -2330,6 +2361,8 @@ struct SheetContentView: View {
         Text("Sheet Content")
     }
 }
+
+
 76. FullScreenCover
 swift
 struct Example76_FullScreenCover: View {
@@ -2344,6 +2377,7 @@ struct Example76_FullScreenCover: View {
         }
     }
 }
+
 77. Popover
 swift
 struct Example77_Popover: View {
@@ -2359,6 +2393,7 @@ struct Example77_Popover: View {
         }
     }
 }
+
 78. Toolbar & ToolbarItem
 swift
 struct Example78_Toolbar: View {
@@ -2373,6 +2408,7 @@ struct Example78_Toolbar: View {
         }
     }
 }
+
 79. Searchable
 swift
 struct Example79_Searchable: View {
@@ -2388,6 +2424,7 @@ struct Example79_Searchable: View {
         }
     }
 }
+
 80. FocusState for TextField
 swift
 struct Example80_FocusState: View {
@@ -2402,6 +2439,7 @@ struct Example80_FocusState: View {
             }
     }
 }
+
 81. LazyVStack & LazyHStack
 swift
 struct Example81_LazyStack: View {
