@@ -47,6 +47,8 @@ counter.value = 3 // 等价于send(3)
 // 当前计数：1
 // 当前计数：2
 // 当前计数：3
+
+
 示例 3：使用 PassthroughSubject（无初始值的可变发布者）
 swift
 import Combine
@@ -68,6 +70,8 @@ messageSubject.send(completion: .finished)
 // 收到消息：Hello
 // 收到消息：World
 // 消息发送完成
+
+
 示例 4：处理错误（Failure 类型）
 swift
 import Combine
@@ -99,6 +103,7 @@ let cancellable = networkSubject
 networkSubject.send(Data([1,2,3]))
 networkSubject.send(completion: .failure(.requestFailed))
 
+
 // 输出：
 // 收到数据：3字节
 // 请求失败：requestFailed
@@ -129,6 +134,9 @@ class ViewModel {
 let vm = ViewModel()
 vm.setupPublisher()
 // 输出：每秒打印当前时间，3秒后停止
+
+
+
 示例 6：Empty 发布者（空发布者，仅发送完成 / 失败）
 swift
 import Combine
