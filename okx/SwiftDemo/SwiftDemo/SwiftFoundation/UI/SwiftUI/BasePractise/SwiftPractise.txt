@@ -1697,6 +1697,8 @@ struct Example52_Searchable: View {
 }
 Explanation:
 .searchable adds a search bar to scrollable views. Search suggestions improve UX—interview use case: Searchable lists (contacts, products).
+
+
 53. MatchedGeometryEffect (Shared Element Transition)
 swift
 import SwiftUI
@@ -1739,6 +1741,8 @@ struct Example53_MatchedGeometryEffect: View {
 }
 Explanation:
 matchedGeometryEffect creates smooth transitions between shared elements (interview: "How to create hero animations in SwiftUI?"). Uses a namespace to identify shared elements.
+
+
 54. Animation (Basic)
 swift
 import SwiftUI
@@ -1776,6 +1780,8 @@ struct Example54_Animation: View {
 }
 Explanation:
 SwiftUI animations are declarative (specify end state, SwiftUI handles the animation). .animation() applies to state changes—interview question: "How to animate view changes in SwiftUI?"
+
+
 55. Custom Animation
 swift
 import SwiftUI
