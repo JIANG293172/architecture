@@ -233,6 +233,9 @@ sequencePublisher
 // 当前数字：4
 // 当前数字：5
 // 遍历完成：finished
+
+
+
 示例 10：Timer 发布者（定时发送）
 swift
 import Combine
@@ -256,6 +259,8 @@ timerPublisher
 // Timer触发：2026-03-04 00:00:00 +0000
 // Timer触发：2026-03-04 00:00:01 +0000
 // Timer触发：2026-03-04 00:00:02 +0000
+
+
 二、核心操作符（11-30）：变换、过滤、组合
 示例 11：map（值变换）
 swift
@@ -273,6 +278,9 @@ import Combine
 // 转换后：20
 // 转换后：30
 // 转换后：40
+
+
+
 示例 12：compactMap（过滤 nil 值并变换）
 swift
 import Combine
@@ -288,6 +296,8 @@ values.publisher
 // 有效数字：10
 // 有效数字：20
 // 有效数字：30
+
+
 示例 13：flatMap（展平发布者）
 swift
 import Combine
@@ -311,6 +321,7 @@ func fetchUser(id: Int) -> Future<String, Never> {
 // 用户1的信息
 // 用户2的信息
 // 用户3的信息
+
 示例 14：filter（过滤值）
 swift
 import Combine
@@ -327,6 +338,8 @@ import Combine
 // 偶数：6
 // 偶数：8
 // 偶数：10
+
+
 示例 15：prefix（取前 N 个值）
 swift
 import Combine
@@ -345,6 +358,7 @@ import Combine
 // 值：2
 // 值：3
 // 完成：finished
+
 示例 16：suffix（取后 N 个值）
 swift
 import Combine
@@ -359,6 +373,8 @@ import Combine
 // 值：8
 // 值：9
 // 值：10
+
+
 示例 17：dropFirst（跳过前 N 个值）
 swift
 import Combine
@@ -373,6 +389,8 @@ import Combine
 // 跳过前5个后：6
 // 跳过前5个后：7
 // ... 直到10
+
+
 示例 18：dropWhile（条件跳过）
 swift
 import Combine
@@ -387,6 +405,8 @@ import Combine
 // 停止跳过后：5
 // 停止跳过后：6
 // ... 直到10
+
+
 示例 19：first/last（取第一个 / 最后一个值）
 swift
 import Combine
@@ -406,6 +426,8 @@ import Combine
 // 输出：
 // 第一个值：1
 // 最后一个值：10
+
+
 示例 20：replaceNil（替换 nil 值）
 swift
 import Combine
@@ -423,6 +445,8 @@ values.publisher
 // 替换后：B
 // 替换后：默认值
 // 替换后：C
+
+
 示例 21：replaceEmpty（替换空发布者）
 swift
 import Combine
@@ -444,6 +468,9 @@ Empty<Int, Never>()
 // 非空发布者：1
 // 非空发布者：2
 // 非空发布者：3
+
+
+
 示例 22：merge（合并多个发布者）
 swift
 import Combine
@@ -466,6 +493,8 @@ pub2.send(4)
 // 合并后：2
 // 合并后：3
 // 合并后：4
+
+
 示例 23：zip（拉链合并，按位置配对）
 swift
 import Combine
@@ -482,6 +511,8 @@ pub1.zip(pub2)
 // 拉链合并：("A", 1)
 // 拉链合并：("B", 2)
 // 拉链合并：("C", 3)
+
+
 示例 24：combineLatest（合并最新值）
 swift
 import Combine
@@ -503,6 +534,8 @@ password.send("654321") // 触发最新的user2和654321
 // 用户名：user1，密码：123456
 // 用户名：user2，密码：123456
 // 用户名：user2，密码：654321
+
+
 示例 25：debounce（防抖，延迟触发）
 swift
 import Combine
@@ -523,6 +556,8 @@ searchText.send("Swift") // 1秒内无新输入，触发此值
 
 // 输出（1秒后）：
 // 搜索：Swift
+
+
 示例 26：throttle（节流，限制触发频率）
 swift
 import Combine
@@ -539,6 +574,8 @@ buttonTap
 buttonTap.send()
 buttonTap.send()
 buttonTap.send()
+
+
 
 // 输出：
 // 按钮点击生效（仅一次，2秒内再次点击不会触发）
