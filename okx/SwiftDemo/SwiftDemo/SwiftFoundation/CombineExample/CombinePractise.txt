@@ -594,6 +594,7 @@ import Combine
 // 去重后：2
 // 去重后：3
 // 去重后：1
+
 示例 28：scan（累积计算）
 swift
 import Combine
@@ -613,6 +614,8 @@ import Combine
 // 累加结果：6
 // 累加结果：10
 // 累加结果：15
+
+
 示例 29：reduce（最终累积结果）
 swift
 import Combine
@@ -661,6 +664,8 @@ func validateString(_ str: String) throws -> String {
 
 // 输出：
 // 验证失败：emptyString
+
+
 三、高级应用（31-40）：调度、共享、重试、取消
 示例 31：receive (on:)- 指定接收值的线程
 swift
@@ -684,6 +689,8 @@ DispatchQueue.global().async {
 
 // 输出：
 // 收到值：1，线程：<NSThread: 0x60000380c000>{number = 1, name = main}
+
+
 示例 32：subscribe (on:)- 指定发布者运行线程
 swift
 import Combine
@@ -708,6 +715,8 @@ heavyComputation()
 // 输出：
 // 计算线程：<NSThread: 0x600003810000>{number = 3, name = (null)}
 // 结果：100，接收线程：<NSThread: 0x60000380c000>{number = 1, name = main}
+
+
 示例 33：share（共享发布者，避免重复执行）
 swift
 import Combine
@@ -736,6 +745,8 @@ sharedFuture.sink { print("共享订阅2：\($0)") }.store(in: &cancellables)
 // 执行异步操作
 // 共享订阅1：10
 // 共享订阅2：10
+
+
 示例 34：multicast（多播发布者，手动控制发送）
 swift
 import Combine
@@ -759,6 +770,8 @@ publisher.connect().store(in: &cancellables)
 // 多播订阅2：2
 // 多播订阅1：3
 // 多播订阅2：3
+
+
 示例 35：retry（失败重试）
 swift
 import Combine
@@ -789,6 +802,8 @@ retryPublisher
 // 尝试次数：3
 // 成功：100
 // 完成：finished
+
+
 示例 36：timeout（超时处理）
 swift
 import Combine
@@ -817,6 +832,8 @@ slowPublisher
 
 // 输出（2秒后）：
 // 超时错误：requestFailed
+
+
 示例 37：catch（捕获错误并替换发布者）
 swift
 import Combine
@@ -838,6 +855,8 @@ failingPublisher.send(completion: .failure(.requestFailed))
 // 输出：
 // 捕获错误：requestFailed，使用备用值
 // 最终值：0
+
+
 示例 38：assertNoFailure（断言无错误，调试用）
 swift
 import Combine
@@ -855,6 +874,8 @@ publisher.send(1)
 
 // 输出：
 // 值：1
+
+
 示例 39：breakpoint（调试断点）
 swift
 import Combine
@@ -876,6 +897,8 @@ import Combine
 // 值：4
 // 值：5
 // ... 直到10
+
+
 示例 40：handleEvents（监听生命周期事件）
 swift
 import Combine
@@ -908,6 +931,8 @@ Just(10)
 // 准备发送值：10
 // 最终值：10
 // 准备完成：finished
+
+
 四、实战场景（41-50）：结合 iOS/macOS 开发
 示例 41：UIKit 绑定（TextField 输入监听）
 swift
@@ -932,6 +957,8 @@ class ViewController: UIViewController {
             .store(in: &cancellables)
     }
 }
+
+
 示例 42：SwiftUI 绑定（@Published 属性）
 swift
 import Combine
@@ -966,6 +993,8 @@ struct LoginView: View {
         }
     }
 }
+
+
 示例 43：网络请求封装（URLSession + Combine）
 swift
 import Combine
@@ -1012,6 +1041,8 @@ struct User: Decodable {
 //         print("用户：\(user.name)")
 //     }
 //     .store(in: &cancellables)
+
+
 示例 44：文件读写（异步操作封装）
 swift
 import Combine
@@ -1043,6 +1074,7 @@ func writeToFile(data: Data, path: String) -> AnyPublisher<Bool, Error> {
 //         print("写入成功：\(success)")
 //     }
 //     .store(in: &cancellables)
+
 示例 45：CoreData 结合 Combine
 swift
 import Combine
@@ -1081,6 +1113,7 @@ class CoreDataManager {
 //         print("用户数量：\(users.count)")
 //     }
 //     .store(in: &cancellables)
+
 示例 46：通知中心监听（Combine 版）
 swift
 import Combine

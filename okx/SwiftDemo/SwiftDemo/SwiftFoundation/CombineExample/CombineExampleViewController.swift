@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Combine
+import SwiftUI
 
 enum ExampleNetworkError: Error {
     case invalidURL
@@ -22,7 +23,7 @@ class CombineExampleViewController : UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        let example = Example26_Conbine()
+        let example = Example40_Combine()
         example.test()
     }
     
@@ -232,17 +233,27 @@ class Example12_Combine {
 class Example13_Combine {
     
     func test() {
+//        [1, 2, 3].publisher
+//            .flatMap { value in
+//                self.fetchUser(id: value)
+//            }
+//            .sink { value in
+//                print("\(value)")
+//            }
+//            .store(in: &cancellables)
+//        
         [1, 2, 3].publisher
-            .flatMap { value in
-                self.fetchUser(id: value)
+            .map {
+                self.fetchUser(id: $0)
             }
             .sink { value in
                 print("\(value)")
+                value.sink {
+                    print("\($0)")
+                }
             }
             .store(in: &cancellables)
     }
-    
-    
     
     func fetchUser(id :Int) -> Future<String, Never> {
         Future { promise in
@@ -251,7 +262,6 @@ class Example13_Combine {
             }
         }
     }
-    
 }
 
 class Example14_Combine {
@@ -456,4 +466,378 @@ class Example26_Conbine {
     
 }
 
+class Example27_Combine {
+    
+    func test() {
+        [1, 1, 2, 2, 3, 1, 1].publisher
+            .removeDuplicates()
+            .sink {
+                print($0)
+            }
+            .store(in: &cancellables)
+    }
+}
 
+class Example28_Combine {
+    func test() {
+        (1...5).publisher
+            .scan(0) { total, current in
+                total + current
+            }
+            .sink {
+                print($0)
+            }
+            .store(in: &cancellables)
+    }
+}
+
+class Example29_Combine {
+    func test() {
+        (1...5).publisher
+            .reduce(0, +)
+            .sink {
+                print($0)
+            }
+            .store(in: &cancellables)
+    }
+}
+
+class Example30__Combine {
+    
+    enum example30_ValidationError: Error {
+        case emptyString
+        case tooShort
+    }
+    
+    func test() {
+        
+        ["", "abc", "hello", "combine"].publisher
+            .tryMap {
+                try self.validateString($0)
+            }
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("失败 \(error)")
+                } else {
+                    print("完成")
+                }
+            } receiveValue: {
+                print("yanzhengwancheng \($0)")
+            }
+            .store(in: &cancellables)
+
+    }
+    
+    
+    func validateString(_ str: String) throws -> String {
+        if str.isEmpty {
+            throw example30_ValidationError.emptyString
+        }
+        
+        if str.count < 5 {
+            throw example30_ValidationError.tooShort
+        }
+        
+        return str.uppercased()
+    }
+    
+}
+
+
+class Example31_Combine {
+    
+    func test() {
+        let publisher = PassthroughSubject<Int, Never>()
+        
+        publisher.subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .sink {
+                print("\($0), \(Thread.current)")
+            }
+            .store(in: &cancellables)
+        
+        
+        DispatchQueue.global().async {
+            publisher.send(1)
+        }
+    }
+}
+
+class Example32_Combine {
+    func heavyComputation() -> AnyPublisher<Int, Never> {
+        return Future<Int, Never> { promise in
+            print("计算线程, \(Thread.current)")
+            promise(.success(100))
+        }
+        .subscribe(on: DispatchQueue.global(qos: .background))
+        .eraseToAnyPublisher()
+    }
+    
+    func test() {
+        heavyComputation()
+            .receive(on: DispatchQueue.main)
+            .sink {
+                print("\($0), \(Thread.current)")
+            }
+            .store(in: &cancellables)
+    }
+}
+
+class Example33_Combine {
+    let future = Future<Int, Never> { promise in
+        print("异步执行")
+        promise(.success(10))
+    }
+    
+    func test() {
+        future.sink {
+            print("操作1 \($0)")
+        }.store(in: &cancellables)
+        
+        future.sink {
+            print("操作2 \($0)")
+        }
+        .store(in: &cancellables)
+        
+        
+        let shareFuture = future.share()
+        shareFuture.sink {
+            print("共享1 \($0)")
+        }
+        .store(in: &cancellables)
+        
+        /// future发送终止了，后续订阅无法收到
+        shareFuture.sink {
+            print("共享2 \($0)")
+        }
+        .store(in: &cancellables)
+        
+        shareFuture.sink {
+            print("共享23\($0)")
+        }
+        .store(in: &cancellables)
+    }
+}
+
+class exapme34_Combine {
+    
+    
+    func test() {
+        let subject = PassthroughSubject<Int, Never>()
+        let publisher = (1...3).publisher
+            .multicast(subject: subject)
+        
+        publisher.sink {
+            print("多1 \($0)")
+        }
+        .store(in: &cancellables)
+        publisher.sink {
+            print("多2 \($0)")
+        }
+        .store(in: &cancellables)
+
+        publisher.connect().store(in: &cancellables)
+        
+    }
+    
+    
+}
+
+var attempt = 0
+
+class Example35_Combine {
+    
+    func test() {
+        let retryPublisher = Future<Int, ExampleNetworkError> { promiss in
+            attempt += 1
+            print("尝试次数 \(attempt)")
+            if attempt < 3 {
+                promiss(.failure(.requestFailed))
+            } else {
+                promiss(.success(100))
+            }
+        }
+        
+        retryPublisher
+            .sink {
+                print("完成 \($0)")
+            } receiveValue: {
+                print("成功 \($0)")
+            }
+            .store(in: &cancellables)
+
+    }
+}
+
+class Example36_Combine {
+    
+    func test() {
+        let slowPublisher = Future<Int, ExampleNetworkError> { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+                promise(.success(10))
+            }
+        }
+            .timeout(.seconds(2), scheduler: DispatchQueue.main) {
+                return ExampleNetworkError.requestFailed
+            }
+        
+        slowPublisher
+            .sink {
+                print("完成 \($0)")
+            } receiveValue: {
+                print("收到 \($0)")
+            }
+            .store(in: &cancellables)
+    }
+}
+
+
+class Example37_Combine {
+    func test() {
+        let failingPublisher = PassthroughSubject<Int, ExampleNetworkError>()
+        let failbackPublisher = Just(0)
+        
+        failingPublisher
+            .catch { error in
+                print("捕获错误")
+                return failbackPublisher
+            }
+            .sink {
+                print("最终值 \($0)")
+            } receiveValue: {
+                print("receiveValue \($0)")
+
+            }
+            .store(in: &cancellables)
+        
+        failingPublisher.send(completion: .failure(.requestFailed))
+        
+    }
+    
+}
+
+
+class Example38_Combine {
+    
+    func test() {
+        let publisher = PassthroughSubject<Int, ExampleNetworkError>()
+        
+        publisher.assertNoFailure("发布则不应该发布错误")
+            .sink {
+                print("值\($0)")
+            }
+            .store(in: &cancellables)
+        
+        publisher.send(1)
+        
+        publisher.send(completion: .failure(.requestFailed))
+        
+    }
+    
+    
+}
+
+
+class Example39_Combine {
+    func test() {
+        (1...10).publisher
+            .breakpoint(
+                receiveSubscription: { _ in false },
+                receiveOutput: { $0 == 5 },
+                receiveCompletion: { _ in false }
+            )
+            .sink {
+                print("值\($0)")
+            }
+            .store(in: &cancellables)
+    }
+}
+
+
+class Example40_Combine {
+    func test() {
+        
+        Just(10)
+            .handleEvents { subscription in
+                print("收到订阅 \(subscription)")
+            } receiveOutput: { value in
+                print("准备发送 \(value)")
+            } receiveCompletion: { completion in
+                print("准备发送 \(completion)")
+            } receiveCancel: {
+                print("取消")
+            } receiveRequest: { demand in
+                print("收到请求 \(demand)")
+            }
+            .sink {
+                print("最终值 \($0)")
+            }
+            .store(in: &cancellables)
+
+    }
+    
+}
+
+
+class Example41_ViewController: UIViewController {
+    
+    private var cancelables = Set<AnyCancellable>()
+    
+    let textField = UITextField()
+    
+    override func viewDidLoad() {
+        self.view.backgroundColor = .white
+        super.viewDidLoad()
+        
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: textField)
+            .compactMap {
+                ($0.object as? UITextField)?.text
+            }
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .sink { text in
+                print("输入内容 \(text ?? "")")
+            }
+            .store(in: &cancelables)
+    }
+}
+
+
+class Example42_Combine_UserViewModel: ObservableObject {
+    @Published var username: String = ""
+    @Published var password: String = ""
+    
+    @Published private(set) var isFormValid: Bool = false
+    
+    init () {
+        Publishers.CombineLatest($username, $password)
+                    .map { username, password in
+                        !username.isEmpty && !password.isEmpty && password.count >= 6
+                    }
+                    .removeDuplicates()
+                    .receive(on: RunLoop.main)
+                    .assign(to: &$isFormValid)
+    }
+
+}
+
+struct Example43_Combine_LoginView: View {
+    
+    @StateObject var vm = Example42_Combine_UserViewModel()
+    
+    var body: some View {
+        VStack {
+            TextField("用户名", text: $vm.username)
+            TextField("密码", text: $vm.password)
+            
+            Button("登录") {}
+                .disabled(!vm.isFormValid)
+        }
+    }
+}
+
+
+class Example44_Combine_NetWorkManager {
+    
+    
+    
+}
