@@ -6,1474 +6,822 @@
 
 核心依赖：import RxSwift + import RxCocoa
 基础入门篇（1-10）
-Example1_RXSwift_Basic_Observable
-swift
+//
+//  RXSwiftFullDemo.swift
+//  SwiftDemo
+//
+//  Created by CQCA202121101_2 on 2026/3/5.
+//
+
+import UIKit
 import RxSwift
 import RxCocoa
+import Alamofire
+import CoreData
 
+class RXSwiftExampleViewController: UIViewController {
+    let disposeBag = DisposeBag()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        
+        // 运行任意 Example 测试
+        let demo = Example1_RXSwift_Basic_Observable()
+        demo.test()
+    }
+}
+
+// MARK: - 1. 基础 Observable 创建
+// 作用：学习 just/of/empty 三种最基础序列创建
+// 场景：快速生成测试数据、固定值数据流
 class Example1_RXSwift_Basic_Observable {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 1. 创建基本可观察序列
-        let observable = Observable<Int>.just(1)
-        observable.subscribe(onNext: { value in
-            print("just: \(value)")
-        }, onCompleted: {
-            print("完成")
-        }).disposed(by: disposeBag)
+        // just：创建单个元素序列
+        Observable<Int>.just(1)
+            .subscribe(onNext: { print("just: \($0)") },
+                       onCompleted: { print("完成") })
+            .disposed(by: disposeBag)
         
-        // 2. 多元素序列
-        Observable.of(1, 2, 3)
+        // of：创建多个元素序列
+        Observable.of(1,2,3)
             .subscribe(onNext: { print("of: \($0)") })
             .disposed(by: disposeBag)
         
-        // 3. 空序列
+        // empty：空序列，只发完成
         Observable<Void>.empty()
             .subscribe(onCompleted: { print("empty 完成") })
             .disposed(by: disposeBag)
     }
 }
 
-
-Example2_RXSwift_Basic_Subject
-swift
-import RxSwift
-import RxCocoa
-
+// MARK: - 2. 三种 Subject 使用
+// 作用：既能发送又能接收事件，是事件中转站
+// 场景：页面传值、状态同步、事件通知
 class Example2_RXSwift_Basic_Subject {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 1. PublishSubject：只发送订阅后的事件
-        let publishSubject = PublishSubject<String>()
-        publishSubject.onNext("A") // 订阅前发送，不会被接收
-        publishSubject.subscribe(onNext: { print("PublishSubject: \($0)") })
-            .disposed(by: disposeBag)
-        publishSubject.onNext("B")
+        // Publish：只收订阅后事件
+        let publish = PublishSubject<String>()
+        publish.onNext("A")
+        publish.subscribe(onNext: { print("Publish: \($0)") })
+        publish.onNext("B")
         
-        // 2. BehaviorSubject：发送最新值+后续事件（需初始值）
-        let behaviorSubject = BehaviorSubject(value: "初始值")
-        behaviorSubject.onNext("C")
-        behaviorSubject.subscribe(onNext: { print("BehaviorSubject: \($0)") })
-            .disposed(by: disposeBag)
-        behaviorSubject.onNext("D")
+        // Behavior：自带最新值
+        let behavior = BehaviorSubject(value: "初始值")
+        behavior.onNext("C")
+        behavior.subscribe(onNext: { print("Behavior: \($0)") })
+        behavior.onNext("D")
         
-        // 3. ReplaySubject：缓存指定数量事件
-        let replaySubject = ReplaySubject<Int>.create(bufferSize: 2)
-        replaySubject.onNext(1)
-        replaySubject.onNext(2)
-        replaySubject.onNext(3)
-        replaySubject.subscribe(onNext: { print("ReplaySubject: \($0)") })
-            .disposed(by: disposeBag) // 输出2、3
+        // Replay：缓存N个历史事件
+        let replay = ReplaySubject<Int>.create(bufferSize: 2)
+        replay.onNext(1)
+        replay.onNext(2)
+        replay.onNext(3)
+        replay.subscribe(onNext: { print("Replay: \($0)") })
     }
 }
-Example3_RXSwift_Basic_Observer
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 3. 自定义观察者 Observer
+// 作用：接收并处理序列事件
+// 场景：自定义事件处理逻辑
 class Example3_RXSwift_Basic_Observer {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 自定义观察者
         let observer = AnyObserver<String> { event in
             switch event {
-            case .next(let value):
-                print("自定义观察者: \(value)")
-            case .error(let error):
-                print("错误: \(error)")
-            case .completed:
-                print("完成")
+            case .next(let v): print("自定义观察: \(v)")
+            case .error(let e): print("错误: \(e)")
+            case .completed: print("完成")
             }
         }
         
-        Observable.of("苹果", "香蕉", "橙子")
-            .subscribe(observer)
-            .disposed(by: disposeBag)
-        
-        // 简化观察者（只关注Next事件）
-        let simpleObserver: (String) -> Void = { print("简化观察者: \($0)") }
-        Observable.just("葡萄")
-            .subscribe(onNext: simpleObserver)
-            .disposed(by: disposeBag)
+        Observable.of("苹果","香蕉").subscribe(observer).disposed(by: disposeBag)
     }
 }
-Example4_RXSwift_Basic_DisposeBag
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 4. 内存管理 DisposeBag
+// 作用：自动销毁订阅，防止内存泄漏
+// 场景：所有 Rx 订阅必须用
 class Example4_RXSwift_Basic_DisposeBag {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 1. 自动释放（DisposeBag）
-        let observable = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
-        observable.subscribe(onNext: { print("定时器: \($0)") })
-            .disposed(by: disposeBag) // 类销毁时自动释放
-        
-        // 2. 手动释放
-        let disposable = Observable.just(100)
-            .subscribe(onNext: { print("手动释放前: \($0)") })
-        disposable.dispose() // 立即释放，后续事件不会接收
+        Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { print("定时器: \($0)") })
+            .disposed(by: disposeBag)
     }
 }
-Example5_RXSwift_Basic_Scheduler
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 5. 线程调度 Scheduler
+// 作用：后台执行、主线程刷新UI
+// 场景：网络请求、耗时计算、IO操作
 class Example5_RXSwift_Basic_Scheduler {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 后台线程执行，主线程接收
-        Observable<Int>.create { observer in
-            print("创建序列线程: \(Thread.current)")
-            observer.onNext(1)
-            observer.onCompleted()
+        Observable<Int>.create { obs in
+            obs.onNext(1)
+            obs.onCompleted()
             return Disposables.create()
         }
-        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background)) // 订阅线程
-        .observe(on: MainScheduler.instance) // 观察线程
-        .subscribe(onNext: { print("接收值: \($0), 线程: \(Thread.current)") })
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { print("主线程接收: \($0)") })
         .disposed(by: disposeBag)
     }
 }
-Example6_RXSwift_Operator_Map
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 6. 转换 map
+// 作用：把每个元素按规则转换
+// 场景：数据类型转换、字段映射
 class Example6_RXSwift_Operator_Map {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Map：转换元素类型
-        Observable.of(1, 2, 3)
-            .map { $0 * 10 } // 1→10, 2→20, 3→30
-            .subscribe(onNext: { print("Map结果: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 嵌套Map：多层转换
-        Observable.of("10", "20", "30")
-            .map { Int($0) }
-            .map { $0 ?? 0 * 2 }
-            .subscribe(onNext: { print("嵌套Map: \($0)") })
+        Observable.of(1,2,3)
+            .map { $0 * 10 }
+            .subscribe(onNext: { print("map: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example7_RXSwift_Operator_Filter
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 7. 过滤 filter
+// 作用：只留下符合条件的元素
+// 场景：数据筛选、去重、条件过滤
 class Example7_RXSwift_Operator_Filter {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Filter：过滤元素
-        Observable.of(1, 2, 3, 4, 5, 6)
-            .filter { $0 % 2 == 0 } // 过滤偶数
+        Observable.of(1,2,3,4,5)
+            .filter { $0 % 2 == 0 }
             .subscribe(onNext: { print("偶数: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // DistinctUntilChanged：过滤连续重复元素
-        Observable.of(1, 1, 2, 2, 3, 1)
-            .distinctUntilChanged() // 输出1,2,3,1
-            .subscribe(onNext: { print("去重: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example8_RXSwift_Operator_CompactMap
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 8. 解包并过滤 nil compactMap
+// 作用：自动去掉nil、解包可选值
+// 场景：字符串转数字、可选数据解析
 class Example8_RXSwift_Operator_CompactMap {
     let disposeBag = DisposeBag()
     
     func test() {
-        // CompactMap：过滤nil并解包
-        Observable.of("10", "20", nil, "30", "abc")
-            .compactMap { Int($0) } // 过滤nil和非数字，输出10,20,30
-            .subscribe(onNext: { print("CompactMap: \($0)") })
+        Observable.of("1","2",nil,"abc")
+            .compactMap { Int($0) }
+            .subscribe(onNext: { print("有效数字: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example9_RXSwift_Operator_FlatMap
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 9. 扁平化序列 flatMap
+// 作用：把序列里的序列展开
+// 场景：嵌套网络请求、多层数据
 class Example9_RXSwift_Operator_FlatMap {
     let disposeBag = DisposeBag()
     
     func test() {
-        // FlatMap：扁平化嵌套序列
-        let subject1 = BehaviorSubject(value: "A")
-        let subject2 = BehaviorSubject(value: "1")
+        let sub = BehaviorSubject(value: "A")
+        let main = BehaviorSubject(value: sub)
         
-        let mainSubject = BehaviorSubject(value: subject1)
-        mainSubject
-            .flatMap { $0 } // 扁平化，接收内部序列事件
-            .subscribe(onNext: { print("FlatMap: \($0)") })
+        main.flatMap { $0 }
+            .subscribe(onNext: { print("flatMap: \($0)") })
             .disposed(by: disposeBag)
-        
-        subject1.onNext("B")
-        mainSubject.onNext(subject2)
-        subject2.onNext("2")
     }
 }
-Example10_RXSwift_Operator_Take
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 10. 取前N个元素 take
+// 作用：限制只接收前N个事件
+// 场景：限制数据条数、限时任务
 class Example10_RXSwift_Operator_Take {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Take：取前N个元素
-        Observable.of(1, 2, 3, 4, 5)
-            .take(3) // 取前3个：1,2,3
-            .subscribe(onNext: { print("Take(3): \($0)") })
+        Observable.of(1,2,3,4,5)
+            .take(3)
+            .subscribe(onNext: { print("take3: \($0)") })
             .disposed(by: disposeBag)
-        
-        // TakeUntil：直到某个条件触发停止
-        let trigger = PublishSubject<Void>()
-        Observable.of(1, 2, 3, 4, 5)
-            .takeUntil(trigger)
-            .subscribe(onNext: { print("TakeUntil: \($0)") })
-            .disposed(by: disposeBag)
-        trigger.onNext(()) // 触发停止，后续元素不接收
     }
 }
-中级进阶篇（11-30）
-Example11_RXSwift_Operator_Zip
-swift
-import RxSwift
-import RxCocoa
 
+
+// MARK: - 11. 按顺序配对 zip
+// 作用：多个序列严格一一对应
+// 场景：多接口按顺序合并
 class Example11_RXSwift_Operator_Zip {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Zip：按序配对（一一对应）
-        let pub1 = Observable.of(1, 2, 3)
-        let pub2 = Observable.of("A", "B")
-        
-        Observable.zip(pub1, pub2) { $0 + " - " + $1 }
-            .subscribe(onNext: { print("Zip结果: \($0)") }) // 1-A, 2-B
+        Observable.zip(Observable.of(1,2), Observable.of("A","B"))
+            .subscribe(onNext: { print("\($0)-\($1)") })
             .disposed(by: disposeBag)
     }
 }
-Example12_RXSwift_Operator_CombineLatest
-swift
-import RxSwift
-import RxCocoa
 
+
+
+// MARK: - 12. 组合最新值 combineLatest
+// 作用：多个输入任意变化，取最新组合
+// 场景：表单验证、多条件筛选
 class Example12_RXSwift_Operator_CombineLatest {
     let disposeBag = DisposeBag()
     
     func test() {
-        // CombineLatest：取最新值组合
-        let pub1 = PublishSubject<Int>()
-        let pub2 = PublishSubject<String>()
-        
-        Observable.combineLatest(pub1, pub2) { $0 + " - " + $1 }
-            .subscribe(onNext: { print("CombineLatest: \($0)") })
+        let a = PublishSubject<Int>()
+        let b = PublishSubject<String>()
+        Observable.combineLatest(a,b)
+            .subscribe(onNext: { print("\($0)-\($1)") })
             .disposed(by: disposeBag)
-        
-        pub1.onNext(1)
-        pub2.onNext("A") // 1-A
-        pub1.onNext(2)   // 2-A
-        pub2.onNext("B") // 2-B
     }
 }
-Example13_RXSwift_Operator_Merge
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 13. 合并序列 merge
+// 作用：多个序列混在一起输出
+// 场景：多按钮统一监听、多事件源
 class Example13_RXSwift_Operator_Merge {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Merge：合并多个序列（按事件发送顺序）
-        let pub1 = PublishSubject<Int>()
-        let pub2 = PublishSubject<Int>()
-        
-        Observable.merge(pub1, pub2)
-            .subscribe(onNext: { print("Merge: \($0)") })
+        let a = PublishSubject<Int>()
+        let b = PublishSubject<Int>()
+        Observable.merge(a,b)
+            .subscribe(onNext: { print("merge: \($0)") })
             .disposed(by: disposeBag)
-        
-        pub1.onNext(1)
-        pub2.onNext(2)
-        pub1.onNext(3) // 输出1,2,3
     }
 }
-Example14_RXSwift_Operator_Concat
-swift
-import RxSwift
-import RxCocoa
 
+
+
+// MARK: - 14. 拼接序列 concat
+// 作用：前一个执行完再执行后一个
+// 场景：按顺序执行任务
 class Example14_RXSwift_Operator_Concat {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Concat：拼接序列（前一个完成后执行后一个）
-        let pub1 = Observable.of(1, 2)
-        let pub2 = Observable.of(3, 4)
-        
-        Observable.concat([pub1, pub2])
-            .subscribe(onNext: { print("Concat: \($0)") }) // 1,2,3,4
+        Observable.concat(Observable.of(1,2), Observable.of(3,4))
+            .subscribe(onNext: { print("concat: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example15_RXSwift_Operator_Debounce
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 15. 防抖 debounce
+// 作用：停止输入一段时间才发送
+// 场景：搜索框、实时输入
 class Example15_RXSwift_Operator_Debounce {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Debounce：防抖（指定时间内无新事件才发送）
-        let searchSubject = PublishSubject<String>()
-        
-        searchSubject
-            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+        let search = PublishSubject<String>()
+        search.debounce(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { print("搜索: \($0)") })
             .disposed(by: disposeBag)
-        
-        // 模拟快速输入
-        searchSubject.onNext("S")
-        searchSubject.onNext("Sw")
-        searchSubject.onNext("Swi")
-        searchSubject.onNext("Swift") // 最终只输出Swift
     }
 }
-Example16_RXSwift_Operator_Throttle
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 16. 节流 throttle
+// 作用：一段时间内只执行一次
+// 场景：按钮防重复点击
 class Example16_RXSwift_Operator_Throttle {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Throttle：节流（指定时间内只发送一次）
-        let buttonClick = PublishSubject<Void>()
-        
-        buttonClick
-            .throttle(.seconds(2), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("按钮点击生效") })
+        let tap = PublishSubject<Void>()
+        tap.throttle(.seconds(2), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { print("点击有效") })
             .disposed(by: disposeBag)
-        
-        // 模拟快速点击
-        buttonClick.onNext(())
-        buttonClick.onNext(()) // 2秒内只生效一次
     }
 }
-Example17_RXSwift_Operator_Reduce
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 17. 聚合计算 reduce
+// 作用：所有元素合并成一个结果
+// 场景：求和、拼接、统计
 class Example17_RXSwift_Operator_Reduce {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Reduce：聚合元素（类似数组reduce）
-        Observable.of(1, 2, 3, 4, 5)
-            .reduce(0, accumulator: +) // 0+1+2+3+4+5=15
-            .subscribe(onNext: { print("Reduce求和: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 自定义聚合
-        Observable.of("A", "B", "C")
-            .reduce("初始值-", accumulator: +)
-            .subscribe(onNext: { print("Reduce拼接: \($0)") }) // 初始值-ABC
+        Observable.of(1,2,3,4,5)
+            .reduce(0, +)
+            .subscribe(onNext: { print("总和: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example18_RXSwift_Operator_Scan
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 18. 逐步累加 scan
+// 作用：每一步都返回当前累计值
+// 场景：进度条、实时累加
 class Example18_RXSwift_Operator_Scan {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Scan：逐步聚合（每一步都返回结果）
-        Observable.of(1, 2, 3, 4)
-            .scan(0, accumulator: +) // 0→1→3→6→10
-            .subscribe(onNext: { print("Scan结果: \($0)") })
+        Observable.of(1,2,3,4)
+            .scan(0, +)
+            .subscribe(onNext: { print("scan: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example19_RXSwift_Operator_Retry
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 19. 失败重试 retry
+// 作用：出错自动重试
+// 场景：网络请求失败重试
 class Example19_RXSwift_Operator_Retry {
     let disposeBag = DisposeBag()
-    var retryCount = 0
+    var count = 0
     
     func test() {
-        // Retry：失败后重试指定次数
-        Observable<Int>.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
-            self.retryCount += 1
-            if self.retryCount < 3 {
-                observer.onError(NSError(domain: "Test", code: 1001))
-            } else {
-                observer.onNext(100)
-                observer.onCompleted()
-            }
+        Observable<Int>.create { [weak self] obs in
+            self?.count += 1
+            if self!.count < 3 { obs.onError(NSError(domain: "", code: 0)) }
+            else { obs.onNext(100); obs.onCompleted() }
             return Disposables.create()
         }
-        .retry(2) // 重试2次（总共执行3次）
-        .subscribe(onNext: { print("Retry成功: \($0)") },
-                   onError: { print("Retry失败: \($0)") })
+        .retry(2)
+        .subscribe(onNext: { print("成功: \($0)") })
         .disposed(by: disposeBag)
     }
 }
-Example20_RXSwift_Operator_CatchError
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 20. 捕获错误 catchError
+// 作用：出错后给默认值，不崩溃
+// 场景：接口异常兜底、容错处理
 class Example20_RXSwift_Operator_CatchError {
     let disposeBag = DisposeBag()
     
     func test() {
-        // CatchError：捕获错误并返回备用序列
-        let errorPub = Observable<Int>.error(NSError(domain: "Test", code: 1001))
-        
-        errorPub
-            .catch { error in
-                print("捕获错误: \(error)")
-                return Observable.just(0) // 备用值
-            }
-            .subscribe(onNext: { print("Catch后值: \($0)") })
+        Observable<Int>.error(NSError(domain: "", code: 0))
+            .catchError { _ in .just(0) }
+            .subscribe(onNext: { print("兜底值: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example21_RXSwift_UI_TextField
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+
+// MARK: - 21. UITextField 绑定
+// 作用：监听输入、文字绑定、表单验证
+// 场景：登录、注册、搜索
 class Example21_RXSwift_UI_TextField {
     let disposeBag = DisposeBag()
-    let textField = UITextField()
+    let tf = UITextField()
     
     func test() {
-        // 监听TextField输入
-        textField.rx.text
-            .orEmpty // 解包nil为""
-            .subscribe(onNext: { print("TextField输入: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 绑定值到TextField
-        Observable.just("默认文字")
-            .bind(to: textField.rx.text)
-            .disposed(by: disposeBag)
-        
-        // 输入验证（非空）
-        textField.rx.text.orEmpty
-            .map { !$0.isEmpty }
-            .bind(to: UIButton().rx.isEnabled)
+        tf.rx.text.orEmpty
+            .subscribe(onNext: { print("输入: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example22_RXSwift_UI_Button
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+// MARK: - 22. UIButton 点击绑定
+// 作用：监听点击、防抖、状态绑定
+// 场景：所有按钮事件
 class Example22_RXSwift_UI_Button {
     let disposeBag = DisposeBag()
-    let button = UIButton(type: .system)
+    let btn = UIButton()
     
     func test() {
-        // 监听按钮点击
-        button.rx.tap
-            .subscribe(onNext: { print("按钮被点击") })
-            .disposed(by: disposeBag)
-        
-        // 绑定按钮是否可用
-        Observable.just(true)
-            .bind(to: button.rx.isEnabled)
-            .disposed(by: disposeBag)
-        
-        // 防抖点击
-        button.rx.tap
-            .throttle(.seconds(1), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("防抖点击生效") })
+        btn.rx.tap
+            .subscribe(onNext: { print("点击") })
             .disposed(by: disposeBag)
     }
 }
-Example23_RXSwift_UI_TableView
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+// MARK: - 23. UITableView 绑定
+// 作用：自动数据源、自动刷新、选中监听
+// 场景：所有列表页面
 class Example23_RXSwift_UI_TableView: UIViewController {
     let disposeBag = DisposeBag()
-    let tableView = UITableView()
-    let data = Observable.just(["苹果", "香蕉", "橙子", "葡萄"])
+    let tv = UITableView()
+    let data = Observable.just(["苹果","香蕉"])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
-    }
-    
-    func setupTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        view.addSubview(tableView)
-        tableView.frame = view.bounds
-        
-        // 绑定数据源
-        data
-            .bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, text, cell in
-                cell.textLabel?.text = text
-            }
-            .disposed(by: disposeBag)
-        
-        // 监听选中事件
-        tableView.rx.modelSelected(String.self)
-            .subscribe(onNext: { print("选中: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 监听取消选中
-        tableView.rx.modelDeselected(String.self)
-            .subscribe(onNext: { print("取消选中: \($0)") })
-            .disposed(by: disposeBag)
+        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        data.bind(to: tv.rx.items(cellIdentifier: "cell")) { _,t,c in
+            c.textLabel?.text = t
+        }.disposed(by: disposeBag)
     }
 }
-Example24_RXSwift_UI_CollectionView
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+
+
+// MARK: - 24. UICollectionView 绑定
+// 作用：网格列表自动绑定
 class Example24_RXSwift_UI_CollectionView: UIViewController {
     let disposeBag = DisposeBag()
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    let data = Observable.just(["1", "2", "3", "4", "5"])
+    let cv = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    let data = Observable.just(["1","2"])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollectionView()
-    }
-    
-    func setupCollectionView() {
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        view.addSubview(collectionView)
-        collectionView.frame = view.bounds
-        
-        // 绑定数据源
-        data
-            .bind(to: collectionView.rx.items(cellIdentifier: "cell")) { row, text, cell in
-                cell.backgroundColor = .lightGray
-                cell.textLabel?.text = text
-            }
-            .disposed(by: disposeBag)
-        
-        // 监听选中
-        collectionView.rx.modelSelected(String.self)
-            .subscribe(onNext: { print("CollectionView选中: \($0)") })
-            .disposed(by: disposeBag)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        data.bind(to: cv.rx.items(cellIdentifier: "cell")) { _,_,c in
+            c.backgroundColor = .lightGray
+        }.disposed(by: disposeBag)
     }
 }
-Example25_RXSwift_UI_SegmentedControl
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+
+
+// MARK: - 25. UISegmentedControl 绑定
+// 作用：分段选择监听、状态绑定
 class Example25_RXSwift_UI_SegmentedControl {
     let disposeBag = DisposeBag()
-    let segmentedControl = UISegmentedControl(items: ["首页", "分类", "我的"])
+    let seg = UISegmentedControl(items: ["首页","我的"])
     
     func test() {
-        // 监听选中索引
-        segmentedControl.rx.selectedSegmentIndex
-            .subscribe(onNext: { print("选中分段: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 绑定选中索引
-        Observable.just(1)
-            .bind(to: segmentedControl.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
-        
-        // 转换为选中标题
-        segmentedControl.rx.selectedSegmentIndex
-            .map { self.segmentedControl.titleForSegment(at: $0) ?? "" }
-            .subscribe(onNext: { print("选中标题: \($0)") })
+        seg.rx.selectedSegmentIndex
+            .subscribe(onNext: { print("选中: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example26_RXSwift_UI_Switch
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+// MARK: - 26. UISwitch 绑定
+// 作用：开关状态监听、数据绑定
 class Example26_RXSwift_UI_Switch {
     let disposeBag = DisposeBag()
-    let switchControl = UISwitch()
+    let sw = UISwitch()
     
     func test() {
-        // 监听开关状态
-        switchControl.rx.isOn
-            .subscribe(onNext: { print("开关状态: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 绑定开关状态
-        Observable.just(true)
-            .bind(to: switchControl.rx.isOn)
-            .disposed(by: disposeBag)
-        
-        // 状态转换
-        switchControl.rx.isOn
-            .map { $0 ? "开启" : "关闭" }
-            .subscribe(onNext: { print("开关文字: \($0)") })
+        sw.rx.isOn
+            .subscribe(onNext: { print("开关: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example27_RXSwift_UI_Slider
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
-class Example28_RXSwift_UI_Slider { // 编号笔误，实际是27
+// MARK: - 27. UISlider 绑定
+// 作用：滑块值监听、进度绑定
+class Example27_RXSwift_UI_Slider {
     let disposeBag = DisposeBag()
     let slider = UISlider()
     
     func test() {
-        // 监听滑块值变化
         slider.rx.value
-            .subscribe(onNext: { print("滑块值: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 绑定滑块值
-        Observable.just(0.5)
-            .bind(to: slider.rx.value)
-            .disposed(by: disposeBag)
-        
-        // 节流监听（避免频繁触发）
-        slider.rx.value
-            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("节流滑块值: \($0)") })
+            .subscribe(onNext: { print("值: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example28_RXSwift_UI_Alert
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
-class Example29_RXSwift_UI_Alert: UIViewController { // 编号笔误，实际是28
+// MARK: - 28. UIAlertController 绑定
+// 作用：响应式弹窗按钮点击
+class Example28_RXSwift_UI_Alert: UIViewController {
     let disposeBag = DisposeBag()
     
-    func testShowAlert() {
-        // 点击按钮弹出Alert
-        let button = UIButton(type: .system)
-        button.setTitle("弹出Alert", for: .normal)
-        view.addSubview(button)
-        button.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
-        
-        button.rx.tap
-            .flatMap { [weak self] _ -> Observable<UIAlertAction> in
-                let alert = UIAlertController(title: "提示", message: "RXSwift Alert", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "确定", style: .default))
-                alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+    func test() {
+        let btn = UIButton()
+        btn.rx.tap
+            .flatMapLatest { [weak self] _ -> Observable<UIAlertAction> in
+                let alert = UIAlertController(title: "提示", message: "", preferredStyle: .alert)
+                alert.addAction(.init(title: "确定", style: .default))
                 self?.present(alert, animated: true)
-                return alert.rx.action // 监听Alert点击
+                return alert.rx.action
             }
-            .subscribe(onNext: { action in
-                print("Alert点击: \(action.title ?? "")")
-            })
+            .subscribe(onNext: { print("点击: \($0.title ?? "")") })
             .disposed(by: disposeBag)
     }
 }
 
-// 扩展UIAlertController支持RX
 extension Reactive where Base: UIAlertController {
     var action: Observable<UIAlertAction> {
-        return Observable.create { observer in
-            let proxy = AlertProxy(alert: self.base, observer: observer)
-            return Disposables.create { proxy.stop() }
+        Observable.create { obs in
+            Disposables.create()
         }
     }
 }
 
-class AlertProxy: NSObject {
-    weak var alert: UIAlertController?
-    var observer: AnyObserver<UIAlertAction>?
-    
-    init(alert: UIAlertController, observer: AnyObserver<UIAlertAction>) {
-        self.alert = alert
-        self.observer = observer
-        super.init()
-        swizzleAlertAction()
-    }
-    
-    func stop() {
-        observer = nil
-        alert = nil
-    }
-    
-    private func swizzleAlertAction() {
-        // 简化实现：实际需通过Method Swizzling监听UIAlertAction点击
-    }
-}
-Example29_RXSwift_Network_Request
-swift
-import RxSwift
-import RxCocoa
-import Alamofire
-
-class Example30_RXSwift_Network_Request { // 编号笔误，实际是29
+// MARK: - 29. 网络请求封装
+// 作用：Rx + Alamofire 网络请求
+// 场景：所有接口请求
+class Example29_RXSwift_Network_Request {
     let disposeBag = DisposeBag()
     
-    // 网络请求封装
-    func requestData(url: String) -> Observable<Data> {
-        return Observable.create { observer in
-            AF.request(url)
-                .responseData { response in
-                    switch response.result {
-                    case .success(let data):
-                        observer.onNext(data)
-                        observer.onCompleted()
-                    case .failure(let error):
-                        observer.onError(error)
-                    }
+    func request(url: String) -> Observable<Data> {
+        Observable.create { obs in
+            AF.request(url).responseData { res in
+                switch res.result {
+                case .success(let d): obs.onNext(d); obs.onCompleted()
+                case .failure(let e): obs.onError(e)
                 }
-            return Disposables.create {
-                // 取消请求
             }
+            return Disposables.create()
         }
     }
-    
-    func test() {
-        // 发起请求
-        requestData(url: "https://api.example.com/data")
-            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { data in
-                print("请求成功，数据长度: \(data.count)")
-            }, onError: { error in
-                print("请求失败: \(error)")
-            })
-            .disposed(by: disposeBag)
-    }
 }
-Example30_RXSwift_Database_CoreData
-swift
-import RxSwift
-import RxCocoa
-import CoreData
 
-class Example31_RXSwift_Database_CoreData { // 编号笔误，实际是30
+// MARK: - 30. CoreData 数据库
+// 作用：本地存储 Rx 封装
+class Example30_RXSwift_Database_CoreData {
     let disposeBag = DisposeBag()
-    let persistentContainer: NSPersistentContainer
+    let container = NSPersistentContainer(name: "Model")
     
-    init() {
-        persistentContainer = NSPersistentContainer(name: "Model")
-        persistentContainer.loadPersistentStores { _, error in
-            if let error = error {
-                print("CoreData加载失败: \(error)")
-            }
-        }
-    }
-    
-    // 保存数据
-    func saveData(name: String) -> Observable<Bool> {
-        return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
-            let context = self.persistentContainer.viewContext
-            let entity = NSEntityDescription.insertNewObject(forEntityName: "User", into: context)
-            entity.setValue(name, forKey: "name")
-            
-            do {
-                try context.save()
-                observer.onNext(true)
-                observer.onCompleted()
-            } catch {
-                observer.onError(error)
-            }
+    func save(name: String) -> Observable<Bool> {
+        Observable.create { obs in
+            let ctx = container.viewContext
+            let ent = NSEntityDescription.insertNewObject(forEntityName: "User", into: ctx)
+            ent.setValue(name, forKey: "name")
+            try? ctx.save()
+            obs.onNext(true)
+            obs.onCompleted()
             return Disposables.create()
         }
-    }
-    
-    // 查询数据
-    func fetchData() -> Observable<[String]> {
-        return Observable.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
-            let context = self.persistentContainer.viewContext
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "User")
-            
-            do {
-                let result = try context.fetch(fetchRequest) as! [NSManagedObject]
-                let names = result.compactMap { $0.value(forKey: "name") as? String }
-                observer.onNext(names)
-                observer.onCompleted()
-            } catch {
-                observer.onError(error)
-            }
-            return Disposables.create()
-        }
-    }
-    
-    func test() {
-        // 保存+查询
-        saveData(name: "RXSwift")
-            .flatMap { _ in self.fetchData() }
-            .subscribe(onNext: { names in
-                print("查询结果: \(names)")
-            }, onError: { error in
-                print("操作失败: \(error)")
-            })
-            .disposed(by: disposeBag)
     }
 }
-高级实战篇（31-50）
-Example31_RXSwift_Higher_Order_Share
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 31. 共享序列 share
+// 作用：多个订阅只执行一次序列
+// 场景：网络请求共享，避免多次请求
 class Example31_RXSwift_Higher_Order_Share {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Share：共享序列（避免重复执行）
-        let pub = Observable<Int>.create { observer in
-            print("序列创建（仅执行一次）")
-            observer.onNext(100)
-            observer.onCompleted()
-            return Disposables.create()
-        }.share()
-        
-        // 多个订阅共享同一个序列
-        pub.subscribe(onNext: { print("订阅1: \($0)") })
-            .disposed(by: disposeBag)
-        pub.subscribe(onNext: { print("订阅2: \($0)") })
-            .disposed(by: disposeBag)
+        let ob = Observable.just(100).share()
+        ob.subscribe(onNext: { print("订阅1: \($0)") }).disposed(by: disposeBag)
+        ob.subscribe(onNext: { print("订阅2: \($0)") }).disposed(by: disposeBag)
     }
 }
-Example32_RXSwift_Higher_Order_Multicast
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 32. 多播 multicast
+// 作用：手动控制序列开始时机
 class Example32_RXSwift_Higher_Order_Multicast {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Multicast：多播（通过Subject分发）
-        let subject = PublishSubject<Int>()
-        let pub = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
-            .take(3)
-            .multicast(subject)
-        
-        // 订阅多播序列
-        pub.subscribe(onNext: { print("多播订阅1: \($0)") })
-            .disposed(by: disposeBag)
-        pub.subscribe(onNext: { print("多播订阅2: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 连接序列（开始发送事件）
-        pub.connect().disposed(by: disposeBag)
+        let sub = PublishSubject<Int>()
+        let ob = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance).multicast(sub)
+        ob.connect().disposed(by: disposeBag)
     }
 }
-Example33_RXSwift_Higher_Order_Deferred
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 33. 延迟创建序列 deferred
+// 作用：订阅时才创建序列
+// 场景：动态生成数据
 class Example33_RXSwift_Higher_Order_Deferred {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Deferred：延迟创建序列（订阅时才创建）
-        var isOdd = true
-        let deferredPub = Observable<Int>.deferred {
-            isOdd.toggle()
-            return isOdd ? Observable.of(1, 3, 5) : Observable.of(2, 4, 6)
-        }
-        
-        // 第一次订阅（偶数）
-        deferredPub.subscribe(onNext: { print("订阅1: \($0)") })
-            .disposed(by: disposeBag)
-        // 第二次订阅（奇数）
-        deferredPub.subscribe(onNext: { print("订阅2: \($0)") })
+        Observable<Int>.deferred { .just(Int.random(in: 0...10)) }
+            .subscribe(onNext: { print("随机: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example34_RXSwift_Higher_Order_Amb
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 34. 竞争 amb
+// 作用：多个序列只取最快发出的
+// 场景：多接口竞争，取最快返回
 class Example34_RXSwift_Higher_Order_Amb {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Amb：竞争（只接收第一个发送事件的序列）
-        let pub1 = Observable<Int>.just(1).delay(.seconds(2), scheduler: MainScheduler.instance)
-        let pub2 = Observable<Int>.just(2).delay(.seconds(1), scheduler: MainScheduler.instance)
-        
-        pub1.amb(pub2)
-            .subscribe(onNext: { print("Amb结果: \($0)") }) // 输出2（pub2先发送）
-            .disposed(by: disposeBag)
+        let a = Observable.just(1).delay(.seconds(2), scheduler: MainScheduler.instance)
+        let b = Observable.just(2).delay(.seconds(1), scheduler: MainScheduler.instance)
+        a.amb(b).subscribe(onNext: { print("最快: \($0)") }).disposed(by: disposeBag)
     }
 }
-Example35_RXSwift_Higher_Order_Timeout
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 35. 超时 timeout
+// 作用：指定时间无事件则报错
+// 场景：网络超时
 class Example35_RXSwift_Higher_Order_Timeout {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Timeout：超时（指定时间无事件则触发错误）
-        let pub = Observable<Int>.create { observer in
-            // 模拟超时（3秒内不发送事件）
-            return Disposables.create()
-        }
-        
-        pub.timeout(.seconds(2), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("Timeout: \($0)") },
-                       onError: { print("超时错误: \($0)") })
+        Observable<Int>.never()
+            .timeout(.seconds(2), scheduler: MainScheduler.instance)
+            .subscribe(onError: { print("超时: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example36_RXSwift_Higher_Order_Delay
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 36. 延迟 delay
+// 作用：延迟发送事件
 class Example36_RXSwift_Higher_Order_Delay {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Delay：延迟发送事件
-        Observable.of(1, 2, 3)
+        Observable.just(1)
             .delay(.seconds(1), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("Delay结果: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // DelaySubscription：延迟订阅
-        Observable.of(4, 5, 6)
-            .delaySubscription(.seconds(2), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("DelaySubscription结果: \($0)") })
+            .subscribe(onNext: { print("延迟1s") })
             .disposed(by: disposeBag)
     }
 }
-Example37_RXSwift_Higher_Order_GroupBy
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 37. 分组 groupBy
+// 作用：按条件把元素分成多个组
+// 场景：列表分组、数据分类
 class Example37_RXSwift_Higher_Order_GroupBy {
     let disposeBag = DisposeBag()
     
     func test() {
-        // GroupBy：分组（按条件拆分序列）
-        Observable.of(1, 2, 3, 4, 5, 6)
-            .groupBy { $0 % 2 == 0 ? "偶数" : "奇数" }
-            .subscribe { group in
-                group.asObservable()
-                    .subscribe(onNext: { print("\(group.key): \($0)") })
-                    .disposed(by: self.disposeBag)
-            }
+        Observable.of(1,2,3,4,5)
+            .groupBy { $0 % 2 == 0 }
+            .subscribe(onNext: { g in
+                g.subscribe(onNext: { print("\(g.key): \($0)") })
+            })
             .disposed(by: disposeBag)
     }
 }
-Example38_RXSwift_Higher_Order_Buffer
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 38. 缓冲 buffer
+// 作用：攒N个事件一起发
+// 场景：批量上报、批量处理
 class Example38_RXSwift_Higher_Order_Buffer {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Buffer：缓冲（按数量/时间收集元素）
         Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
             .buffer(timeSpan: .seconds(3), count: 2, scheduler: MainScheduler.instance)
-            .take(3)
-            .subscribe(onNext: { print("Buffer结果: \($0)") })
+            .subscribe(onNext: { print("批量: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example39_RXSwift_Higher_Order_Window
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 39. 窗口 window
+// 作用：按时间/数量拆分子序列
 class Example39_RXSwift_Higher_Order_Window {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Window：窗口（按数量/时间拆分序列为子序列）
         Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
             .window(timeSpan: .seconds(3), count: 2, scheduler: MainScheduler.instance)
-            .take(2)
-            .subscribe { window in
-                window.asObservable()
-                    .subscribe(onNext: { print("Window子序列: \($0)") })
-                    .disposed(by: self.disposeBag)
-            }
+            .subscribe(onNext: { w in
+                w.asObservable().subscribe(onNext: { print("窗口: \($0)") })
+            })
             .disposed(by: disposeBag)
     }
 }
-Example40_RXSwift_Higher_Order_Skip
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 40. 跳过 skip
+// 作用：跳过前N个事件
 class Example40_RXSwift_Higher_Order_Skip {
     let disposeBag = DisposeBag()
     
     func test() {
-        // Skip：跳过前N个元素
-        Observable.of(1, 2, 3, 4, 5)
-            .skip(2) // 跳过前2个，输出3,4,5
-            .subscribe(onNext: { print("Skip(2): \($0)") })
+        Observable.of(1,2,3,4)
+            .skip(2)
+            .subscribe(onNext: { print("跳过前2个: \($0)") })
             .disposed(by: disposeBag)
-        
-        // SkipUntil：直到某个条件触发才开始接收
-        let trigger = PublishSubject<Void>()
-        Observable.of(1, 2, 3, 4, 5)
-            .skipUntil(trigger)
-            .subscribe(onNext: { print("SkipUntil: \($0)") })
-            .disposed(by: disposeBag)
-        trigger.onNext(()) // 触发后接收后续元素
     }
 }
-Example41_RXSwift_Architecture_ViewModel
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
-// ViewModel
+// MARK: - 41. MVVM + Rx 完整架构
+// 作用：标准MVVM响应式架构
+// 场景：项目架构规范
 class UserListViewModel {
     let disposeBag = DisposeBag()
-    // 输入
-    let refreshTrigger = PublishSubject<Void>()
-    // 输出
+    let refresh = PublishSubject<Void>()
     let users = BehaviorSubject<[String]>(value: [])
     let isLoading = BehaviorSubject<Bool>(value: false)
     
     init() {
-        bind()
-    }
-    
-    private func bind() {
-        refreshTrigger
-            .do(onNext: { [weak self] _ in self?.isLoading.onNext(true) })
-            .flatMap { [weak self] _ -> Observable<[String]> in
-                self?.fetchUsers() ?? Observable.just([])
-            }
-            .do(onNext: { [weak self] _ in self?.isLoading.onNext(false) })
-            .bind(to: users)
-            .disposed(by: disposeBag)
-    }
-    
-    private func fetchUsers() -> Observable<[String]> {
-        // 模拟网络请求
-        return Observable.just(["用户1", "用户2", "用户3"])
-            .delay(.seconds(1), scheduler: MainScheduler.instance)
-    }
-}
-
-// ViewController
-class Example41_RXSwift_Architecture_ViewModel: UIViewController {
-    let disposeBag = DisposeBag()
-    let viewModel = UserListViewModel()
-    let tableView = UITableView()
-    let refreshControl = UIRefreshControl()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-        bindViewModel()
-    }
-    
-    private func setupUI() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.refreshControl = refreshControl
-        view.addSubview(tableView)
-        tableView.frame = view.bounds
-    }
-    
-    private func bindViewModel() {
-        // 绑定刷新触发
-        refreshControl.rx.controlEvent(.valueChanged)
-            .bind(to: viewModel.refreshTrigger)
-            .disposed(by: disposeBag)
-        
-        // 绑定数据源
-        viewModel.users
-            .bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, text, cell in
-                cell.textLabel?.text = text
-            }
-            .disposed(by: disposeBag)
-        
-        // 绑定加载状态
-        viewModel.isLoading
-            .subscribe(onNext: { [weak self] isLoading in
-                if isLoading {
-                    self?.refreshControl.beginRefreshing()
-                } else {
-                    self?.refreshControl.endRefreshing()
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-}
-Example42_RXSwift_Architecture_Coordinator
-swift
-import RxSwift
-import RxCocoa
-import UIKit
-
-// Coordinator协议
-protocol Coordinator: AnyObject {
-    var navigationController: UINavigationController { get }
-    var disposeBag: DisposeBag { get }
-    func start()
-}
-
-// 首页Coordinator
-class HomeCoordinator: Coordinator {
-    let navigationController: UINavigationController
-    let disposeBag = DisposeBag()
-    
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-    }
-    
-    func start() {
-        let vc = HomeViewController()
-        vc.rx.switchToDetail
-            .subscribe(onNext: { [weak self] in
-                self?.navigateToDetail()
-            })
-            .disposed(by: disposeBag)
-        navigationController.pushViewController(vc, animated: true)
-    }
-    
-    private func navigateToDetail() {
-        let detailCoordinator = DetailCoordinator(navigationController: navigationController)
-        detailCoordinator.start()
-    }
-}
-
-// 详情Coordinator
-class DetailCoordinator: Coordinator {
-    let navigationController: UINavigationController
-    let disposeBag = DisposeBag()
-    
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-    }
-    
-    func start() {
-        let vc = DetailViewController()
-        navigationController.pushViewController(vc, animated: true)
-    }
-}
-
-// 首页VC
-class HomeViewController: UIViewController {
-    let disposeBag = DisposeBag()
-    let switchToDetail = PublishSubject<Void>()
-    let button = UIButton(type: .system)
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        button.setTitle("进入详情", for: .normal)
-        view.addSubview(button)
-        button.frame = CGRect(x: 100, y: 100, width: 200, height: 50)
-        
-        button.rx.tap
-            .bind(to: switchToDetail)
-            .disposed(by: disposeBag)
-    }
-}
-
-// 详情VC
-class DetailViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .lightGray
-        title = "详情页"
-    }
-}
-
-// 测试Coordinator
-class Example42_RXSwift_Architecture_Coordinator {
-    func test() {
-        let navigationController = UINavigationController()
-        let homeCoordinator = HomeCoordinator(navigationController: navigationController)
-        homeCoordinator.start()
-    }
-}
-Example43_RXSwift_Error_Handling_RetryWhen
-swift
-import RxSwift
-import RxCocoa
-
-class Example43_RXSwift_Error_Handling_RetryWhen {
-    let disposeBag = DisposeBag()
-    var retryCount = 0
-    
-    func test() {
-        // RetryWhen：条件重试（满足条件时重试）
-        Observable<Int>.create { [weak self] observer in
-            guard let self = self else { return Disposables.create() }
-            self.retryCount += 1
-            if self.retryCount < 3 {
-                observer.onError(NSError(domain: "Test", code: 1001))
-            } else {
-                observer.onNext(100)
-                observer.onCompleted()
-            }
-            return Disposables.create()
+        refresh.flatMapLatest { _ -> Observable<[String]> in
+                .just(["用户1","用户2"]).delay(.seconds(1), scheduler: MainScheduler.instance)
         }
-        .retryWhen { errorObservable in
-            errorObservable.flatMap { error -> Observable<Int> in
-                print("重试原因: \(error)")
-                // 延迟1秒重试
-                return Observable.timer(.seconds(1), scheduler: MainScheduler.instance)
-            }
-        }
-        .subscribe(onNext: { print("RetryWhen成功: \($0)") })
+        .bind(to: users)
         .disposed(by: disposeBag)
     }
 }
-Example44_RXSwift_Error_Handling_MapError
-swift
-import RxSwift
-import RxCocoa
 
-enum CustomError: Error {
-    case networkError
-    case parseError
+class Example41_RXSwift_Architecture_ViewModel: UIViewController {
+    let disposeBag = DisposeBag()
+    let vm = UserListViewModel()
+    let tv = UITableView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        vm.users.bind(to: tv.rx.items(cellIdentifier: "cell")) { _,t,c in
+            c.textLabel?.text = t
+        }.disposed(by: disposeBag)
+    }
 }
 
+// MARK: - 42. Coordinator 路由
+// 作用：页面跳转逻辑抽离
+class Example42_RXSwift_Architecture_Coordinator {}
+
+// MARK: - 43. 条件重试 retryWhen
+// 作用：自定义错误重试逻辑
+class Example43_RXSwift_Error_Handling_RetryWhen {
+    let disposeBag = DisposeBag()
+    
+    func test() {
+        Observable.error(NSError(domain: "", code: 0))
+            .retryWhen { err in
+                err.flatMapLatest { _ in
+                    Observable<Int>.timer(.seconds(1), scheduler: MainScheduler.instance)
+                }
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - 44. 错误类型转换 mapError
+// 作用：统一错误格式
 class Example44_RXSwift_Error_Handling_MapError {
     let disposeBag = DisposeBag()
     
     func test() {
-        // MapError：转换错误类型
-        Observable<Int>.error(NSError(domain: "Test", code: 1001))
-            .mapError { _ in CustomError.networkError }
-            .subscribe(onNext: { print("MapError: \($0)") },
-                       onError: { error in
-                        if error is CustomError {
-                            print("自定义错误: \(error)")
-                        }
-                       })
+        Observable.error(NSError(domain: "", code: 0))
+            .mapError { _ in NSError(domain: "自定义错误", code: 0, userInfo: nil) }
+            .subscribe()
             .disposed(by: disposeBag)
     }
 }
-Example45_RXSwift_Concurrency_Lock
-swift
-import RxSwift
-import RxCocoa
-import Dispatch
 
+// MARK: - 45. 多线程安全 Lock
+// 作用：并发数据安全
 class Example45_RXSwift_Concurrency_Lock {
-    let disposeBag = DisposeBag()
     let lock = NSRecursiveLock()
     var count = 0
     
     func test() {
-        // 并发安全（加锁）
-        let queue1 = DispatchQueue.global()
-        let queue2 = DispatchQueue.global()
-        
-        Observable.of(1, 2, 3)
-            .subscribe(on: ConcurrentDispatchQueueScheduler(queue: queue1))
+        Observable.of(1,2,3)
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .subscribe(onNext: { [weak self] _ in
                 self?.lock.lock()
                 self?.count += 1
-                print("队列1计数: \(self?.count ?? 0)")
                 self?.lock.unlock()
             })
-            .disposed(by: disposeBag)
-        
-        Observable.of(4, 5, 6)
-            .subscribe(on: ConcurrentDispatchQueueScheduler(queue: queue2))
-            .subscribe(onNext: { [weak self] _ in
-                self?.lock.lock()
-                self?.count += 1
-                print("队列2计数: \(self?.count ?? 0)")
-                self?.lock.unlock()
-            })
-            .disposed(by: disposeBag)
     }
 }
-Example46_RXSwift_Concurrency_AsyncAwait
-swift
-import RxSwift
-import RxCocoa
-import Combine // 需iOS 15+
 
+// MARK: - 46. Async/Await 混用
+// 作用：新异步 API 兼容 Rx
 class Example46_RXSwift_Concurrency_AsyncAwait {
     let disposeBag = DisposeBag()
     
-    // 异步函数
-    func fetchData() async -> String {
-        try! await Task.sleep(nanoseconds: 1_000_000_000)
-        return "AsyncAwait数据"
-    }
-    
     func test() {
-        // RXSwift + AsyncAwait
-        Observable<String>.create { observer in
+        Observable<String>.create { obs in
             Task {
-                let data = await self.fetchData()
-                observer.onNext(data)
-                observer.onCompleted()
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                obs.onNext("完成")
+                obs.onCompleted()
             }
             return Disposables.create()
         }
         .observe(on: MainScheduler.instance)
-        .subscribe(onNext: { print("AsyncAwait结果: \($0)") })
+        .subscribe(onNext: { print("异步: \($0)") })
         .disposed(by: disposeBag)
     }
 }
-Example47_RXSwift_Notification_Center
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+// MARK: - 47. 通知监听 NotificationCenter
+// 作用：监听系统/自定义通知
 class Example47_RXSwift_Notification_Center {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 监听通知
         NotificationCenter.default.rx.notification(UIApplication.didEnterBackgroundNotification)
-            .subscribe(onNext: { notification in
-                print("进入后台: \(notification)")
-            })
+            .subscribe(onNext: { _ in print("进入后台") })
             .disposed(by: disposeBag)
-        
-        // 发送通知
-        NotificationCenter.default.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 }
-Example48_RXSwift_Timer
-swift
-import RxSwift
-import RxCocoa
 
+// MARK: - 48. 定时器 Timer
+// 作用：替代 Timer，无内存泄漏
 class Example48_RXSwift_Timer {
     let disposeBag = DisposeBag()
     
     func test() {
-        // 重复定时器
-        let timer = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
-            .take(5) // 执行5次
-            .subscribe(onNext: { print("定时器: \($0)") })
-            .disposed(by: disposeBag)
-        
-        // 一次性定时器
-        Observable<Int>.timer(.seconds(3), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { print("一次性定时器: \($0)") })
+        Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { print("计时: \($0)") })
             .disposed(by: disposeBag)
     }
 }
-Example49_RXSwift_Memory_Leak
-swift
-import RxSwift
-import RxCocoa
-import UIKit
 
+// MARK: - 49. 内存泄漏处理
+// 作用：避免循环引用
 class Example49_RXSwift_Memory_Leak {
     let disposeBag = DisposeBag()
-    var closure: (() -> Void)?
     
-    func testMemoryLeak() {
-        // 内存泄漏示例（循环引用）
-        let vc = UIViewController()
-        // 错误写法：self强引用vc，vc强引用闭包，闭包强引用self
-        closure = {
-            print(vc)
-        }
-        
-        // 正确写法：弱引用
-        closure = { [weak vc] in
-            guard let vc = vc else { return }
-            print(vc)
-        }
-        
-        // RXSwift避免泄漏：使用[weak self]
+    func test() {
         Observable.just(1)
-            .subscribe(onNext: { [weak self] value in
+            .subscribe(onNext: { [weak self] v in
                 guard let self = self else { return }
-                print("弱引用: \(value)")
+                print("安全: \(v)")
             })
             .disposed(by: disposeBag)
     }
 }
-Example50_RXSwift_Advanced_Custom_Observable
-swift
-import RxSwift
-import RxCocoa
 
-// 自定义可观察序列
+// MARK: - 50. 自定义 Observable
+// 作用：把任意系统事件包装成 Rx
 class Example50_RXSwift_Advanced_Custom_Observable {
     let disposeBag = DisposeBag()
     
-    // 自定义Observable：监听键盘高度
-    func keyboardHeightObservable() -> Observable<CGFloat> {
-        return Observable.create { observer in
-            let notification = NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) { notification in
-                guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-                    observer.onNext(0)
-                    return
-                }
-                let height = frame.height
-                observer.onNext(height)
+    func keyboard() -> Observable<CGFloat> {
+        Observable.create { obs in
+            let n = NotificationCenter.default.addObserver(
+                forName: UIResponder.keyboardWillChangeFrameNotification,
+                object: nil,
+                queue: .main
+            ) { noti in
+                let h = (noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
+                obs.onNext(h)
             }
-            
-            return Disposables.create {
-                NotificationCenter.default.removeObserver(notification)
-            }
+            return Disposables.create { NotificationCenter.default.removeObserver(n) }
         }
-    }
-    
-    func test() {
-        // 订阅自定义序列
-        keyboardHeightObservable()
-            .subscribe(onNext: { height in
-                print("键盘高度: \(height)")
-            })
-            .disposed(by: disposeBag)
     }
 }
