@@ -23,7 +23,7 @@ class CombineExampleViewController : UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        let example = Example40_Combine()
+        let example = Example32_Combine()
         example.test()
     }
     
@@ -575,7 +575,7 @@ class Example32_Combine {
     
     func test() {
         heavyComputation()
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global())
             .sink {
                 print("\($0), \(Thread.current)")
             }

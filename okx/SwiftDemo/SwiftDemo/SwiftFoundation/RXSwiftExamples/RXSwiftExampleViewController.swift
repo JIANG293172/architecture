@@ -18,7 +18,7 @@ class RXSwiftExampleViewController: UIViewController {
         
         self.view.backgroundColor = .white
         
-        let example = Example40_RXSwift_Higher_Order_Skip()
+        let example = Example46_RXSwift_Concurrency_AsyncAwait()
         example.test()
     }
 }
@@ -774,3 +774,62 @@ class Example43_RXSwift_Eror_Handling_RetryWhen {
 //    }
 //    
 //}
+
+class Example45_RXSwift_Concurrency_Lock {
+    var lock = NSRecursiveLock()
+    var count = 0
+    
+    func test() {
+        Observable.of(1, 2, 3)
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .subscribe { _ in
+                self.lock.lock()
+                self.count += 1
+                self.lock.unlock()
+            }
+            .disposed(by: disposeBag)
+    }
+}
+
+
+class Example46_RXSwift_Concurrency_AsyncAwait {
+    
+    
+    func test() {
+        
+        Observable<String>.create { obs in
+            Task {
+                
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                obs.onNext("完成")
+                obs.onCompleted()
+            }
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background)) // 订阅线程（后台）
+        .observe(on: MainScheduler.instance)
+        .subscribe {
+            print("异步 \($0)")
+        }
+        .disposed(by: disposeBag)
+
+        
+        // 示例：模拟后台读取数据，主线程更新UI
+        Observable<String>.create { obs in
+            // 冷序列：订阅时才执行这个闭包，线程由 subscribe(on:) 控制
+            let data = Data() // 耗时操作（文件读取）
+            obs.onNext("data")
+            obs.onCompleted()
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background)) // 事件产生在后台
+        .observe(on: MainScheduler.instance) // 下游切主线程
+        .subscribe(onNext: { data in
+            print("主线程更新UI: \(Thread.current)") // 必是主线程
+        })
+        .disposed(by: disposeBag)
+        
+    }
+    
+    
+}
