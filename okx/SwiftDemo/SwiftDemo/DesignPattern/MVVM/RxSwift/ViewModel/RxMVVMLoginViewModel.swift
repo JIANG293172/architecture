@@ -3,27 +3,23 @@ import RxSwift
 import RxCocoa
 import Combine
 
-/// RxSwift 版本的登录视图模型
-class RxMVVMLoginViewModel {
+final class RxMVVMLoginViewModel {
     
-    // MARK: - Inputs
     let username = BehaviorRelay<String>(value: "")
-    let password = BehaviorRelay<String>(value: "") /// 发布者  CurrentValueSubject / @Published   UI 状态同步（如用户名、开关状态）
-    let loginTapped = PublishRelay<Void>() /// 发布者 /// 这个类似于Combine里面的publisher，或则是 passthroughSubject，他们都是发布者
-    
-    // MARK: - Outputs
-    let isLoading = BehaviorRelay<Bool>(value: false)  /// PassthroughSubject  功能对  纯 UI 事件（如按钮点击）
-    let loginResult = PublishRelay<Result<RxMVVMLoginUser, RxLoginError>>()
-    
-//    PublishSubject   passthroughSubject  类似 PublishReplay 是单项的
-//    BehaviorSubject  CurrentValueSubject 类似 BehaviorRelay 也是单项的
-    
-    let isLoginEnabled: Observable<Bool> /// Publisher  各种异步操作（如网络请求）
-    let errorMessage: Observable<String?>
-    
+    let password = BehaviorRelay<String>(value: "")
+    let loginTapped = PublishRelay<Void>()
+    let registerTapped = PublishRelay<Void>()
+
+    let isLoading = BehaviorRelay<Bool>(value: false)
+
+    let isLoginEnabled: Driver<Bool>
+    let errorMessage: Driver<String?>
+    let loginSuccess: Signal<RxMVVMLoginUser>
+    let routeToRegister: Signal<String>
+
+    private let loginResult = PublishRelay<Result<RxMVVMLoginUser, RxLoginError>>()
     private let disposeBag = DisposeBag()
-    
-    private var cancellables = Set<AnyCancellable>()
+    private let authService: RxAuthServicing
 
     
     func rxSwiftBehaviorSuject() {
@@ -146,15 +142,18 @@ class RxMVVMLoginViewModel {
     
     
     
-    init() {
-        // 1. 处理登录按钮是否可用 (类似 Combine 的 combineLatest)
-        isLoginEnabled = Observable.combineLatest(username, password)
+    init(authService: RxAuthServicing = RxMockAuthService()) {
+        self.authService = authService
+
+        let credentials = Observable.combineLatest(username.asObservable(), password.asObservable())
+
+        isLoginEnabled = credentials
             .map { username, password in
-                return username.count >= 3 && password.count >= 6
+                username.count >= 3 && password.count >= 6
             }
             .distinctUntilChanged()
-            
-        // 2. 处理错误消息输出 (先初始化所有 let 属性，避免 self 被捕获时属性未完全初始化)
+            .asDriver(onErrorJustReturn: false)
+
         errorMessage = loginResult
             .map { result -> String? in
                 if case .failure(let error) = result {
@@ -162,33 +161,55 @@ class RxMVVMLoginViewModel {
                 }
                 return nil
             }
-            
-        // 3. 处理登录点击事件 (演示 flatMapLatest 处理异步请求)
+            .asDriver(onErrorJustReturn: "未知错误")
+
+        loginSuccess = loginResult
+            .compactMap { result in
+                if case .success(let user) = result { return user }
+                return nil
+            }
+            .asSignal(onErrorSignalWith: .empty())
+
+        routeToRegister = registerTapped
+            .withLatestFrom(username.asObservable())
+            .asSignal(onErrorSignalWith: .empty())
+
         loginTapped
-            .withLatestFrom(Observable.combineLatest(username, password))
+            .withLatestFrom(credentials)
             .do(onNext: { [weak self] _ in self?.isLoading.accept(true) })
             .flatMapLatest { [weak self] username, password -> Observable<Result<RxMVVMLoginUser, RxLoginError>> in
-                return self?.performLogin(user: username, pass: password) ?? .empty()
+                guard let self else { return .empty() }
+                return self.performLogin(username: username, password: password)
+                    .map { .success($0) }
+                    .catch { error in
+                        let mapped = (error as? RxLoginError) ?? .serverError
+                        return .just(.failure(mapped))
+                    }
             }
             .do(onNext: { [weak self] _ in self?.isLoading.accept(false) })
             .bind(to: loginResult)
             .disposed(by: disposeBag)
     }
-    
-    // 模拟登录请求
-    private func performLogin(user: String, pass: String) -> Observable<Result<RxMVVMLoginUser, RxLoginError>> {
-        return Observable.create { observer in
-            // 模拟网络延迟
-            DispatchQueue.global().asyncAfter(deadline: .now() + 1.5) {
-                if user == "admin" && pass == "123456" {
-                    let mockUser = RxMVVMLoginUser(id: "rx_1", username: "RxSwift管理员", token: "rx_token_123", lastLogin: Date())
-                    observer.onNext(.success(mockUser))
-                } else {
-                    observer.onNext(.failure(.invalidCredentials))
+
+    func applyRegisteredUsername(_ username: String) {
+        self.username.accept(username)
+    }
+
+    private func performLogin(username: String, password: String) -> Observable<RxMVVMLoginUser> {
+        Observable<RxMVVMLoginUser>.create { [authService] observer in
+            let task = Task {
+                do {
+                    let user = try await authService.login(.init(username: username, password: password))
+                    observer.onNext(user)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
                 }
-                observer.onCompleted()
             }
-            return Disposables.create()
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
     
