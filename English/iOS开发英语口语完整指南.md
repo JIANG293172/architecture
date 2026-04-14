@@ -161,7 +161,7 @@
 
 ---
 
-### 9. Can you describe...?
+### 9. Can you describe...?(4.7)
 
 **描述项目/问题/经历**
 
@@ -249,7 +249,7 @@
 
 ---
 
-### 15. I think... / In my opinion... / From my perspective...
+### 15. I think... / In my opinion... / From my perspective... ==
 
 **表达观点**
 
@@ -262,7 +262,7 @@
 
 ---
 
-### 16. I agree... / I disagree...
+### 16. I agree... / I disagree... 
 
 **表达同意/不同意**
 
@@ -355,7 +355,7 @@
 
 ---
 
-### 2.2 自我介绍
+### 2.2 自我介绍 ==
 
 **模板1：基础版**
 > Good morning, I'm [Name]. I'm an iOS developer with [X] years of experience. I specialize in building native iOS applications using Swift and UIKit. I'm passionate about creating user-friendly mobile experiences.
