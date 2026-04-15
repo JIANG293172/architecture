@@ -1,0 +1,70 @@
+<mxfile host="65bd71144e">
+    <diagram id="图2_双目录架构" name="图2">
+        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="移动端APP沙盒存储" style="swimlane;html=1;whiteSpace=wrap;startSize=30;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="40" width="620" height="900" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="正式存储目录（microDistPath）&lt;br&gt;【运行时唯一资源加载目录】" style="swimlane;html=1;whiteSpace=wrap;startSize=30;fillColor=#dae8fc;" vertex="1" parent="2">
+                    <mxGeometry x="20" y="40" width="280" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="临时存储目录（microDistPath/tmp）&lt;br&gt;【新版本资源隔离缓存目录】" style="swimlane;html=1;whiteSpace=wrap;startSize=30;fillColor=#d5e8d4;" vertex="1" parent="2">
+                    <mxGeometry x="320" y="40" width="280" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="微应用1正式版本资源包" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="3">
+                    <mxGeometry x="30" y="80" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="微应用2正式版本资源包" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="3">
+                    <mxGeometry x="30" y="160" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="首页核心微应用正式版本资源包" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="3">
+                    <mxGeometry x="30" y="240" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="普通微应用正式版本资源包" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="3">
+                    <mxGeometry x="30" y="320" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="运行时只读权限管控&lt;br&gt;微应用运行期间禁止修改/覆盖" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="3">
+                    <mxGeometry x="30" y="400" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="微应用运行时唯一资源加载入口" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="3">
+                    <mxGeometry x="30" y="500" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="首页核心微应用待替换新版本资源包" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="4">
+                    <mxGeometry x="30" y="80" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="其他微应用待替换新版本资源包" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="30" y="160" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="与正式目录完全物理隔离&lt;br&gt;读写操作不影响运行中资源" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="4">
+                    <mxGeometry x="30" y="240" width="220" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="仅用于新版本资源下载、解压、校验" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="4">
+                    <mxGeometry x="30" y="340" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="服务端新版本资源包" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="970" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="微应用启动时版本替换" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="970" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="后台静默下载" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="15" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="资源迁移替换" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="启动时触发替换" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="16" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="运行时资源加载" style="endArrow=open;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" edge="1" parent="1" source="3" target="21">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="微应用运行容器" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="1060" width="200" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

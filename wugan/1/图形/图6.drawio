@@ -1,0 +1,85 @@
+<mxfile host="65bd71144e">
+    <diagram id="图6_现有技术流程" name="图6">
+        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="检测微应用新版本" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="40" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="弹出更新提示框，要求用户确认" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="130" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="【缺陷节点1】&lt;br&gt;弹窗打断用户正常操作&lt;br&gt;破坏操作体验连续性" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="130" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="用户是否确认更新？" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="330" y="220" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="流程结束" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="140" y="230" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="下载新版本资源包" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="330" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="直接覆盖本地运行中资源目录" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="420" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="【缺陷节点2】&lt;br&gt;覆盖运行中资源引发读写冲突&lt;br&gt;导致微应用异常、白屏、崩溃" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="420" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="提示用户重启微应用/APP生效" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="510" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="【缺陷节点3】&lt;br&gt;需重启应用才能生效&lt;br&gt;二次打断用户操作" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="510" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="用户重启微应用后加载新版本" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="600" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="【缺陷节点4】&lt;br&gt;无差异化更新策略&lt;br&gt;核心/普通微应用无分级管控" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="330" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="流程结束" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="690" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="2" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="3" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="否" style="endArrow=none;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="是" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5" target="7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="7" target="8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="8" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="10" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="12" target="14">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" style="endArrow=none;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" edge="1" parent="1" source="3" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="endArrow=none;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" edge="1" parent="1" source="8" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" style="endArrow=none;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" edge="1" parent="1" source="10" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" style="endArrow=none;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" edge="1" parent="1" source="7" target="13">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

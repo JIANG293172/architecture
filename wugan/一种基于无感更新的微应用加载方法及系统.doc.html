@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+<head>
+<meta charset="UTF-8">
+<title>一种基于无感更新的微应用加载方法及系统</title>
+<style>
+<!--
+ body { font-family: 'SimSun'; font-size: 12pt; line-height: 1.5; }
+ h1 { font-size: 22pt; text-align: center; margin-top: 30pt; margin-bottom: 20pt; font-weight: bold; }
+ h2 { font-size: 16pt; text-align: left; margin-top: 20pt; margin-bottom: 10pt; font-weight: bold; }
+ h3 { font-size: 14pt; text-align: left; margin-top: 15pt; margin-bottom: 8pt; font-weight: bold; }
+ p { text-indent: 2em; margin-top: 5pt; margin-bottom: 5pt; text-align: justify; }
+ .title-center { text-align: center; font-weight: bold; font-size: 24pt; margin-top: 60pt; }
+ .section-title { font-weight: bold; font-size: 14pt; margin-left: 0pt; text-indent: 0pt; }
+ table { border-collapse: collapse; width: 100%; margin: 10pt auto; }
+ th, td { border: 1px solid black; padding: 8pt; text-align: center; }
+ th { background-color: #f0f0f0; }
+ .claim { text-indent: 0pt; margin-left: 20pt; margin-right: 20pt; }
+ .claim-level1 { margin-left: 0pt; font-weight: bold; }
+ .claim-level2 { margin-left: 40pt; }
+ .abstract { text-align: justify; }
+ -->
+</style>
+</head>
+<body>
+
+<p class="title-center">一种基于无感更新的微应用加载方法及系统</p>
+
+<p style="text-align: center; margin-top: 20pt;">
+<b>申请人：</b>重庆长安汽车股份有限公司
+</p>
+<p style="text-align: center; margin-top: 10pt;">
+<b>申请日：</b>2024年___月___日
+</p>
+
+<div style="page-break-after: always;"></div>
+
+<h1>技术领域</h1>
+<p>本发明涉及移动应用技术领域，具体涉及一种微应用的更新方法和系统，特别涉及一种在使用中的微应用进行无感更新的方法和装置。</p>
+
+<h1>背景技术</h1>
+<p>随着移动互联网的发展，微应用（Mini App）作为一种轻量级应用形态被广泛采用。微应用通常需要从服务器下载完整的资源包（包括HTML、CSS、JavaScript等文件），然后在本地加载运行。</p>
+
+<p>在现有的微应用更新方案中，存在以下问题：</p>
+
+<p><b>（1）热更新冲突问题：</b>当用户正在使用某个微应用时，如果该微应用有新版本发布并开始下载更新，可能导致当前运行的微应用出现资源加载异常、功能紊乱甚至崩溃等问题。</p>
+
+<p><b>（2）更新提示干扰：</b>现有方案通常在检测到新版本时弹出提示框要求用户确认或重启，这打断了用户的正常使用流程，影响用户体验。</p>
+
+<p><b>（3）后台更新不可控：</b>即使采用后台下载更新，现有方案无法区分"首页微应用"和"普通微应用"，对所有微应用采用相同的更新策略，可能导致正在使用的首页微应用被更新覆盖。</p>
+
+<p>因此，需要一种能够在用户使用微应用时静默下载新版本，并在下次启动时平滑切换的微应用更新方法。</p>
+
+<h1>发明内容</h1>
+<h2>1. 发明目的</h2>
+<p>本发明的目的在于提供一种基于无感更新的微应用加载方法及系统，以解决现有技术中微应用更新时打断用户使用的问题。</p>
+<p>具体目的包括：</p>
+<p>（1）实现微应用更新时不影响当前使用体验；</p>
+<p>（2）对首页微应用采用特殊更新策略，确保用户无感知；</p>
+<p>（3）提供一种可复用的微应用无感更新框架。</p>
+
+<h2>2. 技术方案</h2>
+<h3>2.1 核心策略：临时目录缓存 + 延迟替换</h3>
+<p>本发明的核心思想是：当检测到正在使用的微应用有新版本时，不直接覆盖当前版本，而是将新版本下载到一个独立的临时目录中，待用户下次启动该微应用时，再将临时目录中的新版本替换到正式目录，实现平滑过渡。</p>
+
+<h3>2.2 首页微应用识别机制</h3>
+<p>通过isBelongHomeMicroApp方法判断当前微应用是否为"首页微应用"，包括以下步骤：</p>
+<p>（1）预定义首页微应用白名单数组autoDownloadMicroArray；</p>
+<p>（2）获取待更新微应用的包名mappPackName；</p>
+<p>（3）将包名与白名单进行匹配；</p>
+<p>（4）若匹配成功，则判定为首页微应用类型，触发无感更新策略。</p>
+
+<h3>2.3 双目录管理机制</h3>
+<p>系统维护两个目录：</p>
+<p><b>正式目录</b>（microDistPath）：存储当前正在使用的微应用版本；</p>
+<p><b>临时目录</b>（microDistPath/tmp）：缓存新下载的微应用版本。</p>
+
+<p>目录结构如下：</p>
+<table>
+<tr><th>目录</th><th>用途</th><th>内容</th></tr>
+<tr><td>dist/micro.cn.com.uni.app1/</td><td>正式目录</td><td>当前使用版本</td></tr>
+<tr><td>dist/micro.cn.com.uni.app2/</td><td>正式目录</td><td>其他微应用</td></tr>
+<tr><td>dist/tmp/micro.cn.com.uni.app1/</td><td>临时目录</td><td>待替换的新版本</td></tr>
+</table>
+
+<h3>2.4 更新流程</h3>
+<p><b>阶段一：后台静默下载</b></p>
+<p>（1）检测到新版本；</p>
+<p>（2）判断是否为首页微应用（isBelongHomeMicroApp）；</p>
+<p>（3）如果是首页微应用：下载到tmp临时目录，不影响当前运行版本；</p>
+<p>（4）如果是普通微应用：直接下载到正式目录（覆盖式更新）。</p>
+
+<p><b>阶段二：下次启动替换</b></p>
+<p>（1）用户打开微应用；</p>
+<p>（2）检查tmp目录是否存在对应新版本；</p>
+<p>（3）如果存在：将tmp目录内容移动到正式目录，删除tmp目录中的缓存，加载新版本；</p>
+<p>（4）如果不存在：直接加载正式目录版本。</p>
+
+<h3>2.5 版本号管理</h3>
+<p>系统通过buildId和versionId双重维度管理版本，只有在服务器版本号大于本地版本号时才触发更新。</p>
+
+<h3>2.6 防重复机制</h3>
+<p>通过goingMicroArray防止同一微应用被重复打开或重复下载。</p>
+
+<h1>附图说明</h1>
+<p>图1为本发明的整体流程示意图，展示了从检测新版本到完成无感更新的完整流程。</p>
+<p>图2为本发明临时目录与正式目录的关系图，展示了双目录架构。</p>
+<p>图3为本发明首页微应用识别流程图，展示了isBelongHomeMicroApp方法的判断逻辑。</p>
+
+<h1>具体实施方式</h1>
+<h2>实施例一：首页微应用的无感更新</h2>
+<p>（1）用户打开并使用"车辆控制"首页微应用（micro.cn.com.uni.carModelControl）；</p>
+<p>（2）系统检测到服务器有该微应用新版本（versionId增加）；</p>
+<p>（3）系统调用isBelongHomeMicroApp判断该微应用属于首页微应用；</p>
+<p>（4）系统将新版本下载包解压至dist/tmp/micro.cn.com.uni.carModelControl/目录；</p>
+<p>（5）用户继续使用当前版本，不受更新影响；</p>
+<p>（6）用户下次打开该微应用时，系统检测到tmp目录有新版本，执行替换操作；</p>
+<p>（7）替换完成后，用户看到的是最新版本。</p>
+
+<h2>实施例二：普通微应用的直接更新</h2>
+<p>（1）用户打开"设置"微应用；</p>
+<p>（2）系统检测到服务器有新版本；</p>
+<p>（3）系统调用isBelongHomeMicroApp判断该微应用不属于首页微应用；</p>
+<p>（4）系统直接下载并解压到dist/micro.cn.com.uni.setting/目录，覆盖旧版本；</p>
+<p>（5）用户下次打开时，直接加载新版本。</p>
+
+<div style="page-break-after: always;"></div>
+
+<h1>权利要求书</h1>
+
+<p class="claim claim-level1"><b>1. 一种基于无感更新的微应用加载方法，其特征在于，包括以下步骤：</b></p>
+<p class="claim claim-level2">识别步骤：当检测到微应用有新版本时，判断该微应用是否属于预设的首页微应用类型；</p>
+<p class="claim claim-level2">分类下载步骤：若所述微应用属于所述首页微应用类型，则将新版本下载至临时存储目录；若所述微应用不属于所述首页微应用类型，则将新版本直接下载至正式存储目录并覆盖旧版本；</p>
+<p class="claim claim-level2">替换步骤：当用户再次启动所述首页微应用时，将所述临时存储目录中的新版本内容移动至所述正式存储目录，完成版本替换。</p>
+
+<p class="claim claim-level1"><b>2. 一种基于无感更新的微应用加载系统，其特征在于，包括：</b></p>
+<p class="claim claim-level2">首页识别模块：用于判断微应用是否属于首页微应用类型；</p>
+<p class="claim claim-level2">分类下载模块：用于根据识别结果将新版本下载至对应的存储目录；</p>
+<p class="claim claim-level2">延迟替换模块：用于在用户下次启动首页微应用时执行版本替换。</p>
+
+<p class="claim claim-level1"><b>3. 根据权利要求1所述的方法，其特征在于，所述识别步骤包括：</b></p>
+<p class="claim claim-level2">获取微应用的包名；</p>
+<p class="claim claim-level2">将所述包名与预定义的首页微应用白名单进行匹配；</p>
+<p class="claim claim-level2">若匹配成功，则判定为首页微应用类型。</p>
+
+<p class="claim claim-level1"><b>4. 根据权利要求1所述的方法，其特征在于，所述临时存储目录为所述正式存储目录下的tmp子目录。</b></p>
+
+<p class="claim claim-level1"><b>5. 根据权利要求1所述的方法，其特征在于，所述替换步骤还包括：</b></p>
+<p class="claim claim-level2">在执行版本替换前，检测临时存储目录中是否存在有效的新版本；</p>
+<p class="claim claim-level2">若存在，则执行移动操作；若不存在，则跳过替换步骤。</p>
+
+<p class="claim claim-level1"><b>6. 根据权利要求2所述的系统，其特征在于，还包括：</b></p>
+<p class="claim claim-level2">版本管理模块：用于记录和管理各微应用的当前版本号与可用版本号；</p>
+<p class="claim claim-level2">防重模块：用于防止同一微应用被重复打开或重复下载。</p>
+
+<p class="claim claim-level1"><b>7. 根据权利要求2所述的系统，其特征在于，所述首页识别模块进一步包括白名单存储单元，用于存储预设的首页微应用包名列表。</b></p>
+
+<div style="page-break-after: always;"></div>
+
+<h1>摘要</h1>
+
+<p class="abstract">本发明公开了一种基于无感更新的微应用加载方法及系统。该方法通过识别首页微应用类型，对正在使用的首页微应用采用临时目录缓存策略，将新版本下载到临时目录而非直接覆盖当前版本，待用户下次启动时再执行版本替换，实现了微应用更新过程中的用户无感知体验。该方案特别适用于首页类微应用的更新场景，有效避免了更新过程中对用户使用体验的影响，提升了整体系统的可用性和用户满意度。</p>
+
+<p style="text-align: right; margin-top: 40pt;">（本页无正文）</p>
+
+</body>
+</html>
