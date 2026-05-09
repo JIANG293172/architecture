@@ -1,0 +1,37 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15">
+  <diagram id="图2_双区存储架构" name="图2">
+    <mxGraphModel dx="1014" dy="876" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="APP沙盒存储&lt;div&gt;（锁机制全范围管控）&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="120" y="70" width="580" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="【正式运行区】&lt;br&gt;• 存储当前稳定版本资源&lt;br&gt;• 绑定版本锚点文件&lt;br&gt;• 受读锁/写锁互斥保护&lt;br&gt;• 微应用运行唯一读取源" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" parent="1" vertex="1">
+          <mxGeometry x="140" y="140" width="200" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="【临时缓存区】&lt;br&gt;• 存储待替换新版本资源&lt;br&gt;• 绑定独立版本锚点文件&lt;br&gt;• 校验通过后才允许迁移&lt;br&gt;• 异常时自动清理销毁" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" parent="1" vertex="1">
+          <mxGeometry x="480" y="140" width="200" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="物理隔离" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontSize=12;color=#999;" parent="1" vertex="1">
+          <mxGeometry x="370" y="190" width="60" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="正式区版本锚点文件&lt;br&gt;（版本号+MD5校验码）" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="380" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="缓存区版本锚点文件&lt;br&gt;（版本号+MD5校验码）" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="380" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="锚点校验通过后&lt;div&gt;，完整迁移至正式区&lt;/div&gt;" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4" target="3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="锚点匹配校验" style="endArrow=block;html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="7" target="6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="区别：非D1单一目录、非D2分包存储，双区物理隔离+锚点绑定" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontSize=12;color=#666;" parent="1" vertex="1">
+          <mxGeometry x="250" y="520" width="320" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
